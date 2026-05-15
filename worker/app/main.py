@@ -19,6 +19,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 
 from .audit.chain import AuditEvent, verify_chain
+from .auth.router import router as auth_router
 from .config import settings
 from .db import close_pool, init_pool, pool
 from .extraction import ExtractionEngine
@@ -45,6 +46,7 @@ app = FastAPI(
     lifespan=lifespan,
     docs_url="/docs",
 )
+app.include_router(auth_router)
 
 _pipeline = IngestionPipeline()
 _extractor = ExtractionEngine(

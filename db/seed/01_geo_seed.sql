@@ -58,3 +58,16 @@ INSERT INTO election_candidates (election_id, party_code, candidate_name, runnin
   ('2027-presidential', 'NNPP', 'Candidate D', 'Running Mate D', 4);
 
 COMMIT;
+
+-- Refresh tile-cache materialised views now that polling_units is loaded.
+-- The views are created in migration 0006 over an empty table so they stay
+-- empty until something refreshes them. Wrap in a DO block so the seed
+-- still applies cleanly when migration 0006 has not run yet (e.g. older
+-- environments).
+DO $$
+BEGIN
+  PERFORM refresh_tile_caches();
+EXCEPTION
+  WHEN undefined_function THEN
+    NULL;
+END $$;
