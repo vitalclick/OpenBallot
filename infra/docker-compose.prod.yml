@@ -72,6 +72,40 @@ services:
     networks:
       - openballot
 
+  # Audit chain anchor cron. Picks up new audit_log rows, computes a
+  # Merkle root, submits to Ethereum mainnet. ANCHOR_BATCH_INTERVAL_SECONDS
+  # tunes cadence (default 1800s; 600s during election peak).
+  anchor:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/worker.env
+    command:
+      - /bin/sh
+      - -c
+      - 'while true; do python -m cli.anchor || true; sleep "${ANCHOR_BATCH_INTERVAL_SECONDS:-1800}"; done'
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    networks:
+      - openballot
+
+  # Statistical + historical anomaly sweep. Sanity-layer fires inline
+  # on every ingest; this batches the heavier peer-distribution +
+  # 2023-baseline comparisons.
+  anomaly-sweep:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/worker.env
+    command:
+      - /bin/sh
+      - -c
+      - 'while true; do python -m cli.anomaly_sweep || true; sleep "${ANOMALY_SWEEP_INTERVAL_SECONDS:-3600}"; done'
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    networks:
+      - openballot
+
   # Crashed-worker recovery cron. Every 5 minutes, walks any submission
   # stuck in processing_status='processing' for >30 min and re-queues
   # it to Redis. Submissions stuck >4 hours get marked failed with a

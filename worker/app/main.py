@@ -264,6 +264,74 @@ async def get_submission_status(submission_id: str) -> dict:
         }
 
 
+@app.post("/v1/submissions/{submission_id}/retry")
+async def retry_submission(submission_id: str) -> dict:
+    """Operator-triggered retry for a failed submission.
+
+    Only submissions in processing_status='failed' are eligible - we do
+    not re-queue successful or pending rows. Resets the row to 'queued'
+    + clears processing_error + re-enqueues to Redis. Writes an
+    audit_log 'submission.retry_requested' event so the retry is itself
+    part of the chained record.
+    """
+    async with pool().acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            SELECT id, election_id, pu_code, image_url, image_sha256,
+                   processing_status, processing_error
+              FROM ec8a_submissions
+             WHERE id = $1
+             FOR UPDATE
+            """,
+            submission_id,
+        )
+        if row is None:
+            raise HTTPException(status_code=404, detail={"code": "not_found"})
+        if row["processing_status"] != "failed":
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "code": "not_failed",
+                    "message": f"current status: {row['processing_status']}",
+                },
+            )
+        await conn.execute(
+            """
+            UPDATE ec8a_submissions
+               SET processing_status = 'queued',
+                   processing_error = NULL,
+                   extraction_started_at = NULL,
+                   extraction_completed_at = NULL,
+                   queued_at = NOW()
+             WHERE id = $1
+            """,
+            submission_id,
+        )
+        await conn.execute(
+            """
+            INSERT INTO audit_log (event_type, entity_type, entity_id, event_data)
+            VALUES ('submission.retry_requested', 'ec8a_submission', $1, $2::jsonb)
+            """,
+            str(submission_id),
+            json.dumps({
+                "previous_error": row["processing_error"],
+                "election_id": row["election_id"],
+                "pu_code": row["pu_code"],
+            }),
+        )
+
+    queue = await get_queue()
+    await enqueue_ingestion(
+        queue,
+        submission_id=row["id"],
+        election_id=row["election_id"],
+        pu_code=row["pu_code"],
+        image_url=row["image_url"],
+        image_sha256=row["image_sha256"],
+    )
+    return {"submission_id": submission_id, "processing_status": "queued"}
+
+
 @app.get("/v1/audit/verify")
 async def audit_verify(limit: int = 1000) -> dict:
     async with pool().acquire() as conn:
