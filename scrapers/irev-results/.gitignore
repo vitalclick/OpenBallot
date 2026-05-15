@@ -1,3 +1,5 @@
 node_modules
 progress.json
 *.tmp
+fixtures/captured/
+pilot-output/

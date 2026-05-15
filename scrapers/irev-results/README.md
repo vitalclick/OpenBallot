@@ -60,10 +60,52 @@ STORAGE_SECRET_KEY=minioadmin
 DATABASE_URL=postgresql://openballot:openballot@localhost:5432/openballot
 ```
 
-## Usage
+## Recommended sequence: discover -> pilot -> full
+
+Before committing multi-day scrape time, validate that the parser matches
+INEC's current IReV schema. The pilot tooling makes that a 30-minute job.
+
+### 1. Discover the live endpoint
 
 ```bash
-cd scrapers/irev-results
+# Pick any known-good PU code from Polling-Units/results/
+node scripts/discover-endpoints.js \
+  --election presidential \
+  --pu 25-11-04-007
+```
+
+The script probes nine candidate URL templates, prints which ones returned
+parseable JSON, and emits an `export IREV_RESULT_PATHS=...` line to paste
+before the pilot.
+
+### 2. Run the one-state pilot
+
+```bash
+node scripts/pilot.js \
+  --state Lagos \
+  --election presidential \
+  --limit 200
+```
+
+This processes 200 PUs end-to-end (fetch -> parse -> upload -> persist ->
+audit), captures every raw response to `fixtures/captured/<election_id>/`,
+samples 5 uploaded images and recomputes their SHA-256 against the DB
+record, runs the audit chain verifier, and writes:
+
+  - `pilot-output/pilot-report.json`  - structured report
+  - `pilot-output/pilot-report.md`    - human summary
+
+The report ends with a verdict: **ship the full scrape** or **hold +
+here's exactly what to fix**. Common holds:
+
+  - parser saw an unrecognised payload shape -> update `lib/parse.js`
+    (the exemplar fixture path is in the report)
+  - low success rate -> investigate the IReV URL pattern or election ID
+  - audit chain broken -> stop, this is a bug, not a config issue
+
+### 3. Run the full scrape
+
+```bash
 npm install
 
 # Full scrape (resumable - safe to interrupt and re-run)
