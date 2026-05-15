@@ -18,6 +18,9 @@ __pycache__
 .env.*.local
 
 .DS_Store
+*.egg-info
+tsconfig.tsbuildinfo
+package-lock.json
 *.log
 coverage
 .coverage

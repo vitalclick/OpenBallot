@@ -224,7 +224,7 @@ export function PollingUnitDetailView({
         <h2 className="font-semibold mb-2">Audit chain</h2>
         <p className="text-xs text-slate-500 mb-2">
           The last {audit.length} chained audit events touching this polling unit. Each
-          row's log_hash links to the previous row; any rewrite breaks the chain.
+          row&apos;s log_hash links to the previous row; any rewrite breaks the chain.
         </p>
         <table className="w-full text-xs">
           <thead>

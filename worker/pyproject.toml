@@ -38,6 +38,18 @@ dev = [
   "httpx>=0.27"
 ]
 
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# Two top-level packages: `app` for the FastAPI service modules and
+# `cli` for the worker entry points (cli.run_worker, cli.recovery,
+# cli.migrate). setuptools' auto-discovery refuses to pick when more
+# than one top-level package exists, so we declare them explicitly.
+[tool.setuptools.packages.find]
+include = ["app*", "cli*"]
+exclude = ["tests*"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]

@@ -51,15 +51,24 @@ export async function GET(req: NextRequest, { params }: Params) {
     return new NextResponse(error.message, { status: 500 });
   }
 
-  const bytes: Buffer =
-    data instanceof Uint8Array ? Buffer.from(data) : Buffer.from(data ?? '', 'binary');
+  // Supabase RPC returns the bytea as either a Uint8Array or a string
+  // depending on the connection mode. Normalise to an ArrayBuffer so
+  // the Response constructor accepts it cleanly on every Node version
+  // (@types/node 22 typed Uint8Array generically, which trips structural
+  // checks against BodyInit).
+  const source =
+    data instanceof Uint8Array
+      ? data
+      : new Uint8Array(Buffer.from(String(data ?? ''), 'binary'));
+  const buffer = new ArrayBuffer(source.byteLength);
+  new Uint8Array(buffer).set(source);
 
-  if (bytes.length === 0) {
+  if (buffer.byteLength === 0) {
     // Empty tile - Mapbox treats 204 as "nothing here" without retrying.
     return new NextResponse(null, { status: 204 });
   }
 
-  return new NextResponse(bytes, {
+  return new NextResponse(buffer, {
     status: 200,
     headers: {
       'Content-Type': 'application/vnd.mapbox-vector-tile',

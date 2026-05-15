@@ -105,6 +105,25 @@ export async function GET(req: NextRequest, { params }: Params) {
       // resume with ?after_pu=<last>.
       let cursor = req.nextUrl.searchParams.get('after_pu') ?? '';
       const PAGE = 500;
+      type Row = {
+        pu_code: string;
+        pu_name: string;
+        ward_code: string;
+        lga_code: string;
+        state_code: string;
+        status: string;
+        submission_count: number;
+        source_count: number;
+        consensus_data: {
+          candidate_votes?: Record<string, number>;
+          total_valid_votes?: number;
+          rejected_ballots?: number;
+          total_votes_cast?: number;
+          registered_voters?: number;
+          accredited_voters?: number;
+        } | null;
+        computed_at: string;
+      };
       while (true) {
         let q = supabaseAdmin()
           .from('v_pu_live_status')
@@ -119,8 +138,9 @@ export async function GET(req: NextRequest, { params }: Params) {
         if (stateFilter) q = q.eq('state_code', stateFilter);
         const { data, error } = await q;
         if (error || !data || data.length === 0) break;
+        const rows = data as unknown as Row[];
 
-        for (const u of data) {
+        for (const u of rows) {
           const c = u.consensus_data;
           if (!c) continue;
           const candidate_votes = (c.candidate_votes ?? {}) as Record<string, number>;
@@ -154,8 +174,8 @@ export async function GET(req: NextRequest, { params }: Params) {
           }
         }
 
-        if (data.length < PAGE) break;
-        cursor = data[data.length - 1].pu_code;
+        if (rows.length < PAGE) break;
+        cursor = rows[rows.length - 1].pu_code;
       }
 
       controller.close();

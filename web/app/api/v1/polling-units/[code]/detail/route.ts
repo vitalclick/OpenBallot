@@ -79,10 +79,34 @@ export async function GET(req: NextRequest, { params }: Params) {
     return jsonOk(buildMockDetail(code, electionId));
   }
 
-  const pu = puRes.data as PollingUnitDetail;
-  const submissions = (subsRes.data ?? []) as SubmissionView[];
-  const anomalies = (anomRes.data ?? []) as AnomalyRecord[];
-  const audit = (auditRes.data ?? []) as AuditEvent[];
+  const pu = puRes.data as unknown as PollingUnitDetail;
+
+  // Map Supabase row shape (id, source_type, extracted_data, confidence_score)
+  // onto the SubmissionView wire shape the page expects.
+  type SupaSubmissionRow = {
+    id: string;
+    source_type: 'party_agent' | 'observer' | 'inec_irev';
+    party_code: string | null;
+    image_url: string;
+    image_sha256: string;
+    extracted_data: unknown;
+    submitted_at: string;
+    confidence_score: number | null;
+  };
+  const submissions: SubmissionView[] = ((subsRes.data ?? []) as unknown as SupaSubmissionRow[]).map(
+    (r) => ({
+      submission_id: r.id,
+      source: r.source_type,
+      party: r.party_code,
+      image_url: r.image_url,
+      image_sha256: r.image_sha256,
+      extracted: (r.extracted_data ?? {}) as SubmissionView['extracted'],
+      submitted_at: r.submitted_at,
+      confidence: r.confidence_score ?? 0,
+    })
+  );
+  const anomalies = (anomRes.data ?? []) as unknown as AnomalyRecord[];
+  const audit = (auditRes.data ?? []) as unknown as AuditEvent[];
 
   const manifest = submissions.map((s) => ({
     submission_id: s.submission_id,

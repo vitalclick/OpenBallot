@@ -38,12 +38,11 @@ function uuidv4() {
 
 function getOrCreateDeviceFingerprint(): string {
   if (typeof window === 'undefined') return '';
-  let v = localStorage.getItem(DEVICE_KEY);
-  if (!v) {
-    v = uuidv4();
-    localStorage.setItem(DEVICE_KEY, v);
-  }
-  return v;
+  const existing = localStorage.getItem(DEVICE_KEY);
+  if (existing) return existing;
+  const fresh = uuidv4();
+  localStorage.setItem(DEVICE_KEY, fresh);
+  return fresh;
 }
 
 export interface AgentProfile {
