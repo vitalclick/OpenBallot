@@ -47,6 +47,32 @@ export function buildSources(electionId: string, tileBaseUrl: string) {
 
 export function buildLayers() {
   return [
+    // State polygons - rendered as a fill when the tile carries
+    // polygon geometry (loaded via scripts/load_state_polygons.py).
+    // Falls through to the circle layer below for any state whose
+    // boundary hasn't been loaded yet (those tiles carry a centroid
+    // point rather than a polygon).
+    {
+      id: 'states-fill',
+      type: 'fill',
+      source: 'openballot',
+      'source-layer': 'states',
+      minzoom: 0,
+      maxzoom: 6,
+      filter: ['==', ['geometry-type'], 'Polygon'],
+      paint: {
+        'fill-color': [
+          'case',
+          ['>', ['get', 'units_inec_conflict'], 0], '#dc2626',
+          ['>', ['get', 'units_discrepancy'], 0],   '#f97316',
+          ['>', ['get', 'units_consensus'], 0],     '#22c55e',
+          ['>', ['get', 'units_reporting'], 0],     '#64748b',
+          '#e5e7eb',
+        ],
+        'fill-opacity': 0.55,
+        'fill-outline-color': '#0f172a',
+      },
+    },
     {
       id: 'states-circles',
       type: 'circle',
@@ -54,6 +80,7 @@ export function buildLayers() {
       'source-layer': 'states',
       minzoom: 0,
       maxzoom: 6,
+      filter: ['==', ['geometry-type'], 'Point'],
       paint: {
         'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 6, 5, 18],
         'circle-color': '#0f172a',
