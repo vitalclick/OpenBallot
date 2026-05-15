@@ -32,6 +32,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/v1/health"]
       interval: 30s
@@ -55,6 +57,42 @@ services:
     networks:
       - openballot
 
+  # One-shot DB migrator. Runs to completion on every stack-up,
+  # acquires the advisory lock, applies any pending migrations, and
+  # exits 0. Other services depend on it via
+  # service_completed_successfully so a stuck migration fails the
+  # deploy loudly rather than letting the app boot against the wrong
+  # schema.
+  migrate:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    env_file:
+      - /etc/openballot/worker.env
+    command: ["python", "-m", "cli.migrate"]
+    restart: 'no'
+    networks:
+      - openballot
+
+  # Crashed-worker recovery cron. Every 5 minutes, walks any submission
+  # stuck in processing_status='processing' for >30 min and re-queues
+  # it to Redis. Submissions stuck >4 hours get marked failed with a
+  # recovery_giveup audit event so they don't pile up forever.
+  recovery:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/worker.env
+    # Re-run the recovery script every 300 seconds. Cheap when there's
+    # nothing to do (one SELECT, returns immediately).
+    command:
+      - /bin/sh
+      - -c
+      - 'while true; do python -m cli.recovery; sleep 300; done'
+    depends_on:
+      redis: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+    networks:
+      - openballot
+
   # Background job consumer. Same image as `worker`; runs the CLI entry
   # instead of uvicorn. Production should run 4-8 replicas scaled by
   # queue depth during election peak.
@@ -70,6 +108,7 @@ services:
     depends_on:
       redis: { condition: service_healthy }
       worker: { condition: service_started }
+      migrate: { condition: service_completed_successfully }
     deploy:
       replicas: 2
       resources:
