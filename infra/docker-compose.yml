@@ -49,7 +49,7 @@ services:
       db:
         condition: service_healthy
       redis: { condition: service_started }
-    environment:
+    environment: &worker_env
       DATABASE_URL: postgresql://openballot:openballot@db:5432/openballot
       REDIS_URL: redis://redis:6379/0
       STORAGE_ENDPOINT: http://minio:9000
@@ -58,6 +58,21 @@ services:
       LOG_LEVEL: INFO
       ENVIRONMENT: development
     ports: ["8000:8000"]
+
+  # Background job consumer. Same image as the API worker; just runs the
+  # CLI entrypoint instead of uvicorn. Pulls jobs off Redis, runs
+  # extraction + verification + anomaly checks, publishes SSE events.
+  jobworker:
+    build: ../worker
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_started }
+      worker: { condition: service_started }
+    environment: *worker_env
+    command: ["python", "-m", "cli.run_worker"]
+    # Run multiple replicas in production. Local dev uses one.
+    deploy:
+      replicas: 1
 
   web:
     build: ../web

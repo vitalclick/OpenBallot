@@ -55,6 +55,36 @@ services:
     networks:
       - openballot
 
+  # Background job consumer. Same image as `worker`; runs the CLI entry
+  # instead of uvicorn. Production should run 4-8 replicas scaled by
+  # queue depth during election peak.
+  jobworker:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/worker.env
+    environment:
+      ENVIRONMENT: production
+      LOG_LEVEL: INFO
+    command: ["python", "-m", "cli.run_worker"]
+    depends_on:
+      redis: { condition: service_healthy }
+      worker: { condition: service_started }
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 8G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
+    networks:
+      - openballot
+
   redis:
     image: redis:7-alpine
     restart: unless-stopped

@@ -13,10 +13,12 @@ caller's perspective.
 
 from __future__ import annotations
 
+import json
 import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 
 from .audit import cron as anchor_cron
 from .audit.chain import AuditEvent, verify_chain
@@ -28,6 +30,8 @@ from .config import settings
 from .db import close_pool, init_pool, pool
 from .extraction import build_engine
 from .ingestion import IngestionPipeline
+from .jobs import enqueue_ingestion
+from .jobs.queue import close_queue, get_queue
 from .ingestion.pipeline import IngestionContext
 from .models import IngestionPayload
 
@@ -38,8 +42,10 @@ log = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     logging.basicConfig(level=settings().log_level)
     await init_pool()
+    await get_queue()       # prime the Redis connection for /v1/ingest
     log.info("worker.startup", extra={"env": settings().environment})
     yield
+    await close_queue()
     await close_pool()
 
 
@@ -118,8 +124,11 @@ async def ingest(payload: IngestionPayload) -> dict:
             "flags": result.flags,
         }
 
-    extraction = await _extractor.run(payload.image_url, payload.pu_code)
-
+    # Async ingestion: persist the submission row with processing_status
+    # 'queued' immediately, then enqueue a background job that runs the
+    # heavy extraction + verification + anomaly + audit work. The HTTP
+    # path returns 202 in milliseconds. The PWA polls /v1/submissions/{id}
+    # or subscribes to the SSE event stream for the final state.
     async with pool().acquire() as conn:
         await conn.execute(
             """
@@ -127,10 +136,10 @@ async def ingest(payload: IngestionPayload) -> dict:
               id, election_id, pu_code, source_type, party_code,
               image_url, image_sha256, image_bytes, exif_metadata,
               gps_lat, gps_lng, gps_distance_metres, captured_at,
-              confidence_score, extracted_data, per_field_confidence,
-              validation_flags, review_status
+              validation_flags, review_status,
+              processing_status, queued_at
             ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10,$11,$12,$13,
-                      $14,$15::jsonb,$16::jsonb,$17::jsonb,$18)
+                      $14::jsonb,$15,'queued',NOW())
             """,
             result.submission_id,
             payload.election_id,
@@ -145,53 +154,78 @@ async def ingest(payload: IngestionPayload) -> dict:
             payload.gps.lng if payload.gps else None,
             result.distance_metres,
             payload.captured_at,
-            extraction.confidence_score,
-            extraction.extracted.model_dump_json(),
-            extraction.per_field_confidence,
             result.flags,
-            "auto_approved"
-            if (
-                extraction.confidence_score >= s.extraction_confidence_floor
-                and extraction.arithmetic.consistent
-            )
-            else "pending_review",
+            "pending_review",
         )
-
         await conn.execute(
             """
             INSERT INTO audit_log (event_type, entity_type, entity_id, event_data)
             VALUES ('submission.created', 'ec8a_submission', $1, $2::jsonb)
             """,
             str(result.submission_id),
-            {
+            json.dumps({
                 "election_id": payload.election_id,
                 "pu_code": payload.pu_code,
                 "image_sha256": payload.image_sha256,
                 "source": payload.source_type.value,
                 "party": payload.party_code,
-            },
+            }),
         )
 
-    # Inline sanity-layer anomaly detection. Cheap, deterministic,
-    # publishable immediately. Statistical + historical layers run as a
-    # batch sweep so they can pool peer/baseline data.
-    sanity_hits = await _anomaly.run_inline_sanity(
-        extracted=extraction.extracted,
-        election_id=payload.election_id,
+    queue = await get_queue()
+    await enqueue_ingestion(
+        queue,
         submission_id=result.submission_id,
+        election_id=payload.election_id,
+        pu_code=payload.pu_code,
+        image_url=payload.image_url,
+        image_sha256=payload.image_sha256,
     )
 
-    return {
-        "accepted": True,
-        "submission_id": str(result.submission_id),
-        "confidence": extraction.confidence_score,
-        "arithmetic_consistent": extraction.arithmetic.consistent,
-        "extractor": extraction.backend_used,
-        "flags": result.flags,
-        "anomalies": [
-            {"type": h.anomaly_type.value, "severity": int(h.severity)} for h in sanity_hits
-        ],
-    }
+    return JSONResponse(
+        status_code=202,
+        content={
+            "accepted": True,
+            "submission_id": str(result.submission_id),
+            "processing_status": "queued",
+            "flags": result.flags,
+            "poll_url": f"/v1/submissions/{result.submission_id}",
+        },
+    )
+
+
+@app.get("/v1/submissions/{submission_id}")
+async def get_submission_status(submission_id: str) -> dict:
+    """Poll the lifecycle state of a submission. Used by the PWA between
+    upload and the final extraction state; also exposed publicly so any
+    client can confirm a submission landed.
+    """
+    async with pool().acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            SELECT id, election_id, pu_code, source_type, party_code,
+                   image_url, image_sha256, processing_status, processing_error,
+                   queued_at, extraction_started_at, extraction_completed_at,
+                   confidence_score, review_status
+              FROM ec8a_submissions
+             WHERE id = $1
+            """,
+            submission_id,
+        )
+        if row is None:
+            raise HTTPException(status_code=404, detail={"code": "not_found"})
+        return {
+            "id": str(row["id"]),
+            "election_id": row["election_id"],
+            "pu_code": row["pu_code"],
+            "processing_status": row["processing_status"],
+            "processing_error": row["processing_error"],
+            "review_status": row["review_status"],
+            "confidence_score": float(row["confidence_score"]) if row["confidence_score"] else None,
+            "queued_at": row["queued_at"].isoformat() if row["queued_at"] else None,
+            "extraction_started_at": row["extraction_started_at"].isoformat() if row["extraction_started_at"] else None,
+            "extraction_completed_at": row["extraction_completed_at"].isoformat() if row["extraction_completed_at"] else None,
+        }
 
 
 @app.get("/v1/audit/verify")
