@@ -2,6 +2,7 @@
   "nav": {
     "map": "Map",
     "discrepancies": "Wahala",
+    "anomalies": "Strange Numbers",
     "agent": "Agent",
     "admin": "Admin"
   },

@@ -23,6 +23,7 @@ from .audit.chain import AuditEvent, verify_chain
 from .audit.ethereum_client import build_from_settings as build_eth_client
 from .auth.router import router as auth_router
 from .admin.router import router as admin_router
+from .anomaly import AnomalyEngine
 from .config import settings
 from .db import close_pool, init_pool, pool
 from .extraction import build_engine
@@ -56,6 +57,7 @@ _pipeline = IngestionPipeline()
 # configured; otherwise it returns paired stubs. Either way the engine's
 # protocol is identical from the ingest endpoint's perspective.
 _extractor = build_engine()
+_anomaly = AnomalyEngine()
 
 
 @app.get("/v1/health")
@@ -170,6 +172,15 @@ async def ingest(payload: IngestionPayload) -> dict:
             },
         )
 
+    # Inline sanity-layer anomaly detection. Cheap, deterministic,
+    # publishable immediately. Statistical + historical layers run as a
+    # batch sweep so they can pool peer/baseline data.
+    sanity_hits = await _anomaly.run_inline_sanity(
+        extracted=extraction.extracted,
+        election_id=payload.election_id,
+        submission_id=result.submission_id,
+    )
+
     return {
         "accepted": True,
         "submission_id": str(result.submission_id),
@@ -177,6 +188,9 @@ async def ingest(payload: IngestionPayload) -> dict:
         "arithmetic_consistent": extraction.arithmetic.consistent,
         "extractor": extraction.backend_used,
         "flags": result.flags,
+        "anomalies": [
+            {"type": h.anomaly_type.value, "severity": int(h.severity)} for h in sanity_hits
+        ],
     }
 
 
@@ -209,6 +223,26 @@ async def audit_verify(limit: int = 1000) -> dict:
     ]
     ok, broken = verify_chain(events)
     return {"ok": ok, "events_checked": len(events), "first_broken_seq": broken}
+
+
+@app.post("/v1/anomaly/sweep")
+async def anomaly_sweep(election_id: str = "2027-presidential") -> dict:
+    """Run the batch anomaly sweep over an election.
+
+    Refreshes the peer-distribution materialised views, then runs the
+    statistical and historical detectors. Idempotent: re-runs only emit
+    rows for newly-anomalous PUs (the table has a unique index on
+    (election_id, pu_code, anomaly_type, submission_id)).
+    """
+    async with pool().acquire() as conn:
+        await conn.execute("SELECT refresh_anomaly_baselines()")
+    stat_inserted = await _anomaly.run_statistical_sweep(election_id)
+    hist_inserted = await _anomaly.run_historical_sweep(election_id)
+    return {
+        "election_id": election_id,
+        "statistical_inserted": stat_inserted,
+        "historical_inserted": hist_inserted,
+    }
 
 
 @app.post("/v1/audit/anchor")

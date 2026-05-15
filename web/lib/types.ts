@@ -84,6 +84,49 @@ export interface DiscrepancyRecord {
   submissions: SubmissionView[];
 }
 
+export type AnomalyType =
+  | 'votes_exceed_registered'
+  | 'turnout_exceeds_accreditation'
+  | 'rejected_exceeds_cast'
+  | 'leader_extreme_share'
+  | 'zero_registered_voters'
+  | 'cast_zero_but_votes_recorded'
+  | 'turnout_outlier_ward'
+  | 'turnout_outlier_lga'
+  | 'leader_share_outlier_ward'
+  | 'turnout_shift_vs_2023'
+  | 'leader_party_shift_vs_2023';
+
+export interface AnomalyRecord {
+  id: string;
+  election_id: string;
+  pu_code: string;
+  pu_name: string;
+  ward_code: string;
+  lga_code: string;
+  state_code: string;
+  anomaly_type: AnomalyType;
+  severity: 1 | 2 | 3 | 4 | 5;
+  details: Record<string, unknown>;
+  detected_at: string;
+  resolved_at: string | null;
+  submission_id: string | null;
+}
+
+export const ANOMALY_LABELS: Record<AnomalyType, string> = {
+  votes_exceed_registered: 'Votes cast exceeds registered voters',
+  turnout_exceeds_accreditation: 'Turnout exceeds accreditation',
+  rejected_exceeds_cast: 'Rejected ballots exceed total cast',
+  leader_extreme_share: 'Leader received an extreme share (>=97%)',
+  zero_registered_voters: 'Registered voters reported as zero',
+  cast_zero_but_votes_recorded: 'Votes recorded with zero total cast',
+  turnout_outlier_ward: 'Turnout is a statistical outlier in the ward',
+  turnout_outlier_lga: 'Turnout is a statistical outlier in the LGA',
+  leader_share_outlier_ward: 'Leader share is a statistical outlier in the ward',
+  turnout_shift_vs_2023: 'Turnout shifted dramatically vs. 2023 baseline',
+  leader_party_shift_vs_2023: 'Winning party flipped with extreme share swing vs. 2023',
+};
+
 export const STATUS_COLOURS: Record<VerificationStatus, string> = {
   no_data: '#e5e7eb',
   single_source: '#f6c453',

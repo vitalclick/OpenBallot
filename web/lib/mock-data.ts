@@ -3,6 +3,7 @@
 // any infrastructure - useful for investor demos and CI smoke tests.
 
 import type {
+  AnomalyRecord,
   DiscrepancyRecord,
   NationalRollup,
   PollingUnitDetail,
@@ -177,6 +178,63 @@ export function mockDiscrepancies(): DiscrepancyRecord[] {
       severity: u.status === 'inec_conflict' ? 5 : 3,
       escalation_status: u.status === 'inec_conflict' ? 'notified' : 'open',
       submissions: subs,
+    };
+  });
+}
+
+export function mockAnomalies(): AnomalyRecord[] {
+  // Drawn from the same mock units as discrepancies + a few extras so the
+  // anomaly register has variety on a fresh clone.
+  const units = mockPollingUnits().slice(0, 18);
+  const types: AnomalyRecord['anomaly_type'][] = [
+    'votes_exceed_registered',
+    'turnout_exceeds_accreditation',
+    'leader_extreme_share',
+    'turnout_outlier_ward',
+    'leader_share_outlier_ward',
+    'turnout_shift_vs_2023',
+    'leader_party_shift_vs_2023',
+  ];
+  return units.map((u, i) => {
+    const type = types[i % types.length];
+    const sev: 1 | 2 | 3 | 4 | 5 =
+      type === 'votes_exceed_registered' || type === 'turnout_exceeds_accreditation'
+        ? 5
+        : type === 'leader_extreme_share' || type === 'turnout_shift_vs_2023'
+        ? 4
+        : 3;
+    let details: Record<string, unknown> = {};
+    if (type === 'votes_exceed_registered') {
+      details = { registered: 412, cast: 580, excess: 168 };
+    } else if (type === 'leader_extreme_share') {
+      details = { leader: 'APC', share: 0.985, leader_votes: 428, total_valid: 434 };
+    } else if (type === 'turnout_outlier_ward') {
+      details = { z_score: 6.2, pu_turnout: 0.98, ward_mean: 0.61, ward_stddev: 0.06, ward_n: 22 };
+    } else if (type === 'turnout_shift_vs_2023') {
+      details = { current_turnout: 0.89, baseline_turnout: 0.32, shift_pp: 57 };
+    } else if (type === 'leader_party_shift_vs_2023') {
+      details = {
+        current_leader: 'APC',
+        current_share: 0.91,
+        baseline_leader: 'LP',
+        baseline_share: 0.28,
+        share_shift_pp: 63,
+      };
+    }
+    return {
+      id: `anom-${i}`,
+      election_id: '2027-presidential',
+      pu_code: u.pu_code,
+      pu_name: u.pu_name,
+      ward_code: u.ward_code,
+      lga_code: u.lga_code,
+      state_code: u.state_code,
+      anomaly_type: type,
+      severity: sev,
+      details,
+      detected_at: new Date(Date.now() - 1000 * 60 * (10 + i * 4)).toISOString(),
+      resolved_at: null,
+      submission_id: null,
     };
   });
 }

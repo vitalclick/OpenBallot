@@ -2,6 +2,7 @@
   "nav": {
     "map": "Map",
     "discrepancies": "Discrepancies",
+    "anomalies": "Anomalies",
     "agent": "Agent",
     "admin": "Admin"
   },
