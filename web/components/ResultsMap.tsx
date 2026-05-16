@@ -34,6 +34,17 @@ type GeoFeature = {
 };
 type GeoCollection = { type: 'FeatureCollection'; features: GeoFeature[] };
 
+// LGA GeoJSON (lazy-loaded from /nigeria-lgas.geo.json) so the state
+// drill-down shows real LGA polygons matching what /en/results renders,
+// instead of just centroid circles.
+type LgaFeature = {
+  type: 'Feature';
+  properties: { name: string; kind: 'lga'; state_code: string | null; state_name: string };
+  geometry: Geom;
+};
+type LgaCollection = { type: 'FeatureCollection'; features: LgaFeature[] };
+
+
 // The public results map.
 //
 // Rendering hierarchy (see lib/map-focus.ts):
@@ -577,6 +588,28 @@ function bboxToViewBox(
   return [x1 - pad, y1 - pad, w + pad * 2, h + pad * 2];
 }
 
+// % verified rounded to whole %.
+function pctVerified(a: RegionAggregate): number {
+  if (a.pu_count <= 0) return 0;
+  return Math.round(((a.units_consensus + a.units_inec_confirmed) / a.pu_count) * 100);
+}
+
+// Green ramp mirroring the proportional-symbol legend so polygons and
+// circles read the same. No data → light grey, partial reporting →
+// amber, ≥50% consensus → light green, ≥85% → strong green.
+function regionFill(a: RegionAggregate): string {
+  if (a.pu_count <= 0) return '#e2e8f0';
+  const verified = a.units_consensus + a.units_inec_confirmed;
+  const pctV = verified / a.pu_count;
+  if (pctV >= 0.85) return '#16a34a';
+  if (pctV >= 0.50) return '#4ade80';
+  if (pctV >= 0.20) return '#a3e635';
+  const pctR = a.units_reporting / a.pu_count;
+  if (pctR >= 0.50) return '#facc15';
+  if (a.units_reporting > 0) return '#fde68a';
+  return '#e2e8f0';
+}
+
 function pointsBbox(pts: Array<{ lng: number; lat: number }>): [number, number, number, number] | null {
   if (pts.length === 0) return null;
   let lngMin = Infinity, lngMax = -Infinity, latMin = Infinity, latMax = -Infinity;
@@ -608,6 +641,7 @@ function SvgFallback({
   onSelectPU: (u: PollingUnitDetail) => void;
 }) {
   const [geo, setGeo] = useState<GeoCollection | null>(null);
+  const [lgaGeo, setLgaGeo] = useState<LgaCollection | null>(null);
   const [zoomScale, setZoomScale] = useState(1);
   const [panOffset, setPanOffset] = useState<[number, number]>([0, 0]);
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -620,6 +654,18 @@ function SvgFallback({
       .catch(() => {/* fall back to bare background */});
     return () => { cancelled = true; };
   }, []);
+
+  // Lazy-load LGA polygons on first state drill-down. Same dataset
+  // /en/results uses, so the two pages now render identical geometry.
+  useEffect(() => {
+    if (focus.level === 'country' || lgaGeo) return;
+    let cancelled = false;
+    fetch('/nigeria-lgas.geo.json')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (!cancelled && j) setLgaGeo(j as LgaCollection); })
+      .catch(() => {/* tolerate missing file */});
+    return () => { cancelled = true; };
+  }, [focus.level, lgaGeo]);
 
   // Reset manual zoom/pan whenever the user drills in or out.
   useEffect(() => { setZoomScale(1); setPanOffset([0, 0]); }, [focus]);
@@ -643,6 +689,19 @@ function SvgFallback({
     () => geo?.features.find((f) => f.properties.kind === 'country') ?? null,
     [geo]
   );
+
+  // Aggregate lookups so polygon click handlers can resolve the
+  // matching region row (by INEC state code or by lowercase LGA name).
+  const aggregatesByCode = useMemo(() => {
+    const m = new Map<string, RegionAggregate>();
+    for (const r of aggregates) m.set(r.code, r);
+    return m;
+  }, [aggregates]);
+  const aggregatesByName = useMemo(() => {
+    const m = new Map<string, RegionAggregate>();
+    for (const r of aggregates) m.set(r.name.toLowerCase(), r);
+    return m;
+  }, [aggregates]);
 
   // viewBox = bbox of country / focused state / focused LGA / focused ward.
   // For LGA & ward we don't have boundary polygons in the SVG fallback,
@@ -775,22 +834,30 @@ function SvgFallback({
         />
       )}
 
+      {/*
+        State polygons. At country focus the fill is the % verified
+        green ramp (replacing the old "transparent + giant circle"
+        rendering). When the user has drilled into a state, the other
+        states fade to a light tint for geographic context while the
+        focused state's polygon is left empty so its LGAs show through.
+      */}
       {states.map((s) => {
         const code = isoToStateCode(s.properties.iso);
+        const agg = code ? aggregatesByCode.get(code) : undefined;
         const isFocused = focus.level !== 'country' && focus.state_code === code;
         const isOtherFocused = focus.level !== 'country' && !isFocused;
-        // States are only directly clickable when we're at country focus.
-        // Once drilled in, the LGA/ward selection happens via aggregate
-        // symbols overlaid on the focused state.
         const clickable = focus.level === 'country';
+        const fill = !clickable && !isFocused
+          ? '#f1f5f9'
+          : agg ? regionFill(agg) : '#e2e8f0';
         return (
           <path
             key={s.properties.iso ?? s.properties.name}
             d={featureToPath(s)}
-            fill={isFocused ? '#dbeafe' : 'transparent'}
-            fillOpacity={isOtherFocused ? 0.1 : 1}
+            fill={isFocused ? 'transparent' : fill}
+            fillOpacity={isOtherFocused ? 0.55 : 1}
             stroke={isFocused ? '#1d4ed8' : '#94a3b8'}
-            strokeWidth={isFocused ? 1.4 : 0.6}
+            strokeWidth={isFocused ? 1.6 : 0.6}
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
             style={{ cursor: clickable ? 'pointer' : 'default' }}
@@ -798,15 +865,76 @@ function SvgFallback({
               clickable
                 ? guarded(() => {
                     if (!code) return;
+                    onSelectRegion(agg ?? null);
                     onFocus({ level: 'state', state_code: code, state_name: s.properties.name });
                   })
                 : undefined
             }
           >
-            <title>{s.properties.name}</title>
+            <title>
+              {s.properties.name}
+              {agg ? ` — ${pctVerified(agg)}% verified, ${agg.pu_count.toLocaleString()} PUs` : ''}
+            </title>
           </path>
         );
       })}
+
+      {/*
+        LGA polygons at state focus. Lazy-loaded from /nigeria-lgas.geo.json
+        (same dataset /en/results uses). Filled by % verified, with a
+        red/orange outline on conflict regions to flag problems. At LGA
+        focus we keep them drawn but dim the non-focused ones so the
+        focused LGA stands out.
+      */}
+      {(focus.level === 'state' || focus.level === 'lga') && lgaGeo &&
+        lgaGeo.features
+          .filter((f) => f.properties.state_code === focus.state_code)
+          .map((l) => {
+            // At state focus the aggregates are LGA-level so a name
+            // match colours the polygon by % verified. At LGA focus
+            // the aggregates are wards, so we just dim non-focused
+            // LGAs and leave the focused one highlighted.
+            const agg = focus.level === 'state'
+              ? aggregatesByName.get(l.properties.name.toLowerCase())
+              : undefined;
+            const isFocused = focus.level === 'lga' && l.properties.name === focus.lga_name;
+            const isOtherFocused = focus.level === 'lga' && !isFocused;
+            const fill = agg ? regionFill(agg) : '#f1f5f9';
+            const stroke = agg && agg.units_inec_conflict > 0
+              ? '#dc2626'
+              : agg && agg.units_discrepancy > 0
+                ? '#f97316'
+                : isFocused ? '#0f172a' : '#94a3b8';
+            return (
+              <path
+                key={l.properties.name}
+                d={featureToPath(l as unknown as GeoFeature)}
+                fill={fill}
+                fillOpacity={isOtherFocused ? 0.4 : 1}
+                stroke={stroke}
+                strokeWidth={isFocused ? 1.5 : 0.5}
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+                style={{ cursor: focus.level === 'state' ? 'pointer' : 'default' }}
+                onClick={
+                  focus.level === 'state'
+                    ? guarded(() => {
+                        if (!agg) return;
+                        onSelectRegion(agg);
+                        onFocus(descend(focus, {
+                          code: agg.code, name: agg.name, state_code: agg.state_code,
+                        }));
+                      })
+                    : undefined
+                }
+              >
+                <title>
+                  {l.properties.name}
+                  {agg ? ` — ${pctVerified(agg)}% verified, ${agg.pu_count.toLocaleString()} PUs` : ' — no data'}
+                </title>
+              </path>
+            );
+          })}
 
       {country && (
         <path
@@ -821,22 +949,19 @@ function SvgFallback({
       )}
 
       {/*
-        Level-aware overlay:
-          - country / state / lga: proportional symbols at child centroids
-          - ward: individual polling unit dots (always small enough to read)
+        Ward proportional symbols at LGA focus. (No client-side ward
+        polygon GeoJSON exists yet, so we still render wards as sized
+        circles inside the focused LGA's polygon.) At country / state
+        focus the polygons above are the visualization, so no overlay.
       */}
-      {focus.level !== 'ward' && (
+      {focus.level === 'lga' && (
         <AggregateSymbols
           regions={aggregates}
           project={(lng, lat) => ({ x: toX(lng), y: toY(lat) })}
           pxPerUnit={pxPerUnit}
           onSelect={guarded((r) => {
             onSelectRegion(r);
-            if (r.level === 'state' || r.level === 'lga') {
-              onFocus(descend(focus, { code: r.code, name: r.name, state_code: r.state_code }));
-            } else if (r.level === 'ward') {
-              onFocus(descend(focus, { code: r.code, name: r.name, state_code: r.state_code }));
-            }
+            onFocus(descend(focus, { code: r.code, name: r.name, state_code: r.state_code }));
           })}
         />
       )}
