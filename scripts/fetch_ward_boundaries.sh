@@ -1,37 +1,64 @@
 #!/usr/bin/env bash
 # Download the GRID3 Nigeria Operational Wards layer.
 #
-# The dataset is published by GRID3 (Geo-Referenced Infrastructure and
-# Demographic Data for Development) and mirrored on the Humanitarian Data
-# Exchange as part of OCHA's Common Operational Datasets - Administrative
-# Boundaries for Nigeria (slug: cod-ab-nga). It covers all ~8,809 wards
-# nationwide at admin level 3.
+# IMPORTANT - dataset selection:
+#   The OCHA COD-AB Nigeria dataset (data.humdata.org/dataset/cod-ab-nga)
+#   only ships 714 wards at admin level 3 - PARTIAL COVERAGE. Do not use
+#   it as the boundary source.
 #
-# Source page (browse for the latest resource URL if the default 404s):
-#   https://data.humdata.org/dataset/cod-ab-nga
+#   The full-coverage layer (~8,809 wards) is published separately by
+#   GRID3 (Geo-Referenced Infrastructure and Demographic Data for
+#   Development) as "Nigeria Operational Wards". It is hosted on:
+#     1. GRID3 data portal:  https://data.grid3.org/
+#        Search "Nigeria operational wards". Free account required;
+#        export as GeoJSON or download the shapefile.
+#     2. Humanitarian Data Exchange (HDX), as a separate dataset from
+#        cod-ab-nga. Search HDX for: GRID3 Nigeria operational wards
+#        https://data.humdata.org/search?q=grid3+nigeria+operational+wards
+#
+# There is no stable default URL for this script because GRID3 rotates
+# the resource UUIDs on republish and the HDX mirror sometimes lags.
+# Grab the latest resource link from one of the pages above and pass it
+# via WARDS_URL.
 #
 # Usage:
-#   ./scripts/fetch_ward_boundaries.sh                  # default URL
-#   WARDS_URL=https://example.org/path.zip \
-#     ./scripts/fetch_ward_boundaries.sh                # override
+#   WARDS_URL=https://data.grid3.org/.../wards.geojson \
+#     ./scripts/fetch_ward_boundaries.sh
 #
-# The downloaded archive (zip or GeoJSON) lands in data/ward_boundaries/.
-# This directory is gitignored — the raw file is ~60 MB and re-fetchable.
+#   # or, if you have a shapefile bundle:
+#   WARDS_URL=https://.../nga_wards.zip \
+#     ./scripts/fetch_ward_boundaries.sh
+#   # then convert with: ogr2ogr -f GeoJSON wards.geojson nga_wards.shp
 #
-# After download, run:
-#   python scripts/load_ward_boundaries.py data/ward_boundaries/<file>.geojson
+# The download lands in data/ward_boundaries/ (gitignored, ~60 MB).
+#
+# After download:
+#   DATABASE_URL=postgresql://... \
+#     python scripts/load_ward_boundaries.py data/ward_boundaries/<file>.geojson
 
 set -euo pipefail
 
 DEST_DIR="data/ward_boundaries"
 mkdir -p "$DEST_DIR"
 
-# HDX resource URL for the COD-AB Nigeria shapefile bundle. The slug is
-# stable; the resource UUID can rotate when OCHA republishes, in which
-# case override via WARDS_URL.
-DEFAULT_URL="https://data.humdata.org/dataset/cod-ab-nga/resource/nga_admbnda_adm3.geojson"
-URL="${WARDS_URL:-$DEFAULT_URL}"
+if [[ -z "${WARDS_URL:-}" ]]; then
+  cat <<'EOF' >&2
+WARDS_URL is not set.
 
+The OCHA COD-AB Nigeria dataset only covers 714 wards (partial). For
+the full ~8,809-ward layer, get the GRID3 "Nigeria Operational Wards"
+resource URL from one of:
+
+  https://data.grid3.org/              (search "operational wards")
+  https://data.humdata.org/search?q=grid3+nigeria+operational+wards
+
+Then re-run with:
+  WARDS_URL=<that-url> ./scripts/fetch_ward_boundaries.sh
+EOF
+  exit 2
+fi
+
+URL="$WARDS_URL"
 OUT="$DEST_DIR/$(basename "$URL")"
 
 echo "Fetching $URL"
@@ -49,6 +76,9 @@ case "$OUT" in
   *.zip)
     echo "Unzipping into $DEST_DIR"
     unzip -o "$OUT" -d "$DEST_DIR"
+    echo
+    echo "Shapefile downloaded. Convert to GeoJSON before loading:"
+    echo "  ogr2ogr -f GeoJSON $DEST_DIR/wards.geojson $DEST_DIR/<wards>.shp"
     ;;
 esac
 

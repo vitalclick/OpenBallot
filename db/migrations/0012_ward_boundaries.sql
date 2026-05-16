@@ -2,8 +2,9 @@
 -- Ward boundary polygons (~8,800 wards nationwide).
 --
 -- INEC does not publish ward shapes. The de facto open dataset is the
--- GRID3 Nigeria Operational Wards layer, mirrored on HDX as part of the
--- OCHA Common Operational Datasets (cod-ab-nga). Polygons are loaded
+-- GRID3 Nigeria Operational Wards layer (full ~8,809-ward coverage),
+-- hosted on data.grid3.org and HDX (NOT the OCHA cod-ab-nga dataset,
+-- whose admin-3 layer only ships 714 wards). Polygons are loaded
 -- operator-side via scripts/load_ward_boundaries.py, which reconciles
 -- GRID3 ward names to INEC ward codes (see scripts/reconcile_ward_names.py
 -- and docs/WARD_BOUNDARIES.md).

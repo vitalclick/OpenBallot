@@ -2,24 +2,35 @@
 
 INEC does not publish ward shapes. To render the ward-level choropleth
 (zooms 9–11 in `mvt_wards`) with real polygons instead of centroids, the
-portal pulls ward boundaries from **GRID3 Nigeria Operational Wards**,
-mirrored on the Humanitarian Data Exchange as part of OCHA's Common
-Operational Datasets (slug `cod-ab-nga`). The dataset covers ~8,809
-wards nationwide at admin level 3 and is the de facto reference used by
-NPC, NBS, and most donor projects.
+portal pulls ward boundaries from **GRID3 Nigeria Operational Wards**.
+The dataset covers ~8,809 wards nationwide at admin level 3 and is the
+de facto reference used by NPC, NBS, and most donor projects.
 
 The polygon table lives in `db/migrations/0012_ward_boundaries.sql`.
 
-## Source
+## Source — and which dataset NOT to use
 
-- Dataset: GRID3 Nigeria Operational Wards, admin level 3
-- HDX page: https://data.humdata.org/dataset/cod-ab-nga
-- Vintage: ward boundaries are revised infrequently; pin the file you
-  load by leaving it on disk under `data/ward_boundaries/`.
-- Licence: OCHA COD-AB is published under the OCHA terms of use (open,
-  attribution required). GRID3 releases the underlying layer under
-  CC BY 4.0. Preserve attribution to **GRID3** in any public-facing
-  rendering or downloadable export.
+There are two HDX entries that look like they fit; only one does.
+
+- **DO NOT USE: OCHA COD-AB Nigeria** (`data.humdata.org/dataset/cod-ab-nga`).
+  This dataset's admin-3 layer only covers **714 wards** ("partial
+  coverage") — about 8% of the country. It is fine for state / LGA
+  but useless as a national ward layer.
+- **USE: GRID3 Nigeria Operational Wards**. Full ~8,809-ward national
+  coverage. Hosted on:
+  - GRID3 data portal: https://data.grid3.org/ (search
+    "Nigeria operational wards"; free account required)
+  - HDX, as a separate dataset from `cod-ab-nga`. Search HDX for
+    `GRID3 Nigeria operational wards`.
+
+Pin the file you load by leaving it on disk under
+`data/ward_boundaries/`. GRID3 rotates resource UUIDs on republish, so
+`scripts/fetch_ward_boundaries.sh` requires you to supply the resource
+URL via `WARDS_URL` rather than baking in a default that will rot.
+
+Licence: GRID3 releases the layer under **CC BY 4.0**. Preserve
+attribution to **GRID3** in any public-facing rendering or downloadable
+export.
 
 ## INEC reconciliation
 
@@ -57,9 +68,11 @@ DATABASE_URL=postgresql://... \
 # 2. Apply the boundary migration.
 psql "$DATABASE_URL" -f db/migrations/0012_ward_boundaries.sql
 
-# 3. Fetch the GRID3 ward GeoJSON.
-./scripts/fetch_ward_boundaries.sh
-# (or set WARDS_URL=... to override the default HDX resource URL)
+# 3. Fetch the GRID3 ward GeoJSON. WARDS_URL is required - grab the
+#    latest resource URL from data.grid3.org or HDX (NOT cod-ab-nga,
+#    that one is partial). See scripts/fetch_ward_boundaries.sh.
+WARDS_URL=https://data.grid3.org/.../wards.geojson \
+  ./scripts/fetch_ward_boundaries.sh
 
 # 4. (optional) Dry-run reconciliation to see how many wards match
 #     before touching the DB.
