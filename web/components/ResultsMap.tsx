@@ -82,18 +82,20 @@ export function ResultsMap({ electionId }: Props) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_360px] h-full">
-      <div ref={containerRef} className="relative bg-slate-100">
-        {mapboxToken ? (
-          <MapboxRenderer
-            electionId={electionId}
-            token={mapboxToken}
-            onSelect={setSelected}
-          />
-        ) : (
-          <SvgFallback units={filtered} onSelect={setSelected} />
-        )}
-        <Legend />
+      <div ref={containerRef} className="flex flex-col bg-slate-100">
         <FilterBar value={filter} onChange={setFilter} />
+        <div className="relative flex-1 min-h-0">
+          {mapboxToken ? (
+            <MapboxRenderer
+              electionId={electionId}
+              token={mapboxToken}
+              onSelect={setSelected}
+            />
+          ) : (
+            <SvgFallback units={filtered} onSelect={setSelected} />
+          )}
+          <Legend />
+        </div>
       </div>
       <aside className="border-l bg-white overflow-y-auto">
         <PUDetailPane unit={selected} />
@@ -120,7 +122,7 @@ function FilterBar({
     'inec_conflict',
   ];
   return (
-    <div className="absolute top-3 left-3 bg-white rounded-md shadow px-2 py-1 flex flex-wrap gap-1 max-w-[90%]">
+    <div className="m-3 mb-4 bg-white rounded-md shadow px-2 py-1 flex flex-wrap gap-1">
       {opts.map((s) => (
         <button
           key={s}
@@ -138,7 +140,7 @@ function FilterBar({
 
 function Legend() {
   return (
-    <div className="absolute bottom-3 left-3 bg-white rounded-md shadow p-3 text-xs">
+    <div className="absolute bottom-3 right-3 bg-white rounded-md shadow p-3 text-xs">
       <div className="font-semibold mb-1">Verification status</div>
       {(Object.keys(STATUS_COLOURS) as VerificationStatus[]).map((s) => (
         <div key={s} className="flex items-center gap-2 py-0.5">
