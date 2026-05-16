@@ -1,7 +1,7 @@
 # Repository structure
 
 ```
-openballot-nigeria/
+OpenBallot/
 ├── README.md                          # Project overview (preserved from pre-scaffold)
 ├── COLLATION_VERIFICATION_ENGINE_SPEC.md  # Full technical specification
 ├── LICENSE                            # AGPL-3.0

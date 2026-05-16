@@ -490,7 +490,7 @@ var, with the right file permissions.
 2. **Create `/etc/openballot/worker.env`** by copying the template:
 
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/vitalclick/Nigeria-Election-Results-Portal/main/.env.example \
+   curl -fsSL https://raw.githubusercontent.com/vitalclick/OpenBallot/main/.env.example \
      -o /etc/openballot/worker.env
    chmod 600 /etc/openballot/worker.env
    ```
@@ -572,7 +572,7 @@ and connected to Supabase + R2.
    sudo mkdir -p /srv/openballot
    sudo chown openballot:openballot /srv/openballot
    cd /srv/openballot
-   git clone https://github.com/vitalclick/Nigeria-Election-Results-Portal.git .
+   git clone https://github.com/vitalclick/OpenBallot.git .
    git checkout v0.1.0    # or the latest tag
    ```
 
@@ -926,7 +926,7 @@ tighten the anchor cron cadence.
 1. **Provision the Vercel project**:
 
    - Sign in at https://vercel.com with the team GitHub account
-   - New project → import `vitalclick/Nigeria-Election-Results-Portal`
+   - New project → import `vitalclick/OpenBallot`
    - Framework preset: **Next.js** (auto-detected)
    - Root directory: `web/`
    - Environment variables: set every `NEXT_PUBLIC_*` from your

@@ -764,10 +764,10 @@ OpenBallot Nigeria is open source and community contributions are welcome.
 
 ```bash
 # Clone the repository
-git clone https://github.com/openballot-nigeria/openballot
+git clone https://github.com/vitalclick/OpenBallot
 
 # Install dependencies
-cd openballot
+cd OpenBallot
 npm install
 
 # Copy environment variables
@@ -839,7 +839,7 @@ See [LICENSE](/LICENSE) for the full licence text.
 
 **Website:** https://openballot.ng  
 **API:** https://api.openballot.ng  
-**GitHub:** https://github.com/openballot-nigeria  
+**GitHub:** https://github.com/vitalclick/OpenBallot  
 **Contact:** hello@openballot.ng  
 **Press:** press@openballot.ng  
 **Grants:** grants@openballot.ng  

@@ -164,7 +164,7 @@ export default function LandingPage({ params }: { params: { locale: string } }) 
                 <li><a href="/docs" className="hover:underline">Public API</a></li>
                 <li><a href="/api/v1/audit/hashes?election_id=2023-presidential" className="hover:underline">Hash manifest</a></li>
                 <li>
-                  <a href="https://github.com/vitalclick/openballot" className="hover:underline">
+                  <a href="https://github.com/vitalclick/OpenBallot" className="hover:underline">
                     GitHub
                   </a>
                 </li>

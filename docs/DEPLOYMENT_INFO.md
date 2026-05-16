@@ -497,7 +497,7 @@ both.
 ### Provisioning
 
 1. Sign in at https://vercel.com with the team GitHub account
-2. New project → import `vitalclick/Nigeria-Election-Results-Portal`
+2. New project → import `vitalclick/OpenBallot`
 3. Framework preset: **Next.js** (auto-detected)
 4. Root directory: `web/`
 5. Environment variables: set ALL of the `NEXT_PUBLIC_*` vars from the

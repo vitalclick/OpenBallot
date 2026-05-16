@@ -7,8 +7,8 @@ observers, and Nigerian developers in particular are very welcome.
 ## Quick start
 
 ```bash
-git clone https://github.com/vitalclick/Nigeria-Election-Results-Portal
-cd Nigeria-Election-Results-Portal
+git clone https://github.com/vitalclick/OpenBallot
+cd OpenBallot
 docker compose -f infra/docker-compose.yml up --build
 # web   -> http://localhost:3000
 # api   -> http://localhost:8000/docs

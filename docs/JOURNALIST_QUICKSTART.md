@@ -143,7 +143,7 @@ Events arrive within seconds of consensus changing.
 ## Getting help
 
 - Technical questions: open an issue at
-  https://github.com/vitalclick/Nigeria-Election-Results-Portal
+  https://github.com/vitalclick/OpenBallot
 - Press enquiries: press@openballot.ng
 - A particular polling unit you want clarified: link the
   `/en/pu/{pu_code}` URL in your message; that's the shortest
