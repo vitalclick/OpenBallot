@@ -2,6 +2,9 @@
 // Lets a freshly-cloned repo demo the public map without provisioning
 // any infrastructure - useful for investor demos and CI smoke tests.
 
+import fs from 'node:fs';
+import path from 'node:path';
+
 import type {
   AnomalyRecord,
   DiscrepancyRecord,
@@ -18,6 +21,98 @@ const STATE_NAMES: Record<string, string> = {
   RI: 'Rivers',
   FC: 'FCT',
 };
+
+// Real Nigerian state polygons (from web/public/nigeria.geo.json,
+// extracted from Natural Earth). Used to constrain mock PU coordinates
+// to actually fall inside their state so the demo map looks correct.
+type Ring = number[][];
+type StateGeom = { rings: Ring[][]; bbox: [number, number, number, number] };
+
+const STATE_GEOM_BY_CODE: Record<string, StateGeom> = (() => {
+  const out: Record<string, StateGeom> = {};
+  try {
+    const file = path.join(process.cwd(), 'public', 'nigeria.geo.json');
+    const raw = JSON.parse(fs.readFileSync(file, 'utf8')) as {
+      features: Array<{
+        properties: { name: string; kind: string };
+        geometry: { type: string; coordinates: any };
+      }>;
+    };
+    const NAME_TO_CODE: Record<string, string> = {
+      Lagos: 'LA',
+      Kano: 'KN',
+      Rivers: 'RI',
+      'Federal Capital Territory': 'FC',
+    };
+    for (const f of raw.features) {
+      if (f.properties.kind !== 'state') continue;
+      const code = NAME_TO_CODE[f.properties.name];
+      if (!code) continue;
+      const polys: Ring[][] =
+        f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+      let lngMin = Infinity, lngMax = -Infinity, latMin = Infinity, latMax = -Infinity;
+      for (const poly of polys)
+        for (const ring of poly)
+          for (const [lng, lat] of ring) {
+            if (lng < lngMin) lngMin = lng;
+            if (lng > lngMax) lngMax = lng;
+            if (lat < latMin) latMin = lat;
+            if (lat > latMax) latMax = lat;
+          }
+      out[code] = { rings: polys, bbox: [lngMin, latMin, lngMax, latMax] };
+    }
+  } catch {
+    // file not readable at module load - fall back to bbox-only placement
+  }
+  return out;
+})();
+
+function pointInRing(lng: number, lat: number, ring: Ring): boolean {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    const intersect =
+      yi > lat !== yj > lat &&
+      lng < ((xj - xi) * (lat - yi)) / (yj - yi || 1e-12) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInState(lng: number, lat: number, geom: StateGeom): boolean {
+  for (const poly of geom.rings) {
+    if (!poly.length) continue;
+    if (!pointInRing(lng, lat, poly[0])) continue;
+    let inHole = false;
+    for (let h = 1; h < poly.length; h++) {
+      if (pointInRing(lng, lat, poly[h])) { inHole = true; break; }
+    }
+    if (!inHole) return true;
+  }
+  return false;
+}
+
+// Deterministic pseudo-random in [0, 1) for a given seed.
+function rand(seed: number): number {
+  const x = Math.sin(seed * 9301 + 49297) * 233280;
+  return x - Math.floor(x);
+}
+
+function pickPointInState(code: string, seed: number): { lng: number; lat: number } {
+  const geom = STATE_GEOM_BY_CODE[code];
+  if (!geom) {
+    return { lng: 7, lat: 9 };
+  }
+  const [lngMin, latMin, lngMax, latMax] = geom.bbox;
+  for (let i = 0; i < 40; i++) {
+    const lng = lngMin + rand(seed * 2 + i) * (lngMax - lngMin);
+    const lat = latMin + rand(seed * 2 + i + 1) * (latMax - latMin);
+    if (pointInState(lng, lat, geom)) return { lng, lat };
+  }
+  // Fallback to bbox centre.
+  return { lng: (lngMin + lngMax) / 2, lat: (latMin + latMax) / 2 };
+}
 
 const STATUSES: VerificationStatus[] = [
   'no_data',
@@ -53,13 +148,7 @@ function pickStatus(seed: number): VerificationStatus {
 export function mockPollingUnits(): PollingUnitDetail[] {
   const units: PollingUnitDetail[] = [];
   let seed = 0;
-  const seedPoints: [string, number, number][] = [
-    ['LA', 3.3515, 6.4969],
-    ['KN', 8.5167, 12.0022],
-    ['RI', 7.0134, 4.8156],
-    ['FC', 7.4868, 9.0563],
-  ];
-  for (const [state, baseLng, baseLat] of seedPoints) {
+  for (const state of STATES) {
     for (let i = 0; i < 60; i++) {
       seed += 1;
       const status = pickStatus(seed);
@@ -67,16 +156,14 @@ export function mockPollingUnits(): PollingUnitDetail[] {
       const pdp = 80 + ((seed * 11) % 180);
       const lp = 150 + ((seed * 13) % 220);
       const total = apc + pdp + lp;
+      const coords = pickPointInState(state, seed);
       units.push({
         pu_code: `${state}-${i.toString().padStart(4, '0')}`,
         pu_name: `${STATE_NAMES[state]} PU ${i + 1}`,
         ward_code: `${state}-W${(i % 8) + 1}`,
         lga_code: `${state}-LGA-${(i % 4) + 1}`,
         state_code: state,
-        coordinates: {
-          lat: baseLat + ((seed * 0.0017) % 0.5) - 0.25,
-          lng: baseLng + ((seed * 0.0023) % 0.5) - 0.25,
-        },
+        coordinates: { lat: coords.lat, lng: coords.lng },
         status,
         submission_count: status === 'no_data' ? 0 : 1 + (seed % 3),
         source_count: status === 'no_data' ? 0 : 1 + (seed % 3),
