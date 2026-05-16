@@ -154,6 +154,9 @@ export interface DashboardResponse {
   turnout_pct: number;
   parties: DashboardPartyResult[];
   state_winners: Record<string, string>;
+  // Raw per-state party totals so the dashboard can recompute the
+  // results table when the user drills into a state on the choropleth.
+  state_party_totals: Record<string, Record<string, number>>;
   last_updated: string;
 }
 

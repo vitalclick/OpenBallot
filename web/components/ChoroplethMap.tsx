@@ -40,9 +40,18 @@ type LgaFeature = {
 };
 type LgaCollection = { type: 'FeatureCollection'; features: LgaFeature[] };
 
+export interface ChoroplethFocus {
+  level: 'country' | 'state' | 'lga';
+  stateCode?: string;
+  stateName?: string;
+  lgaName?: string;
+}
+
 interface Props {
   winners: Record<string, string>;
   partyByCode: Record<string, DashboardPartyResult>;
+  /** Fired whenever the user drills in or back out. */
+  onFocusChange?: (focus: ChoroplethFocus) => void;
 }
 
 type Level = 'country' | 'state' | 'lga';
@@ -54,11 +63,22 @@ interface Focus {
   lgaName?: string;     // when level === 'lga'
 }
 
-export function ChoroplethMap({ winners, partyByCode }: Props) {
+export function ChoroplethMap({ winners, partyByCode, onFocusChange }: Props) {
   const [geo, setGeo] = useState<StateCollection | null>(null);
   const [lgas, setLgas] = useState<LgaCollection | null>(null);
   const [lgaError, setLgaError] = useState<string | null>(null);
   const [focus, setFocus] = useState<Focus>({ level: 'country' });
+
+  // Notify the parent dashboard whenever the user drills in / out so it
+  // can rescope the title, the seat total, and the party totals table.
+  useEffect(() => {
+    onFocusChange?.({
+      level: focus.level,
+      stateCode: focus.stateCode,
+      stateName: focus.stateName,
+      lgaName: focus.lgaName,
+    });
+  }, [focus, onFocusChange]);
   const [hover, setHover] = useState<{ x: number; y: number; label: string } | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
 
