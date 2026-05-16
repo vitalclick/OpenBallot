@@ -14,8 +14,20 @@ GRID3 publishes all three layers from a single topology, so the
 levels snap by construction. CC BY 4.0; attribution surfaced in the
 map legend ("Boundaries © GRID3 (CC BY 4.0)").
 
-- Portal: https://data.grid3.org/ → "Nigeria Operational Boundaries"
-- HDX mirror: https://data.humdata.org/ search "grid3 nigeria"
+Public landing page (no account required):
+**https://grid3.org/geospatial-data-nigeria**
+
+The page links directly to:
+
+- `GRID3 NGA – Operational State Boundaries` (Dec 2020) — ADM1, 37 features
+- `GRID3 NGA – Operational LGA Boundaries` (Dec 2020) — ADM2, 774 features
+- `GRID3 NGA – Operational Wards v2.0` (Apr 2026) — partial state coverage
+- `GRID3 NGA – Operational Wards v1.0` (Dec 2020) — all states; v2.0 supersedes per-listed-state
+
+Each link routes through the GRID3 Data Hub (data.grid3.org). On the
+dataset page, use the **Download** dropdown and pick **GeoJSON**
+(Shapefile also works but requires a one-step conversion). HDX
+mirror: https://data.humdata.org/ search "grid3 nigeria".
 
 ## Why TopoJSON
 

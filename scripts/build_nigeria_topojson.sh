@@ -13,10 +13,13 @@
 #   LGA-LGA borders only once, eliminating the rest of the artifacts.
 #
 # Source data
-#   GRID3 Nigeria Operational Boundaries (ADM1 + ADM2). The wards loader
-#   already documents the download flow in scripts/fetch_ward_boundaries.sh.
-#   GRID3 ADM2 is the production source of truth. CC BY 4.0 attribution
-#   is mandatory — surfaced in the map legend.
+#   GRID3 Nigeria Operational Boundaries (ADM1 + ADM2). Public landing
+#   page (no account needed):
+#     https://grid3.org/geospatial-data-nigeria
+#   Direct dataset links on that page route through the GRID3 Data Hub;
+#   pick the "GRID3 NGA - Operational LGA Boundaries" file and export
+#   as GeoJSON. CC BY 4.0 attribution is mandatory — surfaced in the
+#   map legend.
 #
 #   For the demo / fresh-clone path we fall back to the OCHA COD-AB LGA
 #   file already committed under web/public/nigeria-lgas.geo.json so
