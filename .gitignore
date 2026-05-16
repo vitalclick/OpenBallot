@@ -25,8 +25,10 @@ package-lock.json
 # next-pwa build output (auto-generated under public/)
 web/public/sw.js
 web/public/workbox-*.js
+web/public/worker-*.js
 web/public/sw.js.map
 web/public/workbox-*.js.map
+web/public/worker-*.js.map
 *.log
 coverage
 .coverage
