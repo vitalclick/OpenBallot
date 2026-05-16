@@ -11,6 +11,10 @@
  *   node scraper.js --state "Lagos"     # Scrape a single state
  *   node scraper.js --reset             # Clear progress and start fresh
  *   node scraper.js --detect-only       # Only detect working API base URL
+ *   node scraper.js --probe             # One-shot states->LGAs->wards->PUs
+ *                                       # diagnostic; writes results/probe.json
+ *   node scraper.js --debug             # Print every request URL + sample
+ *                                       # response (use with --probe or --state)
  */
 
 const http = require("http");
@@ -129,9 +133,10 @@ function httpGet(url, { headers = {}, timeout = config.REQUEST_TIMEOUT_MS } = {}
 // ─── Scraper Class ────────────────────────────────────────────────────────────
 
 class INECPollingUnitsScraper {
-  constructor() {
+  constructor({ debug = false } = {}) {
     this.baseUrl = null;
     this.useAltPollingEndpoint = false;
+    this.debug = debug;
     this.failures = [];
     this.stats = {
       states: 0,
@@ -140,6 +145,13 @@ class INECPollingUnitsScraper {
       pollingUnits: 0,
       startTime: null,
     };
+  }
+
+  // Debug logger - prints when --debug is on. Used by fetchWithRetry to
+  // surface the exact URL and response shape so an empty scrape (the
+  // 2026-04-17 failure mode) shows itself in one line per call.
+  _log(...args) {
+    if (this.debug) console.log("  [debug]", ...args);
   }
 
   // ── Auto-Discover Theme URL ───────────────────────────────────────────────
@@ -272,6 +284,7 @@ class INECPollingUnitsScraper {
   async fetchWithRetry(endpoint, params = {}, label = "") {
     const qs = buildQueryString(params);
     const url = `${this.baseUrl}/${endpoint}${qs}`;
+    this._log(`GET ${url}`);
 
     for (let attempt = 1; attempt <= config.RETRY_ATTEMPTS; attempt++) {
       try {
@@ -282,7 +295,14 @@ class INECPollingUnitsScraper {
         } catch {
           parsed = res.data;
         }
-        return objectToArray(parsed);
+        const items = objectToArray(parsed);
+        this._log(
+          `  -> ${label}: ${items.length} items` +
+            (items.length === 0
+              ? `, raw response: ${String(res.data).slice(0, 200)}`
+              : `, sample: ${JSON.stringify(items[0]).slice(0, 200)}`)
+        );
+        return items;
       } catch (err) {
         if (attempt < config.RETRY_ATTEMPTS) {
           const backoff = config.RETRY_BASE_DELAY_MS * Math.pow(2, attempt - 1);
@@ -760,15 +780,95 @@ class INECPollingUnitsScraper {
 
 // ─── CLI ──────────────────────────────────────────────────────────────────────
 
+async function probe(scraper) {
+  // One-shot diagnostic that hits states -> first state's LGAs ->
+  // first LGA's wards -> first ward's PUs and dumps everything to
+  // results/probe.json. Designed for offline debugging when a full
+  // scrape silently returned zero (see 2026-04-17 incident).
+  console.log("INEC Probe (states -> LGAs -> wards -> polling units)");
+  console.log("=====================================================\n");
+
+  const dump = { steps: [] };
+  const states = await scraper.detectBaseUrl();
+  dump.base_url = scraper.baseUrl;
+  dump.states_count = states.length;
+  dump.states_sample = states.slice(0, 3);
+  console.log(`States: ${states.length}`);
+  if (states.length === 0) {
+    fs.writeFileSync(
+      path.join(config.RESULTS_DIR, "probe.json"),
+      JSON.stringify(dump, null, 2)
+    );
+    throw new Error("No states - INEC endpoint returned empty.");
+  }
+
+  const firstState = states[0];
+  const stateId = scraper.extractId(
+    firstState, "code", "id", "state_id", "s_id", "value", "state_code", "_key"
+  );
+  const stateName = scraper.extractName(firstState, "s_name", "name", "state_name");
+  console.log(`\nProbing state: ${stateName} (id=${stateId})`);
+  dump.first_state = { id: stateId, name: stateName, raw: firstState };
+
+  const lgas = await scraper.fetchLGAs(stateId);
+  dump.lgas_count = lgas.length;
+  dump.lgas_sample = lgas.slice(0, 3);
+  console.log(`  LGAs: ${lgas.length}`);
+  if (lgas.length === 0) {
+    console.log("  ^ This is the failure point - lgaView.php returned empty.");
+    console.log("  Open https://www.inecnigeria.org/polling-units/ in a browser,");
+    console.log("  pick this state from the dropdown, watch DevTools Network tab.");
+    console.log("  Compare the request the page makes vs. the URL above.");
+  }
+
+  if (lgas.length > 0) {
+    const firstLga = lgas[0];
+    const lgaId = scraper.extractId(
+      firstLga, "abbreviation", "id", "lga_id", "code", "value", "_key"
+    );
+    dump.first_lga = { id: lgaId, raw: firstLga };
+    const wards = await scraper.fetchWards(stateId, lgaId);
+    dump.wards_count = wards.length;
+    dump.wards_sample = wards.slice(0, 3);
+    console.log(`  Wards in first LGA: ${wards.length}`);
+
+    if (wards.length > 0) {
+      const firstWard = wards[0];
+      const wardId = scraper.extractId(
+        firstWard, "id", "ward_id", "abbreviation", "code", "value", "_key"
+      );
+      dump.first_ward = { id: wardId, raw: firstWard };
+      const pus = await scraper.fetchPollingUnits(stateId, lgaId, wardId);
+      dump.pus_count = pus.length;
+      dump.pus_sample = pus.slice(0, 3);
+      console.log(`  PUs in first ward: ${pus.length}`);
+    }
+  }
+
+  ensureDir(config.RESULTS_DIR);
+  const dumpPath = path.join(config.RESULTS_DIR, "probe.json");
+  fs.writeFileSync(dumpPath, JSON.stringify(dump, null, 2));
+  console.log(`\nDiagnostic dump written to ${dumpPath}`);
+  if ((dump.lgas_count || 0) === 0 || (dump.pus_count || 0) === 0) {
+    console.log(
+      "\nNon-zero state count but empty children -> the endpoint shape or " +
+        "the id field name probably changed. Send probe.json + the DevTools " +
+        "request you captured to update config.js / extractId() field lists."
+    );
+  }
+}
+
 async function main() {
   const args = process.argv.slice(2);
-  const scraper = new INECPollingUnitsScraper();
+  const debug = args.includes("--debug");
+  const scraper = new INECPollingUnitsScraper({ debug });
 
   const stateIndex = args.indexOf("--state");
   const filterState =
     stateIndex !== -1 && args[stateIndex + 1] ? args[stateIndex + 1] : null;
   const reset = args.includes("--reset");
   const detectOnly = args.includes("--detect-only");
+  const probeOnly = args.includes("--probe");
 
   if (detectOnly) {
     try {
@@ -779,6 +879,16 @@ async function main() {
       );
     } catch (err) {
       console.error(err.message);
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (probeOnly) {
+    try {
+      await probe(scraper);
+    } catch (err) {
+      console.error(`\nProbe failed: ${err.message}`);
       process.exit(1);
     }
     return;
