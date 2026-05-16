@@ -54,6 +54,7 @@ import json
 import os
 import re
 import sys
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -327,29 +328,66 @@ def main(results_dir: str) -> int:
     if rc != 0:
         return rc
 
-    conn = psycopg2.connect(url)
-    conn.autocommit = False
-    cur = conn.cursor()
+    def connect():
+        # TCP keepalives prevent the Supabase pooler from treating short
+        # idle gaps between batches as a dead connection.
+        return psycopg2.connect(
+            url,
+            keepalives=1,
+            keepalives_idle=30,
+            keepalives_interval=10,
+            keepalives_count=5,
+            connect_timeout=15,
+        )
 
     totals = {"lgas": 0, "wards": 0, "pus": 0, "skipped": 0}
-    try:
-        for path in files:
-            with path.open() as f:
-                payload = json.load(f)
-            lc, wc, pc, sk = load_state_file(cur, payload)
-            conn.commit()
-            totals["lgas"] += lc
-            totals["wards"] += wc
-            totals["pus"] += pc
-            totals["skipped"] += sk
-            note = f" ({sk} skipped)" if sk else ""
-            print(f"  {path.name}: {lc} LGAs, {wc} wards, {pc} PUs{note}")
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        cur.close()
-        conn.close()
+
+    for path in files:
+        with path.open() as f:
+            payload = json.load(f)
+
+        # Each state is a self-contained transaction. If the pooler drops
+        # the connection mid-state we reconnect and retry; upserts are
+        # idempotent (ON CONFLICT DO UPDATE) so a re-run is safe.
+        attempts = 4
+        for attempt in range(1, attempts + 1):
+            conn = None
+            cur = None
+            try:
+                conn = connect()
+                conn.autocommit = False
+                cur = conn.cursor()
+                lc, wc, pc, sk = load_state_file(cur, payload)
+                conn.commit()
+                break
+            except (psycopg2.OperationalError, psycopg2.InterfaceError) as e:
+                if attempt == attempts:
+                    print(
+                        f"  {path.name}: giving up after {attempts} attempts: {e}",
+                        file=sys.stderr,
+                    )
+                    raise
+                backoff = 2 ** (attempt - 1)
+                print(
+                    f"  {path.name}: connection error on attempt {attempt}/{attempts}"
+                    f" ({type(e).__name__}); reconnecting in {backoff}s",
+                    file=sys.stderr,
+                )
+                time.sleep(backoff)
+            finally:
+                if cur is not None:
+                    try: cur.close()
+                    except Exception: pass
+                if conn is not None:
+                    try: conn.close()
+                    except Exception: pass
+
+        totals["lgas"] += lc
+        totals["wards"] += wc
+        totals["pus"] += pc
+        totals["skipped"] += sk
+        note = f" ({sk} skipped)" if sk else ""
+        print(f"  {path.name}: {lc} LGAs, {wc} wards, {pc} PUs{note}")
 
     skipped_note = (
         f"; {totals['skipped']} PUs skipped (malformed delim)"
