@@ -142,7 +142,6 @@ export interface DashboardResponse {
   election_id: string;
   election_name: string;
   election_year: number;
-  ballot: string;
   // Total seats up for grabs (e.g. 360 for House of Reps). null for
   // presidential/gubernatorial races where the table hides the column.
   seat_total: number | null;

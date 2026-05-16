@@ -39,7 +39,7 @@ const ELECTION_LABELS: Record<string, string> = {
 
 function buildMockDashboard(
   electionId: string,
-  overrides: { year?: number; election?: string; ballot?: string }
+  overrides: { year?: number; election?: string }
 ): DashboardResponse {
   const rollup = mockNationalRollup();
   const voterTotals = mockVoterTotals();
@@ -48,7 +48,6 @@ function buildMockDashboard(
   const [parsedYear, parsedSlug] = electionId.split('-');
   const year = overrides.year ?? Number(parsedYear) ?? 2027;
   const slug = overrides.election ?? parsedSlug ?? 'presidential';
-  const ballot = overrides.ballot ?? 'National';
   const seatTotal = seatTotalForElection(slug);
 
   const partyTotals = rollup.party_totals ?? {};
@@ -85,7 +84,6 @@ function buildMockDashboard(
     election_id: electionId,
     election_name: ELECTION_LABELS[slug] ?? 'Presidential Election',
     election_year: year,
-    ballot,
     seat_total: seatTotal,
     units_total: rollup.units_total,
     units_completed: rollup.units_reporting,
@@ -104,7 +102,6 @@ export async function GET(req: NextRequest, { params }: Params) {
   const overrides = {
     year: Number(req.nextUrl.searchParams.get('year')) || undefined,
     election: req.nextUrl.searchParams.get('election') ?? undefined,
-    ballot: req.nextUrl.searchParams.get('ballot') ?? undefined,
   };
   // The dashboard view is currently mock-only; a future change will
   // back it with the same Supabase views the rest of the app uses.

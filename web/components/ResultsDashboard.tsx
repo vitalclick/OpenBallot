@@ -21,7 +21,6 @@ const ELECTION_OPTIONS: Array<{ slug: string; label: string }> = [
 ];
 
 const YEAR_OPTIONS = [2027, 2023, 2019, 2015, 2011];
-const BALLOT_OPTIONS = ['National', 'State'];
 
 interface Props { defaultElectionId: string }
 
@@ -34,17 +33,15 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
     return {
       year: Number(year) || 2027,
       election: slug || 'presidential',
-      ballot: 'National',
     };
   }, [defaultElectionId]);
 
   const year = Number(searchParams.get('year')) || defaults.year;
   const election = searchParams.get('election') || defaults.election;
-  const ballot = searchParams.get('ballot') || defaults.ballot;
 
   const electionId = `${year}-${election}`;
   const setFilter = useCallback(
-    (key: 'year' | 'election' | 'ballot', value: string) => {
+    (key: 'year' | 'election', value: string) => {
       const next = new URLSearchParams(searchParams.toString());
       next.set(key, value);
       router.replace(`?${next.toString()}`, { scroll: false });
@@ -59,7 +56,7 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
     let cancelled = false;
     setLoading(true);
     (async () => {
-      const qs = new URLSearchParams({ year: String(year), election, ballot });
+      const qs = new URLSearchParams({ year: String(year), election });
       const r = await fetch(`/api/v1/elections/${electionId}/dashboard?${qs}`, {
         cache: 'no-store',
       });
@@ -68,7 +65,7 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
       if (!cancelled) setLoading(false);
     })();
     return () => { cancelled = true; };
-  }, [electionId, year, election, ballot]);
+  }, [electionId, year, election]);
 
   if (loading && !data) {
     return <div className="p-10 text-slate-500">Loading dashboard…</div>;
@@ -84,7 +81,6 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
       <FiltersPanel
         year={year}
         election={election}
-        ballot={ballot}
         onChange={setFilter}
       />
       <div className={`space-y-6 ${loading ? 'opacity-60 pointer-events-none' : ''}`}>
@@ -117,13 +113,11 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
 function FiltersPanel({
   year,
   election,
-  ballot,
   onChange,
 }: {
   year: number;
   election: string;
-  ballot: string;
-  onChange: (key: 'year' | 'election' | 'ballot', value: string) => void;
+  onChange: (key: 'year' | 'election', value: string) => void;
 }) {
   return (
     <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
@@ -146,17 +140,6 @@ function FiltersPanel({
         >
           {ELECTION_OPTIONS.map((o) => (
             <option key={o.slug} value={o.slug}>{o.label}</option>
-          ))}
-        </select>
-      </FilterCard>
-      <FilterCard step="3" colour="bg-sky-600" label="Select Ballot">
-        <select
-          className="w-full border rounded px-2 py-1 text-sm bg-white"
-          value={ballot}
-          onChange={(e) => onChange('ballot', e.target.value)}
-        >
-          {BALLOT_OPTIONS.map((b) => (
-            <option key={b} value={b}>{b}</option>
           ))}
         </select>
       </FilterCard>
