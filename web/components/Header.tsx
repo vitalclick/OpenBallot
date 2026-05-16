@@ -24,6 +24,9 @@ export function Header({ locale }: { locale: Locale }) {
         </Link>
 
         <nav className="flex items-center gap-1 sm:gap-4 text-sm">
+          <Link href={`/${locale}/results`} className="px-2 py-1 hover:underline">
+            {t('results')}
+          </Link>
           <Link href={`/${locale}/map`} className="px-2 py-1 hover:underline">
             {t('map')}
           </Link>

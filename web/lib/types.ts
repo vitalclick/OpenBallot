@@ -127,6 +127,33 @@ export const ANOMALY_LABELS: Record<AnomalyType, string> = {
   leader_party_shift_vs_2023: 'Winning party flipped with extreme share swing vs. 2023',
 };
 
+export interface DashboardPartyResult {
+  code: string;
+  name: string;
+  color: string;
+  total_votes: number;
+  support_pct: number;
+  seats: number;
+  history: Array<{ year: number; seats: number }>;
+}
+
+export interface DashboardResponse {
+  election_id: string;
+  election_name: string;
+  election_year: number;
+  ballot: string;
+  units_total: number;
+  units_completed: number;
+  total_valid_votes: number;
+  total_rejected_ballots: number;
+  total_registered_voters: number;
+  total_accredited_voters: number;
+  turnout_pct: number;
+  parties: DashboardPartyResult[];
+  state_winners: Record<string, string>;
+  last_updated: string;
+}
+
 export const STATUS_COLOURS: Record<VerificationStatus, string> = {
   no_data: '#e5e7eb',
   single_source: '#f6c453',

@@ -5,7 +5,8 @@
     "anomalies": "Anomalies",
     "agent": "Agent",
     "observer": "Observer",
-    "admin": "Admin"
+    "admin": "Admin",
+    "results": "Results"
   },
   "landing": {
     "eyebrow": "Transparent. Verifiable. Irreversible.",
@@ -15,7 +16,6 @@
     "cta_disc": "Discrepancy register",
     "cta_anomalies": "Anomaly register",
     "cta_agent": "Agent app",
-
     "pillars_title": "Three independent pillars of trust",
     "pillars_lede": "Each pillar is independently testable, independently verifiable, and independently catches different failure modes.",
     "feature1_title": "Multi-source consensus",
@@ -27,7 +27,6 @@
     "feature3_title": "Tamper-evident audit",
     "feature3_body": "Every image is SHA-256 hashed at the agent's device, every database event is chained, and Merkle roots are anchored to Ethereum mainnet every 30 minutes.",
     "feature3_example": "Example: an auditor downloads the published manifest five years from now and re-verifies every image bit-for-bit.",
-
     "how_title": "How it works",
     "how_lede": "Five steps from a polling unit on election day to a verifiable result on the public map.",
     "how_step1_title": "Agent photographs the EC8A",
@@ -40,7 +39,6 @@
     "how_step4_body": "Across all submissions for a unit — party agents, observers, INEC IReV — the verification engine returns one of six map states. Disagreement surfaces, never hides.",
     "how_step5_title": "Chained, anchored, published",
     "how_step5_body": "Every event is chained into the SHA-256 audit log. Merkle roots are anchored to Ethereum mainnet. After the election, the full evidentiary dataset is released under Creative Commons.",
-
     "audiences_title": "What you can do today",
     "audience_journalist_title": "For journalists",
     "audience_journalist_body": "Cite a polling unit by URL. Download the full results CSV. Diff today's INEC upload against the cross-source consensus.",
@@ -54,7 +52,6 @@
     "audience_researcher_title": "For researchers",
     "audience_researcher_body": "Stream the full results CSV (one row per PU × candidate). Download the SHA-256 hash manifest. Verify the audit chain end-to-end in any language.",
     "audience_researcher_link": "Download results CSV",
-
     "footer_tagline": "Open, multi-source, document-first election results.",
     "footer_explore": "Explore",
     "footer_participate": "Participate",
