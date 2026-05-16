@@ -94,6 +94,7 @@ function buildMockDashboard(
     turnout_pct: turnoutPct,
     parties,
     state_winners: stateWinners,
+    state_party_totals: stateTotals,
     last_updated: rollup.last_updated,
   };
 }

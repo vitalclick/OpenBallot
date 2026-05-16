@@ -3,7 +3,8 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { ChoroplethMap } from '@/components/ChoroplethMap';
+import { ChoroplethMap, type ChoroplethFocus } from '@/components/ChoroplethMap';
+import { PARTIES, seatTotalForStateElection } from '@/lib/parties';
 import type { DashboardResponse, DashboardPartyResult } from '@/lib/types';
 
 // Recreates the public results dashboard layout used by election
@@ -83,31 +84,98 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
         election={election}
         onChange={setFilter}
       />
-      <div className={`space-y-6 ${loading ? 'opacity-60 pointer-events-none' : ''}`}>
-        <Title data={data} />
-        <CompletionRibbon
-          pct={completedPct}
-          completed={data.units_completed}
-          total={data.units_total}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ValidSpoiltCard
-            valid={data.total_valid_votes}
-            rejected={data.total_rejected_ballots}
-          />
-          <TurnoutCard pct={data.turnout_pct} />
-        </div>
-        <QuickLinks electionId={data.election_id} />
-        <LeadingParties parties={data.parties.slice(0, 3)} totalValid={data.total_valid_votes} />
-        <ChoroplethSection winners={data.state_winners} parties={data.parties} />
-        <PartyResultsTable parties={data.parties} seatTotal={data.seat_total} />
-        <p className="text-xs text-slate-500 pt-2">
-          Last updated {new Date(data.last_updated).toLocaleString()} ·{' '}
-          <a href={`/api/v1/elections/${data.election_id}/dashboard`} className="hover:underline">JSON</a>
-        </p>
-      </div>
+      <DashboardBody data={data} completedPct={completedPct} />
     </div>
   );
+}
+
+function DashboardBody({
+  data,
+  completedPct,
+}: {
+  data: DashboardResponse;
+  completedPct: number;
+}) {
+  const [focus, setFocus] = useState<ChoroplethFocus>({ level: 'country' });
+
+  // When the user drills into a state on the map, rescope the title,
+  // the seat total, and the party-results table to that state.
+  const scopedTable = useMemo(() => {
+    const electionSlug = electionSlugFromId(data.election_id);
+    if (!focus.stateCode) {
+      return {
+        title: `${data.election_name} – ${data.election_year}`,
+        seatTotal: data.seat_total,
+        parties: data.parties,
+        totalValid: data.total_valid_votes,
+      };
+    }
+    const stateTotals = data.state_party_totals[focus.stateCode] ?? {};
+    const totalValid = Object.values(stateTotals).reduce((a, b) => a + b, 0);
+    const stateSeats =
+      data.seat_total === null
+        ? null
+        : seatTotalForStateElection(electionSlug, focus.stateCode);
+    const parties: DashboardPartyResult[] = PARTIES.map((p) => {
+      const votes = stateTotals[p.code] ?? 0;
+      const support = totalValid ? votes / totalValid : 0;
+      return {
+        code: p.code,
+        name: p.name,
+        color: p.color,
+        total_votes: votes,
+        support_pct: support * 100,
+        seats: stateSeats === null ? null : Math.round(support * stateSeats),
+        history: data.parties.find((d) => d.code === p.code)?.history ?? [],
+      };
+    }).sort((a, b) => b.total_votes - a.total_votes);
+    return {
+      title: `${data.election_name} – ${focus.stateName} – ${data.election_year}`,
+      seatTotal: stateSeats,
+      parties,
+      totalValid,
+    };
+  }, [focus, data]);
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-center text-2xl md:text-3xl font-semibold text-slate-800">
+        {scopedTable.title}
+      </h1>
+      <CompletionRibbon
+        pct={completedPct}
+        completed={data.units_completed}
+        total={data.units_total}
+      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ValidSpoiltCard
+          valid={data.total_valid_votes}
+          rejected={data.total_rejected_ballots}
+        />
+        <TurnoutCard pct={data.turnout_pct} />
+      </div>
+      <QuickLinks electionId={data.election_id} />
+      <LeadingParties
+        parties={scopedTable.parties.slice(0, 3)}
+        totalValid={scopedTable.totalValid}
+      />
+      <ChoroplethSection
+        winners={data.state_winners}
+        parties={data.parties}
+        onFocusChange={setFocus}
+      />
+      <PartyResultsTable parties={scopedTable.parties} seatTotal={scopedTable.seatTotal} />
+      <p className="text-xs text-slate-500 pt-2">
+        Last updated {new Date(data.last_updated).toLocaleString()} ·{' '}
+        <a href={`/api/v1/elections/${data.election_id}/dashboard`} className="hover:underline">JSON</a>
+      </p>
+    </div>
+  );
+}
+
+function electionSlugFromId(electionId: string): string {
+  const [, slug] = electionId.split('-');
+  return slug ?? 'presidential';
 }
 
 function FiltersPanel({
@@ -168,14 +236,6 @@ function FilterCard({
       </div>
       <div className="mt-2 text-slate-900">{children}</div>
     </div>
-  );
-}
-
-function Title({ data }: { data: DashboardResponse }) {
-  return (
-    <h1 className="text-center text-2xl md:text-3xl font-semibold text-slate-800">
-      {data.election_name} – {data.election_year}
-    </h1>
   );
 }
 
@@ -350,9 +410,11 @@ function LeadingParties({
 function ChoroplethSection({
   winners,
   parties,
+  onFocusChange,
 }: {
   winners: Record<string, string>;
   parties: DashboardPartyResult[];
+  onFocusChange?: (focus: ChoroplethFocus) => void;
 }) {
   const partyByCode = useMemo(
     () => Object.fromEntries(parties.map((p) => [p.code, p])),
@@ -364,7 +426,11 @@ function ChoroplethSection({
         Leading party by state
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[1fr_180px] gap-4 items-start">
-        <ChoroplethMap winners={winners} partyByCode={partyByCode} />
+        <ChoroplethMap
+          winners={winners}
+          partyByCode={partyByCode}
+          onFocusChange={onFocusChange}
+        />
         <div className="text-xs space-y-1">
           {parties.map((p) => (
             <div key={p.code} className="flex items-center gap-2">
