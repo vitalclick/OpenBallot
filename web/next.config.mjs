@@ -10,6 +10,10 @@ const withPWA = withPWAInit({
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
+  // Custom worker that handles Background Sync. next-pwa appends the
+  // contents of sw-custom/index.js to the generated service worker so
+  // we get Workbox's caching plus our drainer in one SW.
+  customWorkerDir: 'sw-custom',
   runtimeCaching: [
     {
       urlPattern: /^https?:\/\/.*\/api\/v1\/elections\/.*\/results.*/i,

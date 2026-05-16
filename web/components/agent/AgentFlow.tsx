@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
-import { AuthError, requestOtp, verifyOtp, type AgentProfile } from '@/lib/auth-client';
+import { AuthError, logout, requestOtp, verifyOtp, type AgentProfile } from '@/lib/auth-client';
 import { pollSubmission, type SubmissionStatus } from '@/lib/uploads';
 
-import { computeSha256Hex, OfflineQueue, type DrainMessage } from './queue';
+import { computeSha256Hex, OfflineQueue, requestBackgroundSync, type DrainMessage } from './queue';
+import { QueuePanel } from './QueuePanel';
 
 // Five-step flow:
 //   request_otp -> verify_otp -> pu -> capture -> confirm -> done
@@ -17,7 +19,16 @@ import { computeSha256Hex, OfflineQueue, type DrainMessage } from './queue';
 
 type Step = 'phone' | 'otp' | 'pu' | 'capture' | 'confirm' | 'done';
 
+interface ElectionOption {
+  id: string;
+  election_type: string;
+  status: string;
+  election_date?: string;
+}
+
 export function AgentFlow() {
+  const t = useTranslations('agent');
+
   const [step, setStep] = useState<Step>('phone');
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
@@ -27,8 +38,11 @@ export function AgentFlow() {
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
   const [agent, setAgent] = useState<AgentProfile | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [capturedAt, setCapturedAt] = useState<string | null>(null);
   const [gps, setGps] = useState<{ lat: number; lng: number; acc: number } | null>(null);
   const [queueDepth, setQueueDepth] = useState(0);
+  const [elections, setElections] = useState<ElectionOption[] | null>(null);
+  const [electionId, setElectionId] = useState<string | null>(null);
 
   useEffect(() => {
     if (step !== 'capture') return;
@@ -52,6 +66,30 @@ export function AgentFlow() {
     return () => clearInterval(id);
   }, []);
 
+  // Fetch the election list once the agent is signed in so the PU screen
+  // can default (single election) or offer a picker (multiple).
+  useEffect(() => {
+    if (!agent) return;
+    let cancelled = false;
+    fetch('/api/v1/elections')
+      .then((r) => r.json())
+      .then((rows: ElectionOption[]) => {
+        if (cancelled) return;
+        const active = (Array.isArray(rows) ? rows : []).filter(
+          (e) => e.status !== 'concluded'
+        );
+        setElections(active);
+        if (active.length === 1) setElectionId(active[0].id);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setElections([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [agent]);
+
   // Drainer: every 5 seconds, attempt to upload any queued submissions.
   // In production a service worker takes over when the page is hidden;
   // this in-page drainer covers the foreground case.
@@ -63,23 +101,30 @@ export function AgentFlow() {
       try {
         await OfflineQueue.drainOnce((msg: DrainMessage) => {
           if (cancelled) return;
-          if (msg.kind === 'started') setDrainNote('Requesting upload slot…');
-          else if (msg.kind === 'presigned') setDrainNote('Uploading photo…');
-          else if (msg.kind === 'uploaded') setDrainNote('Submitting record…');
+          if (msg.kind === 'started') setDrainNote(t('drain_started'));
+          else if (msg.kind === 'presigned') setDrainNote(t('drain_presigned'));
+          else if (msg.kind === 'uploaded') setDrainNote(t('drain_uploaded'));
           else if (msg.kind === 'accepted') {
-            setDrainNote('Submitted. Awaiting extraction…');
+            setDrainNote(t('drain_accepted'));
             setLastAcceptedId(msg.submission_id);
-          } else if (msg.kind === 'error') setDrainNote(`Will retry: ${msg.error}`);
+          } else if (msg.kind === 'error') setDrainNote(t('drain_error', { error: msg.error }));
         });
       } catch {/* swallow; next tick retries */}
     };
     tick();
     const id = setInterval(tick, 5_000);
+    // Trigger an immediate drain when connectivity returns; the SW
+    // background-sync registration covers the tab-closed case.
+    const onOnline = () => {
+      tick();
+    };
+    if (typeof window !== 'undefined') window.addEventListener('online', onOnline);
     return () => {
       cancelled = true;
       clearInterval(id);
+      if (typeof window !== 'undefined') window.removeEventListener('online', onOnline);
     };
-  }, []);
+  }, [t]);
 
   // Status poll: once a submission has been accepted, keep checking until
   // it reaches a terminal state, so the agent sees "extracted" or
@@ -104,14 +149,30 @@ export function AgentFlow() {
     };
   }, [lastAcceptedId]);
 
+  const doLogout = () => {
+    logout();
+    setAgent(null);
+    setPhone('');
+    setOtp('');
+    setFile(null);
+    setCapturedAt(null);
+    setGps(null);
+    setAuthError(null);
+    setElections(null);
+    setElectionId(null);
+    setLastAcceptedId(null);
+    setStatusForLast(null);
+    setStep('phone');
+  };
+
   if (step === 'phone') {
     return (
-      <Shell title="Sign in">
-        <p className="text-slate-600">Enter the phone number registered with your party.</p>
+      <Shell title={t('phone_title')}>
+        <p className="text-slate-600">{t('phone_lede')}</p>
         <input
           type="tel"
           inputMode="tel"
-          placeholder="+234..."
+          placeholder={t('phone_placeholder')}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           className="mt-4 w-full border rounded px-4 py-3 text-lg"
@@ -119,7 +180,7 @@ export function AgentFlow() {
         {authError && (
           <p className="mt-3 text-sm text-red-700">
             {authError}
-            {retryAfter ? ` Try again in ${retryAfter}s.` : ''}
+            {retryAfter ? ' ' + t('phone_retry_in', { seconds: retryAfter }) : ''}
           </p>
         )}
         <button
@@ -132,7 +193,7 @@ export function AgentFlow() {
               setStep('otp');
             } catch (e) {
               const err = e as AuthError;
-              setAuthError(translateAuthError(err.code));
+              setAuthError(translateAuthError(err.code, t));
               setRetryAfter(
                 (err.detail as { retry_after_seconds?: number })?.retry_after_seconds ?? null
               );
@@ -142,7 +203,7 @@ export function AgentFlow() {
           }}
           className="mt-5 w-full bg-ng-green text-white text-lg py-3 rounded font-medium disabled:opacity-40"
         >
-          {otpRequesting ? 'Sending code...' : 'Send code'}
+          {otpRequesting ? t('phone_sending') : t('phone_send')}
         </button>
       </Shell>
     );
@@ -150,14 +211,12 @@ export function AgentFlow() {
 
   if (step === 'otp') {
     return (
-      <Shell title="Enter the code">
-        <p className="text-slate-600">
-          We sent a 6-digit code to <span className="font-mono">{phone}</span>.
-        </p>
+      <Shell title={t('otp_title')}>
+        <p className="text-slate-600">{t('otp_lede', { phone })}</p>
         <input
           type="text"
           inputMode="numeric"
-          placeholder="6-digit code"
+          placeholder={t('otp_placeholder')}
           maxLength={6}
           value={otp}
           onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
@@ -175,14 +234,14 @@ export function AgentFlow() {
               setStep('pu');
             } catch (e) {
               const err = e as AuthError;
-              setAuthError(translateAuthError(err.code));
+              setAuthError(translateAuthError(err.code, t));
             } finally {
               setOtpVerifying(false);
             }
           }}
           className="mt-5 w-full bg-ng-green text-white text-lg py-3 rounded font-medium disabled:opacity-40"
         >
-          {otpVerifying ? 'Verifying...' : 'Verify and continue'}
+          {otpVerifying ? t('otp_verifying') : t('otp_verify')}
         </button>
         <button
           onClick={() => {
@@ -192,90 +251,138 @@ export function AgentFlow() {
           }}
           className="mt-3 w-full text-slate-600 underline"
         >
-          Use a different number
+          {t('otp_change_number')}
         </button>
       </Shell>
     );
   }
 
   if (step === 'pu' && agent) {
+    const activeElections = elections ?? [];
+    const hasMultiple = activeElections.length > 1;
+    const noActive = elections !== null && activeElections.length === 0;
+    const canContinue = !!agent.assigned_pu_code && !!electionId;
+
     return (
-      <Shell title="Your polling unit">
+      <Shell title={t('pu_title')} onLogout={doLogout} logoutLabel={t('logout')}>
         <dl className="space-y-2 text-sm">
-          <Row label="Name" value={agent.full_name} />
-          <Row label="Party" value={agent.party_code ?? '—'} />
-          <Row label="PU code" value={agent.assigned_pu_code ?? '—'} mono />
+          <Row label={t('pu_name')} value={agent.full_name} />
+          <Row label={t('pu_party')} value={agent.party_code ?? '—'} />
+          <Row label={t('pu_code')} value={agent.assigned_pu_code ?? '—'} mono />
         </dl>
+        {noActive && (
+          <p className="mt-4 text-sm text-red-700">{t('pu_no_elections')}</p>
+        )}
+        {hasMultiple && (
+          <label className="mt-4 block">
+            <span className="text-sm text-slate-600">{t('pu_choose_election')}</span>
+            <select
+              value={electionId ?? ''}
+              onChange={(e) => setElectionId(e.target.value || null)}
+              className="mt-1 w-full border rounded px-3 py-2"
+            >
+              <option value="" disabled>
+                —
+              </option>
+              {activeElections.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.election_type} · {e.id}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        {!hasMultiple && electionId && (
+          <dl className="mt-2">
+            <Row label={t('pu_election')} value={electionId} mono />
+          </dl>
+        )}
         <button
+          disabled={!canContinue}
           onClick={() => setStep('capture')}
-          className="mt-6 w-full bg-ng-green text-white text-lg py-3 rounded font-medium"
+          className="mt-6 w-full bg-ng-green text-white text-lg py-3 rounded font-medium disabled:opacity-40"
         >
-          Take photo of EC8A
+          {t('pu_take_photo')}
         </button>
-        <p className="mt-3 text-xs text-slate-500">
-          You will only ever submit for this polling unit. If you need to change assignment,
-          contact your party admin.
-        </p>
+        <p className="mt-3 text-xs text-slate-500">{t('pu_footnote')}</p>
+        <QueuePanel onChange={setQueueDepth} />
       </Shell>
     );
   }
 
   if (step === 'capture' && agent) {
     return (
-      <Shell title="Photograph the form">
-        <div className="text-sm text-slate-600 mb-3">
-          Photograph the whole EC8A. Make sure all four corners are visible and the signatures
-          are legible.
-        </div>
+      <Shell title={t('capture_title')} onLogout={doLogout} logoutLabel={t('logout')}>
+        <div className="text-sm text-slate-600 mb-3">{t('capture_lede')}</div>
         <label className="block border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-slate-50">
           <input
             type="file"
             accept="image/*"
             capture="environment"
             className="hidden"
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            onChange={(e) => {
+              const f = e.target.files?.[0] ?? null;
+              setFile(f);
+              // Snapshot capture time at the moment the file lands in the
+              // input, not at submit-time. This is what gets stored as
+              // captured_at on the submission record.
+              setCapturedAt(f ? new Date().toISOString() : null);
+            }}
           />
           <div className="text-sm">
-            {file ? `Selected: ${file.name}` : 'Tap to open camera'}
+            {file ? t('capture_selected', { name: file.name }) : t('capture_open_camera')}
           </div>
         </label>
         <div className="mt-3 text-xs text-slate-500">
-          GPS: {gps ? `${gps.lat.toFixed(5)}, ${gps.lng.toFixed(5)} (±${Math.round(gps.acc)}m)` : 'acquiring…'}
+          {gps
+            ? t('capture_gps_locked', {
+                lat: gps.lat.toFixed(5),
+                lng: gps.lng.toFixed(5),
+                acc: Math.round(gps.acc),
+              })
+            : t('capture_gps_acquiring')}
         </div>
         <button
           disabled={!file}
           onClick={() => setStep('confirm')}
           className="mt-5 w-full bg-ng-green text-white text-lg py-3 rounded font-medium disabled:opacity-40"
         >
-          Continue
+          {t('capture_continue')}
         </button>
       </Shell>
     );
   }
 
-  if (step === 'confirm' && file && agent) {
+  if (step === 'confirm' && file && agent && capturedAt) {
     return (
-      <Shell title="Confirm and submit">
+      <Shell title={t('confirm_title')} onLogout={doLogout} logoutLabel={t('logout')}>
         <img
           alt="EC8A preview"
           src={URL.createObjectURL(file)}
           className="w-full rounded border max-h-[60vh] object-contain"
         />
         <dl className="mt-3 space-y-1 text-sm">
-          <Row label="PU code" value={agent.assigned_pu_code ?? '—'} mono />
-          <Row label="GPS" value={gps ? `${gps.lat.toFixed(5)}, ${gps.lng.toFixed(5)}` : '—'} />
-          <Row label="Captured at" value={new Date().toLocaleString()} />
+          <Row label={t('confirm_pu')} value={agent.assigned_pu_code ?? '—'} mono />
+          <Row
+            label={t('confirm_gps')}
+            value={gps ? `${gps.lat.toFixed(5)}, ${gps.lng.toFixed(5)}` : '—'}
+          />
+          <Row label={t('confirm_captured_at')} value={new Date(capturedAt).toLocaleString()} />
         </dl>
         <button
           onClick={async () => {
             const buf = await file.arrayBuffer();
             const sha = await computeSha256Hex(buf);
             if (!agent.assigned_pu_code) {
-              setAuthError('No polling unit assigned to your agent record.');
+              setAuthError(t('err_no_pu_assigned'));
+              return;
+            }
+            if (!electionId) {
+              setAuthError(t('pu_no_elections'));
               return;
             }
             await OfflineQueue.enqueue({
-              election_id: '2027-presidential',
+              election_id: electionId,
               pu_code: agent.assigned_pu_code,
               source_type: 'party_agent',
               party_code: agent.party_code,
@@ -283,21 +390,22 @@ export function AgentFlow() {
               image_sha256: sha,
               image_bytes: file.size,
               gps,
-              captured_at: new Date().toISOString(),
+              captured_at: capturedAt,
               client_submission_uuid:
                 (typeof crypto !== 'undefined' && (crypto as any).randomUUID)
                   ? (crypto as any).randomUUID()
                   : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
             });
+            // Tell the service worker to drain when network returns,
+            // even if the tab is closed.
+            await requestBackgroundSync();
             setStep('done');
           }}
           className="mt-5 w-full bg-ng-green text-white text-lg py-3 rounded font-medium"
         >
-          Submit
+          {t('confirm_submit')}
         </button>
-        <p className="mt-3 text-xs text-slate-500">
-          If you are offline this will upload automatically when connectivity returns.
-        </p>
+        <p className="mt-3 text-xs text-slate-500">{t('confirm_offline_note')}</p>
       </Shell>
     );
   }
@@ -306,52 +414,53 @@ export function AgentFlow() {
     const live = statusForLast?.processing_status;
     const finalLabel =
       live === 'extracted'
-        ? 'Extracted and recorded'
+        ? t('done_status_extracted')
         : live === 'failed'
-        ? `Extraction failed: ${statusForLast?.processing_error ?? 'unknown error'}`
+        ? t('done_status_failed', { error: statusForLast?.processing_error ?? '—' })
         : live === 'processing'
-        ? 'Extracting…'
+        ? t('done_status_processing')
         : live === 'queued'
-        ? 'Submitted. Waiting for the extraction worker…'
-        : 'Submitted. Awaiting acknowledgement…';
+        ? t('done_status_queued')
+        : t('done_status_submitting');
 
     return (
-      <Shell title="Submission status">
+      <Shell title={t('done_title')} onLogout={doLogout} logoutLabel={t('logout')}>
         <p className="text-sm font-medium">{finalLabel}</p>
-        {drainNote && (
-          <p className="text-xs text-slate-500 mt-1">{drainNote}</p>
-        )}
+        {drainNote && <p className="text-xs text-slate-500 mt-1">{drainNote}</p>}
         {statusForLast && (
           <dl className="mt-4 space-y-1 text-xs">
-            <Row label="Submission ID" value={statusForLast.id.slice(0, 8) + '…'} mono />
+            <Row label={t('done_submission_id')} value={statusForLast.id.slice(0, 8) + '…'} mono />
             {statusForLast.confidence_score != null && (
               <Row
-                label="Extraction confidence"
+                label={t('done_confidence')}
                 value={`${(statusForLast.confidence_score * 100).toFixed(0)}%`}
               />
             )}
             {statusForLast.review_status && (
-              <Row label="Review status" value={statusForLast.review_status} />
+              <Row label={t('done_review')} value={statusForLast.review_status} />
             )}
           </dl>
         )}
         {queueDepth > 1 && (
           <p className="mt-3 text-xs text-slate-500">
-            {queueDepth - 1} earlier submission{queueDepth === 2 ? '' : 's'} still in the
-            offline queue.
+            {queueDepth - 1 === 1
+              ? t('done_queue_remaining_one')
+              : t('done_queue_remaining_many', { n: queueDepth - 1 })}
           </p>
         )}
         <button
           onClick={() => {
             setFile(null);
+            setCapturedAt(null);
             setLastAcceptedId(null);
             setStatusForLast(null);
             setStep('pu');
           }}
           className="mt-5 w-full border py-3 rounded font-medium"
         >
-          Done
+          {t('done_continue')}
         </button>
+        <QueuePanel onChange={setQueueDepth} />
       </Shell>
     );
   }
@@ -359,10 +468,27 @@ export function AgentFlow() {
   return null;
 }
 
-function Shell({ title, children }: { title: string; children: React.ReactNode }) {
+function Shell({
+  title,
+  children,
+  onLogout,
+  logoutLabel,
+}: {
+  title: string;
+  children: React.ReactNode;
+  onLogout?: () => void;
+  logoutLabel?: string;
+}) {
   return (
     <div className="max-w-md mx-auto px-5 py-6">
-      <h1 className="text-2xl font-bold mb-4">{title}</h1>
+      <div className="flex items-baseline justify-between mb-4">
+        <h1 className="text-2xl font-bold">{title}</h1>
+        {onLogout && (
+          <button onClick={onLogout} className="text-xs text-slate-500 underline">
+            {logoutLabel}
+          </button>
+        )}
+      </div>
       {children}
     </div>
   );
@@ -377,30 +503,32 @@ function Row({ label, value, mono }: { label: string; value: string; mono?: bool
   );
 }
 
-function translateAuthError(code: string): string {
+type Translator = ReturnType<typeof useTranslations>;
+
+function translateAuthError(code: string, t: Translator): string {
   switch (code) {
     case 'phone_throttled':
-      return 'Too many code requests for this number.';
+      return t('err_phone_throttled');
     case 'ip_throttled':
-      return 'Too many code requests from this network.';
+      return t('err_ip_throttled');
     case 'no_active_otp':
-      return 'No active code for this number. Request a new one.';
+      return t('err_no_active_otp');
     case 'expired':
-      return 'The code expired. Request a new one.';
+      return t('err_expired');
     case 'code_mismatch':
-      return 'That code does not match.';
+      return t('err_code_mismatch');
     case 'too_many_attempts':
-      return 'Too many incorrect attempts. Request a new code.';
+      return t('err_too_many_attempts');
     case 'already_consumed':
-      return 'That code has already been used.';
+      return t('err_already_consumed');
     case 'phone_not_provisioned':
-      return 'This number is not registered. Contact your party admin.';
+      return t('err_phone_not_provisioned');
     case 'device_change_required':
-      return 'New device detected. Your admin must approve.';
+      return t('err_device_change_required');
     case 'invalid phone number':
     case 'unparseable phone':
-      return 'That phone number is not valid.';
+      return t('err_invalid_phone');
     default:
-      return 'Something went wrong. Please try again.';
+      return t('err_generic');
   }
 }

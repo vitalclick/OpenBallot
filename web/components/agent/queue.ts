@@ -160,7 +160,64 @@ export const OfflineQueue = {
       r.onerror = () => rej(r.error);
     });
   },
+
+  /** Return a lightweight, blob-free view of every row in the queue.
+   *  Used by the QueuePanel UI so the agent can see what's stuck. */
+  async list(): Promise<QueuedSubmissionView[]> {
+    const db = await open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readonly');
+      const r = tx.objectStore(STORE).getAll();
+      r.onsuccess = () => {
+        const rows = (r.result as QueuedSubmission[]).map((row) => ({
+          id: row.id!,
+          election_id: row.election_id,
+          pu_code: row.pu_code,
+          image_bytes: row.image_bytes,
+          captured_at: row.captured_at,
+          retries: row.retries ?? 0,
+          next_attempt_at: row.next_attempt_at ?? null,
+          submission_id: row.submission_id ?? null,
+          last_status: row.last_status ?? null,
+        }));
+        resolve(rows);
+      };
+      r.onerror = () => reject(r.error);
+    });
+  },
 };
+
+/** Trigger a background-sync registration so the service worker drains
+ *  the queue when connectivity returns, even if this tab is closed.
+ *  Silently no-ops if the platform doesn't support SyncManager (Safari,
+ *  Firefox at time of writing) — the in-page drainer still covers the
+ *  foreground case. */
+export async function requestBackgroundSync(): Promise<void> {
+  if (typeof navigator === 'undefined') return;
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const reg = (await navigator.serviceWorker.ready) as ServiceWorkerRegistration & {
+      sync?: { register: (tag: string) => Promise<void> };
+    };
+    if (reg.sync?.register) {
+      await reg.sync.register('drain-uploads');
+    }
+  } catch {
+    /* swallow; foreground drainer is the safety net */
+  }
+}
+
+export interface QueuedSubmissionView {
+  id: number;
+  election_id: string;
+  pu_code: string;
+  image_bytes: number;
+  captured_at: string;
+  retries: number;
+  next_attempt_at: number | null;
+  submission_id: string | null;
+  last_status: 'queued' | 'processing' | 'extracted' | 'failed' | null;
+}
 
 export type DrainMessage =
   | { kind: 'started'; id: number }

@@ -17,6 +17,58 @@ const DEVICE_KEY = 'openballot.agent.device';
 const WORKER =
   process.env.NEXT_PUBLIC_WORKER_URL ?? 'http://localhost:8000';
 
+// IDB mirror for the service worker. The SW can't read localStorage, so
+// when Background Sync fires while the tab is closed it would have no
+// way to authenticate uploads. We replicate the token + fingerprint +
+// worker URL into IDB at login and clear them at logout.
+const AUTH_DB = 'openballot-auth';
+const AUTH_STORE = 'session';
+
+function openAuthDb(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(AUTH_DB, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(AUTH_STORE)) {
+        db.createObjectStore(AUTH_STORE);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function writeAuthMirror(token: string, exp: string, fp: string): Promise<void> {
+  if (typeof indexedDB === 'undefined') return;
+  try {
+    const db = await openAuthDb();
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(AUTH_STORE, 'readwrite');
+      const store = tx.objectStore(AUTH_STORE);
+      store.put({ token, exp, fp, worker: WORKER }, 'current');
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  } catch {
+    /* SW will fall back to skipping uploads until the tab is open again */
+  }
+}
+
+async function clearAuthMirror(): Promise<void> {
+  if (typeof indexedDB === 'undefined') return;
+  try {
+    const db = await openAuthDb();
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(AUTH_STORE, 'readwrite');
+      tx.objectStore(AUTH_STORE).delete('current');
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  } catch {
+    /* ignore */
+  }
+}
+
 function uuidv4() {
   if (typeof crypto !== 'undefined' && (crypto as any).randomUUID) {
     return (crypto as any).randomUUID();
@@ -83,6 +135,9 @@ export async function verifyOtp(
   const j = await r.json();
   localStorage.setItem(TOKEN_KEY, j.token);
   localStorage.setItem(TOKEN_EXP_KEY, j.expires_at);
+  // Mirror for the service worker; fire-and-forget so we don't block
+  // the agent on the IDB write.
+  void writeAuthMirror(j.token, j.expires_at, fp);
   return j;
 }
 
@@ -102,6 +157,7 @@ export function logout(): void {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(TOKEN_EXP_KEY);
+  void clearAuthMirror();
 }
 
 export async function authedFetch(input: RequestInfo, init: RequestInit = {}): Promise<Response> {
