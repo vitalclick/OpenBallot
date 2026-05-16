@@ -90,14 +90,21 @@ export function ResultsMap({ defaultElectionId }: Props) {
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-4 h-full">
+    <MapPanel electionId={electionId}>
       <FiltersPanel year={year} election={election} onChange={setFilter} />
-      <MapPanel electionId={electionId} />
-    </div>
+    </MapPanel>
   );
 }
 
-function MapPanel({ electionId }: { electionId: string }) {
+function MapPanel({
+  electionId,
+  children,
+}: {
+  electionId: string;
+  // Rendered above the breadcrumb / filters / detail pane in the left
+  // sidebar. The ElectionYear / ElectionType selectors live here.
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [focus, setFocusState] = useState<MapFocus>(COUNTRY_FOCUS);
@@ -185,46 +192,51 @@ function MapPanel({ electionId }: { electionId: string }) {
   }, [electionId]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_360px] h-full bg-slate-100 rounded-md overflow-hidden border border-slate-200">
-      <div className="flex flex-col bg-slate-100 min-h-0">
-        <FilterBar
-          value={statusFilter}
-          onChange={setStatusFilter}
-          disabled={focus.level !== 'ward'}
-        />
+    <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4 h-full">
+      {/* Left sidebar: election selectors, breadcrumb, status filter,
+          and the detail pane all stack vertically here so the map gets
+          the full remaining width. */}
+      <aside className="flex flex-col gap-3 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] overflow-y-auto p-3 lg:p-0">
+        {children}
         <StateFinder
           states={statesIndex}
           focus={focus}
           onJump={(s) => setFocus({ level: 'state', state_code: s.code, state_name: s.name })}
         />
         <Breadcrumb focus={focus} onFocus={setFocus} />
-        <div className="relative flex-1 min-h-0">
-          {mapboxToken ? (
-            <MapboxRenderer
-              electionId={electionId}
-              token={mapboxToken}
-              focus={focus}
-              onFocus={setFocus}
-              onSelectPU={setSelected}
-            />
-          ) : (
-            <SvgFallback
-              focus={focus}
-              aggregates={aggregates}
-              units={filteredUnits}
-              onFocus={setFocus}
-              onSelectRegion={setSelectedRegion}
-              onSelectPU={setSelected}
-            />
-          )}
-          <Legend level={focus.level} regions={aggregates} />
+        <FilterBar
+          value={statusFilter}
+          onChange={setStatusFilter}
+          disabled={focus.level !== 'ward'}
+        />
+        <div className="border-t bg-white rounded-md shadow-sm">
+          {selected
+            ? <PUDetailPane unit={selected} />
+            : <RegionDetailPane focus={focus} region={selectedRegion} aggregates={aggregates} />}
         </div>
-      </div>
-      <aside className="border-l bg-white overflow-y-auto">
-        {selected
-          ? <PUDetailPane unit={selected} />
-          : <RegionDetailPane focus={focus} region={selectedRegion} aggregates={aggregates} />}
       </aside>
+      {/* Map fills the full right column. */}
+      <div className="relative h-full min-h-[480px] bg-slate-100 rounded-md overflow-hidden border border-slate-200">
+        {mapboxToken ? (
+          <MapboxRenderer
+            electionId={electionId}
+            token={mapboxToken}
+            focus={focus}
+            onFocus={setFocus}
+            onSelectPU={setSelected}
+          />
+        ) : (
+          <SvgFallback
+            focus={focus}
+            aggregates={aggregates}
+            units={filteredUnits}
+            onFocus={setFocus}
+            onSelectRegion={setSelectedRegion}
+            onSelectPU={setSelected}
+          />
+        )}
+        <Legend level={focus.level} regions={aggregates} />
+      </div>
     </div>
   );
 }
@@ -239,7 +251,7 @@ function FiltersPanel({
   onChange: (key: 'year' | 'election', value: string) => void;
 }) {
   return (
-    <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start p-3 lg:p-0">
+    <div className="space-y-3">
       <FilterCard step="1" colour="bg-ng-600" label="Select Election Year">
         <select
           className="w-full border rounded px-2 py-1 text-sm bg-white"
@@ -262,7 +274,7 @@ function FiltersPanel({
           ))}
         </select>
       </FilterCard>
-    </aside>
+    </div>
   );
 }
 
@@ -310,9 +322,9 @@ function FilterBar({
     'inec_conflict',
   ];
   return (
-    <div className={`m-3 mb-2 bg-white rounded-md shadow px-2 py-1 flex flex-wrap gap-1 items-center ${disabled ? 'opacity-50' : ''}`}>
-      <span className="text-[10px] uppercase tracking-wider text-slate-500 mr-1 px-1">
-        Status
+    <div className={`bg-white rounded-md shadow-sm px-2 py-2 flex flex-wrap gap-1 items-center ${disabled ? 'opacity-50' : ''}`}>
+      <span className="w-full text-[10px] uppercase tracking-wider text-slate-500 mb-1 px-1">
+        Status filter
       </span>
       {opts.map((s) => (
         <button
@@ -344,12 +356,12 @@ function StateFinder({
   // focused on a state, otherwise pre-selects the focused state.
   const value = focus.level === 'country' ? '' : focus.state_code;
   return (
-    <div className="mx-3 mb-2 flex items-center gap-2 text-xs text-slate-600">
-      <label className="text-[10px] uppercase tracking-wider text-slate-500">
+    <div className="bg-white rounded-md shadow-sm px-2 py-2">
+      <label className="block text-[10px] uppercase tracking-wider text-slate-500 mb-1">
         Jump to state
       </label>
       <select
-        className="border border-slate-200 rounded px-2 py-1 text-xs bg-white"
+        className="w-full border border-slate-200 rounded px-2 py-1 text-xs bg-white"
         value={value}
         onChange={(e) => {
           const s = states.find((x) => x.code === e.target.value);
@@ -401,7 +413,7 @@ function Breadcrumb({
     trail.push({ label: focus.ward_name, target: focus });
   }
   return (
-    <div className="mx-3 mb-2 flex items-center gap-2 text-xs text-slate-600">
+    <div className="bg-white rounded-md shadow-sm px-2 py-2 flex flex-wrap items-center gap-1.5 text-xs text-slate-600">
       {trail.map((t, i) => (
         <span key={i} className="flex items-center gap-2">
           {i > 0 && <span className="text-slate-300">›</span>}
