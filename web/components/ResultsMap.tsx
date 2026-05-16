@@ -138,7 +138,7 @@ function FilterBar({
 
 function Legend() {
   return (
-    <div className="absolute bottom-3 left-3 bg-white rounded-md shadow p-3 text-xs">
+    <div className="absolute bottom-3 right-3 bg-white rounded-md shadow p-3 text-xs">
       <div className="font-semibold mb-1">Verification status</div>
       {(Object.keys(STATUS_COLOURS) as VerificationStatus[]).map((s) => (
         <div key={s} className="flex items-center gap-2 py-0.5">
