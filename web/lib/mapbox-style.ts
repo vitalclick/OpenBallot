@@ -119,6 +119,24 @@ export function buildLayers() {
         'fill-outline-color': '#0f172a',
       },
     },
+    // Focused state outline: when the user has drilled into a state,
+    // its polygon gets a thick blue stroke. The renderer drives this
+    // via the layer filter (set in applyFocusLayers).
+    {
+      id: 'states-focus-outline',
+      type: 'line',
+      source: 'openballot',
+      'source-layer': 'states',
+      filter: ['all',
+        ['==', ['geometry-type'], 'Polygon'],
+        ['==', ['get', 'state_code'], '__none__'],
+      ],
+      paint: {
+        'line-color': '#1d4ed8',
+        'line-width': 2.5,
+        'line-opacity': 0.9,
+      },
+    },
     // Centroid fallback for states without a polygon loaded.
     {
       id: 'states-circles',

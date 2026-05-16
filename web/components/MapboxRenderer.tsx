@@ -235,10 +235,16 @@ function applyFocusLayers(map: any, focus: MapFocus) {
   };
 
   // States: always visible (the choropleth gives geographic context at
-  // every level). The focused state's polygon stroke is handled in the
-  // style as a feature-state highlight if we add one later.
+  // every level). The focused state's polygon gets a thick blue stroke
+  // via the states-focus-outline layer.
   show('states-fill', true);
   show('states-circles', true);
+  setFilter('states-focus-outline', [
+    'all',
+    ['==', ['geometry-type'], 'Polygon'],
+    ['==', ['get', 'state_code'],
+      focus.level === 'country' ? '__none__' : focus.state_code],
+  ]);
 
   // LGAs visible at state focus, filtered to the focused state's LGAs.
   show('lgas-circles', focus.level === 'state');

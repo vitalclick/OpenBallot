@@ -101,6 +101,9 @@ function MapPanel({ electionId }: { electionId: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [focus, setFocusState] = useState<MapFocus>(COUNTRY_FOCUS);
+  // States are cheap (37 rows) - cache them so the state finder works
+  // regardless of which level the user is currently viewing.
+  const [statesIndex, setStatesIndex] = useState<RegionAggregate[]>([]);
   const [aggregates, setAggregates] = useState<RegionAggregate[]>([]);
   const [units, setUnits] = useState<PollingUnitDetail[]>([]);
   const [statusFilter, setStatusFilter] = useState<VerificationStatus | 'all'>('all');
@@ -118,6 +121,16 @@ function MapPanel({ electionId }: { electionId: string }) {
     for (const [k, v] of Object.entries(focusToParams(next))) params.set(k, v);
     router.replace(`?${params.toString()}`, { scroll: false });
   }, [router, searchParams]);
+
+  // States list cached separately for the state finder dropdown.
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/v1/elections/${electionId}/aggregates?level=state`)
+      .then((r) => r.json())
+      .then((j) => { if (!cancelled) setStatesIndex(j.data ?? []); })
+      .catch(() => { if (!cancelled) setStatesIndex([]); });
+    return () => { cancelled = true; };
+  }, [electionId]);
 
   // Fetch aggregates for the current level. Skipped at ward focus -
   // ward shows raw PUs instead.
@@ -178,6 +191,11 @@ function MapPanel({ electionId }: { electionId: string }) {
           value={statusFilter}
           onChange={setStatusFilter}
           disabled={focus.level !== 'ward'}
+        />
+        <StateFinder
+          states={statesIndex}
+          focus={focus}
+          onJump={(s) => setFocus({ level: 'state', state_code: s.code, state_name: s.name })}
         />
         <Breadcrumb focus={focus} onFocus={setFocus} />
         <div className="relative flex-1 min-h-0">
@@ -309,6 +327,44 @@ function FilterBar({
           {s === 'all' ? 'All' : STATUS_LABEL[s as VerificationStatus]}
         </button>
       ))}
+    </div>
+  );
+}
+
+function StateFinder({
+  states,
+  focus,
+  onJump,
+}: {
+  states: RegionAggregate[];
+  focus: MapFocus;
+  onJump: (s: RegionAggregate) => void;
+}) {
+  // The select shows "— jump to state —" when the user is not currently
+  // focused on a state, otherwise pre-selects the focused state.
+  const value = focus.level === 'country' ? '' : focus.state_code;
+  return (
+    <div className="mx-3 mb-2 flex items-center gap-2 text-xs text-slate-600">
+      <label className="text-[10px] uppercase tracking-wider text-slate-500">
+        Jump to state
+      </label>
+      <select
+        className="border border-slate-200 rounded px-2 py-1 text-xs bg-white"
+        value={value}
+        onChange={(e) => {
+          const s = states.find((x) => x.code === e.target.value);
+          if (s) onJump(s);
+        }}
+      >
+        <option value="" disabled>— select —</option>
+        {[...states]
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((s) => (
+            <option key={s.code} value={s.code}>
+              {s.name} ({s.pu_count.toLocaleString()} PUs)
+            </option>
+          ))}
+      </select>
     </div>
   );
 }
