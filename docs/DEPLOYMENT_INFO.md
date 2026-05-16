@@ -156,7 +156,7 @@ and Storage as a redundant secondary mirror of EC8A images.
 5. (Optional, post-launch) Database → Read replicas → add one replica in
    `af-south-1` for Africa-region read latency.
 6. Project Settings → API → copy:
-   * **Project URL** (`https://<id>.supabase.co`)
+   * **Project URL** — for OpenBallot Nigeria this is `https://ibkpyiolygwxkltebjpk.supabase.co`
    * **anon public key** (safe to expose; used by browser code)
    * **service_role key** (server-side ONLY; full DB access; treat as a root password)
 
