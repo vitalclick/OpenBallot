@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { unstable_setRequestLocale } from 'next-intl/server';
 
 import { ResultsDashboard } from '@/components/ResultsDashboard';
@@ -16,7 +17,9 @@ export default function ResultsPage({ params }: { params: { locale: string } }) 
           <p className="text-xs text-slate-500">National and State Elections</p>
         </div>
       </div>
-      <ResultsDashboard electionId="2027-presidential" />
+      <Suspense fallback={<div className="p-10 text-slate-500">Loading dashboard…</div>}>
+        <ResultsDashboard defaultElectionId="2027-presidential" />
+      </Suspense>
     </div>
   );
 }

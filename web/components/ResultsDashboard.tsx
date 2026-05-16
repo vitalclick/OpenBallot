@@ -1,36 +1,74 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { ChoroplethMap } from '@/components/ChoroplethMap';
+import { ChoroplethMap, type ChoroplethFocus } from '@/components/ChoroplethMap';
+import { PARTIES, seatTotalForStateElection } from '@/lib/parties';
 import type { DashboardResponse, DashboardPartyResult } from '@/lib/types';
 
 // Recreates the public results dashboard layout used by election
 // commissions (loosely modelled after results.elections.org.za).
 //
-// Left rail: year/election/ballot filters (mock-only - currently the
-// only option is the configured election_id). Main column: completion
-// ribbon, valid/spoilt + turnout summaries, quick links, leading-party
-// cards, choropleth, full party-results table.
+// Filter state lives in the URL (?year=&election=&ballot=) so the
+// page is bookmarkable and the selectors auto-navigate on change.
 
-interface Props { electionId: string }
+const ELECTION_OPTIONS: Array<{ slug: string; label: string }> = [
+  { slug: 'presidential', label: 'Presidential Election' },
+  { slug: 'senate',       label: 'Senate' },
+  { slug: 'reps',         label: 'House of Representatives' },
+  { slug: 'governorship', label: 'Gubernatorial' },
+  { slug: 'stha',         label: 'State House of Assembly' },
+];
 
-export function ResultsDashboard({ electionId }: Props) {
+const YEAR_OPTIONS = [2027, 2023, 2019, 2015, 2011];
+
+interface Props { defaultElectionId: string }
+
+export function ResultsDashboard({ defaultElectionId }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const defaults = useMemo(() => {
+    const [year, slug] = defaultElectionId.split('-');
+    return {
+      year: Number(year) || 2027,
+      election: slug || 'presidential',
+    };
+  }, [defaultElectionId]);
+
+  const year = Number(searchParams.get('year')) || defaults.year;
+  const election = searchParams.get('election') || defaults.election;
+
+  const electionId = `${year}-${election}`;
+  const setFilter = useCallback(
+    (key: 'year' | 'election', value: string) => {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set(key, value);
+      router.replace(`?${next.toString()}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
+
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
     (async () => {
-      const r = await fetch(`/api/v1/elections/${electionId}/dashboard`, { cache: 'no-store' });
+      const qs = new URLSearchParams({ year: String(year), election });
+      const r = await fetch(`/api/v1/elections/${electionId}/dashboard?${qs}`, {
+        cache: 'no-store',
+      });
       const j = await r.json();
       if (!cancelled && j.data) setData(j.data as DashboardResponse);
-      setLoading(false);
+      if (!cancelled) setLoading(false);
     })();
     return () => { cancelled = true; };
-  }, [electionId]);
+  }, [electionId, year, election]);
 
-  if (loading) {
+  if (loading && !data) {
     return <div className="p-10 text-slate-500">Loading dashboard…</div>;
   }
   if (!data) {
@@ -41,56 +79,136 @@ export function ResultsDashboard({ electionId }: Props) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 max-w-7xl mx-auto px-4 py-6">
-      <FiltersPanel data={data} />
-      <div className="space-y-6">
-        <Title data={data} />
-        <CompletionRibbon
-          pct={completedPct}
-          completed={data.units_completed}
-          total={data.units_total}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ValidSpoiltCard
-            valid={data.total_valid_votes}
-            rejected={data.total_rejected_ballots}
-          />
-          <TurnoutCard pct={data.turnout_pct} />
-        </div>
-        <QuickLinks electionId={data.election_id} />
-        <LeadingParties parties={data.parties.slice(0, 3)} totalValid={data.total_valid_votes} />
-        <ChoroplethSection winners={data.state_winners} parties={data.parties} />
-        <PartyResultsTable parties={data.parties} />
-        <p className="text-xs text-slate-500 pt-2">
-          Last updated {new Date(data.last_updated).toLocaleString()} ·{' '}
-          <a href={`/api/v1/elections/${data.election_id}/dashboard`} className="hover:underline">JSON</a>
-        </p>
-      </div>
+      <FiltersPanel
+        year={year}
+        election={election}
+        onChange={setFilter}
+      />
+      <DashboardBody data={data} completedPct={completedPct} />
     </div>
   );
 }
 
-function FiltersPanel({ data }: { data: DashboardResponse }) {
+function DashboardBody({
+  data,
+  completedPct,
+}: {
+  data: DashboardResponse;
+  completedPct: number;
+}) {
+  const [focus, setFocus] = useState<ChoroplethFocus>({ level: 'country' });
+
+  // When the user drills into a state on the map, rescope the title,
+  // the seat total, and the party-results table to that state.
+  const scopedTable = useMemo(() => {
+    const electionSlug = electionSlugFromId(data.election_id);
+    if (!focus.stateCode) {
+      return {
+        title: `${data.election_name} – ${data.election_year}`,
+        seatTotal: data.seat_total,
+        parties: data.parties,
+        totalValid: data.total_valid_votes,
+      };
+    }
+    const stateTotals = data.state_party_totals[focus.stateCode] ?? {};
+    const totalValid = Object.values(stateTotals).reduce((a, b) => a + b, 0);
+    const stateSeats =
+      data.seat_total === null
+        ? null
+        : seatTotalForStateElection(electionSlug, focus.stateCode);
+    const parties: DashboardPartyResult[] = PARTIES.map((p) => {
+      const votes = stateTotals[p.code] ?? 0;
+      const support = totalValid ? votes / totalValid : 0;
+      return {
+        code: p.code,
+        name: p.name,
+        color: p.color,
+        total_votes: votes,
+        support_pct: support * 100,
+        seats: stateSeats === null ? null : Math.round(support * stateSeats),
+        history: data.parties.find((d) => d.code === p.code)?.history ?? [],
+      };
+    }).sort((a, b) => b.total_votes - a.total_votes);
+    return {
+      title: `${data.election_name} – ${focus.stateName} – ${data.election_year}`,
+      seatTotal: stateSeats,
+      parties,
+      totalValid,
+    };
+  }, [focus, data]);
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-center text-2xl md:text-3xl font-semibold text-slate-800">
+        {scopedTable.title}
+      </h1>
+      <CompletionRibbon
+        pct={completedPct}
+        completed={data.units_completed}
+        total={data.units_total}
+      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ValidSpoiltCard
+          valid={data.total_valid_votes}
+          rejected={data.total_rejected_ballots}
+        />
+        <TurnoutCard pct={data.turnout_pct} />
+      </div>
+      <QuickLinks electionId={data.election_id} />
+      <LeadingParties
+        parties={scopedTable.parties.slice(0, 3)}
+        totalValid={scopedTable.totalValid}
+      />
+      <ChoroplethSection
+        winners={data.state_winners}
+        parties={data.parties}
+        onFocusChange={setFocus}
+      />
+      <PartyResultsTable parties={scopedTable.parties} seatTotal={scopedTable.seatTotal} />
+      <p className="text-xs text-slate-500 pt-2">
+        Last updated {new Date(data.last_updated).toLocaleString()} ·{' '}
+        <a href={`/api/v1/elections/${data.election_id}/dashboard`} className="hover:underline">JSON</a>
+      </p>
+    </div>
+  );
+}
+
+function electionSlugFromId(electionId: string): string {
+  const [, slug] = electionId.split('-');
+  return slug ?? 'presidential';
+}
+
+function FiltersPanel({
+  year,
+  election,
+  onChange,
+}: {
+  year: number;
+  election: string;
+  onChange: (key: 'year' | 'election', value: string) => void;
+}) {
   return (
     <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
-      <FilterCard step="1" colour="bg-sky-600" label="Select Election Year">
-        <select className="w-full border rounded px-2 py-1 text-sm bg-white" defaultValue={data.election_year}>
-          <option value={data.election_year}>{data.election_year}</option>
-          <option value={2023}>2023</option>
-          <option value={2019}>2019</option>
+      <FilterCard step="1" colour="bg-ng-600" label="Select Election Year">
+        <select
+          className="w-full border rounded px-2 py-1 text-sm bg-white"
+          value={year}
+          onChange={(e) => onChange('year', e.target.value)}
+        >
+          {YEAR_OPTIONS.map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
         </select>
       </FilterCard>
-      <FilterCard step="2" colour="bg-orange-500" label="Select Election">
-        <select className="w-full border rounded px-2 py-1 text-sm bg-white" defaultValue={data.election_name}>
-          <option>{data.election_name}</option>
-          <option>House of Representatives</option>
-          <option>Senate</option>
-          <option>Gubernatorial</option>
-        </select>
-      </FilterCard>
-      <FilterCard step="3" colour="bg-sky-600" label="Select Ballot">
-        <select className="w-full border rounded px-2 py-1 text-sm bg-white" defaultValue={data.ballot}>
-          <option>National</option>
-          <option>State</option>
+      <FilterCard step="2" colour="bg-ng-800" label="Select Election">
+        <select
+          className="w-full border rounded px-2 py-1 text-sm bg-white"
+          value={election}
+          onChange={(e) => onChange('election', e.target.value)}
+        >
+          {ELECTION_OPTIONS.map((o) => (
+            <option key={o.slug} value={o.slug}>{o.label}</option>
+          ))}
         </select>
       </FilterCard>
     </aside>
@@ -121,14 +239,6 @@ function FilterCard({
   );
 }
 
-function Title({ data }: { data: DashboardResponse }) {
-  return (
-    <h1 className="text-center text-2xl md:text-3xl font-semibold text-slate-800">
-      {data.election_name} – {data.election_year}
-    </h1>
-  );
-}
-
 function CompletionRibbon({
   pct,
   completed,
@@ -144,8 +254,8 @@ function CompletionRibbon({
         <svg viewBox="0 0 200 130" className="absolute inset-0 w-full h-full">
           <path
             d="M 20 5 L 180 5 L 180 95 L 100 125 L 20 95 Z"
-            fill="#1e3a8a"
-            stroke="#1e40af"
+            fill="#008753"
+            stroke="#006a40"
             strokeWidth="2"
           />
         </svg>
@@ -175,13 +285,13 @@ function ValidSpoiltCard({ valid, rejected }: { valid: number; rejected: number 
       <div className="text-center text-sm font-medium text-slate-600 mb-3">Valid / Spoilt Votes</div>
       <div className="flex items-center justify-center gap-6">
         <svg viewBox="0 0 160 160" className="w-32 h-32">
-          <circle cx="80" cy="80" r={r} fill="none" stroke="#f59e0b" strokeWidth="22" />
+          <circle cx="80" cy="80" r={r} fill="none" stroke="#d97706" strokeWidth="22" />
           <circle
             cx="80"
             cy="80"
             r={r}
             fill="none"
-            stroke="#0ea5e9"
+            stroke="#008753"
             strokeWidth="22"
             strokeDasharray={`${validLen} ${c - validLen}`}
             strokeDashoffset={c / 4}
@@ -189,8 +299,8 @@ function ValidSpoiltCard({ valid, rejected }: { valid: number; rejected: number 
           />
         </svg>
         <div className="text-xs space-y-2">
-          <Legend dot="#0ea5e9" label={`Valid Votes ${validPct.toFixed(2)}%`} />
-          <Legend dot="#f59e0b" label={`Spoilt Votes ${spoiltPct.toFixed(2)}%`} />
+          <Legend dot="#008753" label={`Valid Votes ${validPct.toFixed(2)}%`} />
+          <Legend dot="#d97706" label={`Spoilt Votes ${spoiltPct.toFixed(2)}%`} />
           <div className="pt-2 text-slate-500">
             {valid.toLocaleString()} valid<br />
             {rejected.toLocaleString()} rejected
@@ -215,8 +325,8 @@ function TurnoutCard({ pct }: { pct: number }) {
     <div className="border rounded-lg bg-white p-5">
       <div className="text-center text-sm font-medium text-slate-600 mb-3">Voter Turnout</div>
       <div className="flex flex-col items-center justify-center h-32">
-        <div className="border-4 border-slate-200 rounded-lg px-6 py-4">
-          <div className="text-3xl font-semibold text-sky-600 text-center">{pct.toFixed(2)}%</div>
+        <div className="border-4 border-ng-100 rounded-lg px-6 py-4 bg-ng-50">
+          <div className="text-3xl font-semibold text-ng-700 text-center">{pct.toFixed(2)}%</div>
         </div>
       </div>
     </div>
@@ -300,9 +410,11 @@ function LeadingParties({
 function ChoroplethSection({
   winners,
   parties,
+  onFocusChange,
 }: {
   winners: Record<string, string>;
   parties: DashboardPartyResult[];
+  onFocusChange?: (focus: ChoroplethFocus) => void;
 }) {
   const partyByCode = useMemo(
     () => Object.fromEntries(parties.map((p) => [p.code, p])),
@@ -314,7 +426,11 @@ function ChoroplethSection({
         Leading party by state
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[1fr_180px] gap-4 items-start">
-        <ChoroplethMap winners={winners} partyByCode={partyByCode} />
+        <ChoroplethMap
+          winners={winners}
+          partyByCode={partyByCode}
+          onFocusChange={onFocusChange}
+        />
         <div className="text-xs space-y-1">
           {parties.map((p) => (
             <div key={p.code} className="flex items-center gap-2">
@@ -332,7 +448,16 @@ function ChoroplethSection({
   );
 }
 
-function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
+function PartyResultsTable({
+  parties,
+  seatTotal,
+}: {
+  parties: DashboardPartyResult[];
+  seatTotal: number | null;
+}) {
+  // Presidential and gubernatorial races are winner-take-all under
+  // Nigerian law - no seat allocation, so the column is hidden.
+  const showSeats = seatTotal !== null;
   return (
     <div className="border rounded-lg bg-white overflow-x-auto">
       <table className="w-full text-sm">
@@ -341,7 +466,9 @@ function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
             <th className="text-left p-3">Party</th>
             <th className="text-right p-3">Votes</th>
             <th className="text-right p-3">Support</th>
-            <th className="text-right p-3">Seats (360)</th>
+            {showSeats && (
+              <th className="text-right p-3">Seats ({seatTotal})</th>
+            )}
             <th className="text-right p-3 hidden md:table-cell">History</th>
           </tr>
         </thead>
@@ -362,7 +489,9 @@ function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
               </td>
               <td className="p-3 text-right tabular-nums">{p.total_votes.toLocaleString()}</td>
               <td className="p-3 text-right tabular-nums">{p.support_pct.toFixed(2)}%</td>
-              <td className="p-3 text-right tabular-nums">{p.seats}</td>
+              {showSeats && (
+                <td className="p-3 text-right tabular-nums">{p.seats ?? '—'}</td>
+              )}
               <td className="p-3 hidden md:table-cell">
                 <HistoryBars history={p.history} color={p.color} />
               </td>

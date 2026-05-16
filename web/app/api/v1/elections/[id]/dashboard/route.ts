@@ -2,12 +2,11 @@ import { NextRequest } from 'next/server';
 
 import { jsonOk } from '@/lib/api';
 import {
-  isMockMode,
   mockNationalRollup,
   mockStatePartyTotals,
   mockVoterTotals,
 } from '@/lib/mock-data';
-import { PARTIES, TOTAL_REP_SEATS } from '@/lib/parties';
+import { PARTIES, seatTotalForElection } from '@/lib/parties';
 import type { DashboardPartyResult, DashboardResponse } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -30,10 +29,26 @@ const HISTORICAL_SEATS: Record<string, Array<{ year: number; seats: number }>> =
   AAC:  [{year:2011,seats:0},  {year:2015,seats:0},  {year:2019,seats:0},  {year:2023,seats:0}],
 };
 
-function buildMockDashboard(electionId: string): DashboardResponse {
+const ELECTION_LABELS: Record<string, string> = {
+  presidential: 'Presidential Election',
+  reps: 'House of Representatives',
+  senate: 'Senate',
+  governorship: 'Gubernatorial',
+  stha: 'State House of Assembly',
+};
+
+function buildMockDashboard(
+  electionId: string,
+  overrides: { year?: number; election?: string }
+): DashboardResponse {
   const rollup = mockNationalRollup();
   const voterTotals = mockVoterTotals();
   const stateTotals = mockStatePartyTotals();
+
+  const [parsedYear, parsedSlug] = electionId.split('-');
+  const year = overrides.year ?? Number(parsedYear) ?? 2027;
+  const slug = overrides.election ?? parsedSlug ?? 'presidential';
+  const seatTotal = seatTotalForElection(slug);
 
   const partyTotals = rollup.party_totals ?? {};
   const totalValid = Object.values(partyTotals).reduce((a, b) => a + b, 0);
@@ -47,7 +62,7 @@ function buildMockDashboard(electionId: string): DashboardResponse {
       color: p.color,
       total_votes: votes,
       support_pct: support * 100,
-      seats: Math.round(support * TOTAL_REP_SEATS),
+      seats: seatTotal === null ? null : Math.round(support * seatTotal),
       history: HISTORICAL_SEATS[p.code] ?? [],
     };
   }).sort((a, b) => b.total_votes - a.total_votes);
@@ -67,9 +82,9 @@ function buildMockDashboard(electionId: string): DashboardResponse {
 
   return {
     election_id: electionId,
-    election_name: 'Presidential Election',
-    election_year: 2027,
-    ballot: 'National',
+    election_name: ELECTION_LABELS[slug] ?? 'Presidential Election',
+    election_year: year,
+    seat_total: seatTotal,
     units_total: rollup.units_total,
     units_completed: rollup.units_reporting,
     total_valid_votes: totalValid,
@@ -79,13 +94,17 @@ function buildMockDashboard(electionId: string): DashboardResponse {
     turnout_pct: turnoutPct,
     parties,
     state_winners: stateWinners,
+    state_party_totals: stateTotals,
     last_updated: rollup.last_updated,
   };
 }
 
-export async function GET(_req: NextRequest, { params }: Params) {
+export async function GET(req: NextRequest, { params }: Params) {
+  const overrides = {
+    year: Number(req.nextUrl.searchParams.get('year')) || undefined,
+    election: req.nextUrl.searchParams.get('election') ?? undefined,
+  };
   // The dashboard view is currently mock-only; a future change will
   // back it with the same Supabase views the rest of the app uses.
-  if (isMockMode()) return jsonOk(buildMockDashboard(params.id));
-  return jsonOk(buildMockDashboard(params.id));
+  return jsonOk(buildMockDashboard(params.id, overrides));
 }

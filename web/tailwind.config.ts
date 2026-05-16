@@ -16,8 +16,22 @@ const config: Config = {
           conflict: '#dc2626',
         },
         ng: {
-          green: '#008753',
-          white: '#ffffff',
+          // Official Nigerian flag green and a coordinated scale used by
+          // the public dashboard. The 600 step is the flag colour.
+          50:  '#e6f4ec',
+          100: '#cfe9da',
+          200: '#a1d4b6',
+          300: '#73bf91',
+          400: '#3ea76c',
+          500: '#179656',
+          600: '#008753',
+          700: '#006a40',
+          800: '#004f30',
+          900: '#003520',
+          green:     '#008753',
+          greenDark: '#006a40',
+          mint:      '#e6f4ec',
+          white:     '#ffffff',
         },
       },
       fontFamily: {
