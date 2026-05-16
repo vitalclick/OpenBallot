@@ -6,10 +6,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type {
+  AggregateLevel,
   AnomalyRecord,
   DiscrepancyRecord,
   NationalRollup,
   PollingUnitDetail,
+  RegionAggregate,
   SubmissionView,
   VerificationStatus,
 } from './types';
@@ -380,4 +382,168 @@ export function mockAnomalies(): AnomalyRecord[] {
 
 export function isMockMode(): boolean {
   return !process.env.NEXT_PUBLIC_SUPABASE_URL;
+}
+
+// Human-readable LGA / ward labels for the mock data. The codes are
+// stable (`LA-LGA-1`, `LA-W3`) but the names give the breadcrumb +
+// tooltips something nicer than the raw code on a fresh clone.
+const MOCK_LGA_NAMES: Record<string, string[]> = {
+  LA: ['Alimosho', 'Kosofe', 'Eti-Osa', 'Ikeja'],
+  KN: ['Nasarawa', 'Tarauni', 'Kumbotso', 'Fagge'],
+  RI: ['Port Harcourt', 'Obio-Akpor', 'Eleme', 'Okrika'],
+  FC: ['Abuja Municipal', 'Bwari', 'Gwagwalada', 'Kuje'],
+};
+const MOCK_WARD_NAMES: Record<string, string[]> = {
+  LA: ['Ikotun', 'Egbeda', 'Mushin', 'Surulere', 'Ajegunle', 'Yaba', 'Lekki', 'Apapa'],
+  KN: ['Sabon Gari', 'Fagge', 'Hotoro', 'Nasarawa', 'Brigade', 'Tarauni', 'Kumbotso', 'Gwale'],
+  RI: ['Diobu', 'Mile 1', 'Rumuomasi', 'Choba', 'Eleme Town', 'Okrika Town', 'Trans Amadi', 'Borokiri'],
+  FC: ['Garki', 'Wuse', 'Maitama', 'Asokoro', 'Gwarinpa', 'Kubwa', 'Lugbe', 'Karu'],
+};
+
+export function mockLgaName(code: string): string {
+  // code looks like "LA-LGA-1"
+  const m = /^([A-Z]{2})-LGA-(\d+)$/.exec(code);
+  if (!m) return code;
+  const list = MOCK_LGA_NAMES[m[1]] ?? [];
+  return list[(Number(m[2]) - 1) % Math.max(list.length, 1)] ?? code;
+}
+
+export function mockWardName(code: string): string {
+  // code looks like "LA-W3"
+  const m = /^([A-Z]{2})-W(\d+)$/.exec(code);
+  if (!m) return code;
+  const list = MOCK_WARD_NAMES[m[1]] ?? [];
+  return list[(Number(m[2]) - 1) % Math.max(list.length, 1)] ?? code;
+}
+
+// Centroid helper - average lng/lat across the given PUs.
+function centroidOf(units: PollingUnitDetail[]): { lng: number; lat: number } {
+  if (units.length === 0) return { lng: 8.7, lat: 9.1 };
+  let lng = 0, lat = 0;
+  for (const u of units) {
+    lng += u.coordinates.lng;
+    lat += u.coordinates.lat;
+  }
+  return { lng: lng / units.length, lat: lat / units.length };
+}
+
+function statusBuckets(units: PollingUnitDetail[]) {
+  const out = {
+    units_reporting: 0,
+    units_consensus: 0,
+    units_discrepancy: 0,
+    units_inec_confirmed: 0,
+    units_inec_conflict: 0,
+    units_inec_published: 0,
+    units_single_source: 0,
+  };
+  for (const u of units) {
+    if (u.status !== 'no_data') out.units_reporting++;
+    if (u.status === 'consensus') out.units_consensus++;
+    else if (u.status === 'discrepancy') out.units_discrepancy++;
+    else if (u.status === 'inec_confirmed') out.units_inec_confirmed++;
+    else if (u.status === 'inec_conflict') out.units_inec_conflict++;
+    else if (u.status === 'inec_published') out.units_inec_published++;
+    else if (u.status === 'single_source') out.units_single_source++;
+  }
+  return out;
+}
+
+function leaderOf(units: PollingUnitDetail[]): { party: string | null; share: number | null } {
+  const totals: Record<string, number> = {};
+  let grand = 0;
+  for (const u of units) {
+    if (!u.consensus_data) continue;
+    for (const [p, n] of Object.entries(u.consensus_data.candidate_votes)) {
+      totals[p] = (totals[p] ?? 0) + (n as number);
+      grand += n as number;
+    }
+  }
+  if (grand === 0) return { party: null, share: null };
+  let bestParty: string | null = null;
+  let best = 0;
+  for (const [p, n] of Object.entries(totals)) {
+    if (n > best) { best = n; bestParty = p; }
+  }
+  return { party: bestParty, share: bestParty ? best / grand : null };
+}
+
+// Produce region-level aggregates from the mock PU set. `parent` filters
+// LGAs to a state, and wards to an LGA - mirrors the server-side
+// `/aggregates` endpoint so the demo behaves identically.
+export function mockAggregates(
+  level: AggregateLevel,
+  parent: string | null
+): RegionAggregate[] {
+  const all = mockPollingUnits();
+  if (level === 'state') {
+    const byState = new Map<string, PollingUnitDetail[]>();
+    for (const u of all) {
+      const arr = byState.get(u.state_code) ?? [];
+      arr.push(u);
+      byState.set(u.state_code, arr);
+    }
+    return [...byState.entries()].map(([code, units]) => {
+      const { party, share } = leaderOf(units);
+      return {
+        level: 'state' as const,
+        code,
+        name: STATE_NAMES[code] ?? code,
+        parent_code: null,
+        state_code: code,
+        pu_count: units.length,
+        centroid: centroidOf(units),
+        leader_party: party,
+        leader_share: share,
+        ...statusBuckets(units),
+      };
+    });
+  }
+  if (level === 'lga') {
+    const scoped = parent ? all.filter((u) => u.state_code === parent) : all;
+    const byLga = new Map<string, PollingUnitDetail[]>();
+    for (const u of scoped) {
+      const arr = byLga.get(u.lga_code) ?? [];
+      arr.push(u);
+      byLga.set(u.lga_code, arr);
+    }
+    return [...byLga.entries()].map(([code, units]) => {
+      const { party, share } = leaderOf(units);
+      return {
+        level: 'lga' as const,
+        code,
+        name: mockLgaName(code),
+        parent_code: units[0]?.state_code ?? null,
+        state_code: units[0]?.state_code ?? '',
+        pu_count: units.length,
+        centroid: centroidOf(units),
+        leader_party: party,
+        leader_share: share,
+        ...statusBuckets(units),
+      };
+    });
+  }
+  // ward
+  const scoped = parent ? all.filter((u) => u.lga_code === parent) : all;
+  const byWard = new Map<string, PollingUnitDetail[]>();
+  for (const u of scoped) {
+    const arr = byWard.get(u.ward_code) ?? [];
+    arr.push(u);
+    byWard.set(u.ward_code, arr);
+  }
+  return [...byWard.entries()].map(([code, units]) => {
+    const { party, share } = leaderOf(units);
+    return {
+      level: 'ward' as const,
+      code,
+      name: mockWardName(code),
+      parent_code: units[0]?.lga_code ?? null,
+      state_code: units[0]?.state_code ?? '',
+      pu_count: units.length,
+      centroid: centroidOf(units),
+      leader_party: party,
+      leader_share: share,
+      ...statusBuckets(units),
+    };
+  });
 }

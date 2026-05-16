@@ -160,6 +160,34 @@ export interface DashboardResponse {
   last_updated: string;
 }
 
+// Per-region aggregate used by the map at country/state/LGA zoom levels.
+// `level` tells the renderer which administrative unit a row represents;
+// `code` is the INEC code (state.code, lga.code, or ward.code) and `name`
+// is the human-readable label shown in the breadcrumb + tooltips.
+//
+// Counts are restricted to the requested election. `centroid` is the
+// representative point used to place the proportional symbol on the map.
+export type AggregateLevel = 'state' | 'lga' | 'ward';
+
+export interface RegionAggregate {
+  level: AggregateLevel;
+  code: string;
+  name: string;
+  parent_code: string | null;        // state_code for lga; lga_code for ward
+  state_code: string;
+  pu_count: number;
+  units_reporting: number;
+  units_consensus: number;
+  units_discrepancy: number;
+  units_inec_confirmed: number;
+  units_inec_conflict: number;
+  units_inec_published: number;
+  units_single_source: number;
+  centroid: { lng: number; lat: number };
+  leader_party: string | null;       // party with the most consensus/IReV votes
+  leader_share: number | null;       // 0..1, fraction of valid votes
+}
+
 export const STATUS_COLOURS: Record<VerificationStatus, string> = {
   no_data: '#e5e7eb',
   single_source: '#f6c453',
