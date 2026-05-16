@@ -35,9 +35,12 @@ coverage
 .idea
 .vscode
 
-# Polling-Units scraper output (kept ignored from prior work)
-Polling-Units/results
+# Polling-Units scraper output: regenerable from `node scraper.js`, loaded
+# into Postgres by scripts/load_polling_units.py — the DB is the source of
+# truth. The README explains how to regenerate, so allow it through.
+Polling-Units/results/*
 Polling-Units/progress
+!Polling-Units/results/README.md
 
 # Ward boundary downloads (~60 MB, re-fetchable via scripts/fetch_ward_boundaries.sh)
 data/ward_boundaries/*

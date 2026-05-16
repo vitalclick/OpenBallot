@@ -24,3 +24,7 @@ Thumbs.db
 temp/
 tmp/
 *.bak
+
+# Note: Polling-Units/results and Polling-Units/progress are excluded by
+# the repo-root .gitignore (the database is the source of truth once
+# scripts/load_polling_units.py has loaded the scraped JSON).
