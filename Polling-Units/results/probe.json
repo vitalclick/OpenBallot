@@ -1,0 +1,175 @@
+{
+  "steps": [],
+  "base_url": "https://www.inecnigeria.org/wp-content/themes/rishi/custom/views",
+  "states_count": 37,
+  "states_sample": [
+    {
+      "s_name": "ABIA"
+    },
+    {
+      "s_name": "ADAMAWA"
+    },
+    {
+      "s_name": "AKWA IBOM"
+    }
+  ],
+  "first_state": {
+    "name": "ABIA",
+    "raw": {
+      "s_name": "ABIA"
+    }
+  },
+  "lga_probe_attempts": [
+    {
+      "params": {
+        "state_id": "ABIA"
+      },
+      "label": "state_id=<name>",
+      "count": 17,
+      "sample": [
+        {
+          "lga": "ABA NORTH"
+        },
+        {
+          "lga": "ABA SOUTH"
+        }
+      ]
+    }
+  ],
+  "lgas_count": 17,
+  "lgas_sample": [
+    {
+      "lga": "ABA NORTH"
+    },
+    {
+      "lga": "ABA SOUTH"
+    },
+    {
+      "lga": "AROCHUKWU"
+    }
+  ],
+  "working_lga_params": {
+    "params": {
+      "state_id": "ABIA"
+    },
+    "label": "state_id=<name>"
+  },
+  "first_lga": {
+    "name": "ABA NORTH",
+    "raw": {
+      "lga": "ABA NORTH"
+    }
+  },
+  "ward_probe_attempts": [
+    {
+      "params": {
+        "state_id": "ABIA",
+        "lga_id": "ABA NORTH"
+      },
+      "label": "lga_id=<name>",
+      "count": 12,
+      "sample": [
+        {
+          "ward": "EZIAMA"
+        },
+        {
+          "ward": "INDUSTRIAL AREA"
+        }
+      ]
+    }
+  ],
+  "wards_count": 12,
+  "wards_sample": [
+    {
+      "ward": "EZIAMA"
+    },
+    {
+      "ward": "INDUSTRIAL AREA"
+    },
+    {
+      "ward": "OSUSU I"
+    }
+  ],
+  "working_ward_params": {
+    "params": {
+      "state_id": "ABIA",
+      "lga_id": "ABA NORTH"
+    },
+    "label": "lga_id=<name>"
+  },
+  "first_ward": {
+    "name": "EZIAMA",
+    "raw": {
+      "ward": "EZIAMA"
+    }
+  },
+  "pu_probe_attempts": [
+    {
+      "params": {
+        "state_id": "ABIA",
+        "lga_id": "ABA NORTH",
+        "ward_id": "EZIAMA"
+      },
+      "label": "ward_id=<name>",
+      "count": 57,
+      "sample": [
+        {
+          "id": "1",
+          "state": "ABIA",
+          "lga": "ABA NORTH",
+          "ward": "EZIAMA",
+          "pu": "RAILWAY QUARTERS - RAILWAY QUARTERS I",
+          "delim": "01-01-01-001",
+          "remark": "EXISTING PU"
+        },
+        {
+          "id": "3",
+          "state": "ABIA",
+          "lga": "ABA NORTH",
+          "ward": "EZIAMA",
+          "pu": "RAILWAY QUARTERS - RAILWAY QUARTERS II",
+          "delim": "01-01-01-002",
+          "remark": "EXISTING PU"
+        }
+      ]
+    }
+  ],
+  "pus_count": 57,
+  "pus_sample": [
+    {
+      "id": "1",
+      "state": "ABIA",
+      "lga": "ABA NORTH",
+      "ward": "EZIAMA",
+      "pu": "RAILWAY QUARTERS - RAILWAY QUARTERS I",
+      "delim": "01-01-01-001",
+      "remark": "EXISTING PU"
+    },
+    {
+      "id": "3",
+      "state": "ABIA",
+      "lga": "ABA NORTH",
+      "ward": "EZIAMA",
+      "pu": "RAILWAY QUARTERS - RAILWAY QUARTERS II",
+      "delim": "01-01-01-002",
+      "remark": "EXISTING PU"
+    },
+    {
+      "id": "5",
+      "state": "ABIA",
+      "lga": "ABA NORTH",
+      "ward": "EZIAMA",
+      "pu": "RAILWAY QUARTERS - RAILWAY QUARTERS III",
+      "delim": "01-01-01-003",
+      "remark": "EXISTING PU"
+    }
+  ],
+  "working_pu_params": {
+    "params": {
+      "state_id": "ABIA",
+      "lga_id": "ABA NORTH",
+      "ward_id": "EZIAMA"
+    },
+    "label": "ward_id=<name>"
+  }
+}
