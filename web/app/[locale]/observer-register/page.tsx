@@ -1,6 +1,9 @@
+import { unstable_setRequestLocale } from 'next-intl/server';
+
 import { ObserverRegistrationForm } from '@/components/ObserverRegistrationForm';
 
-export default function ObserverRegisterPage() {
+export default function ObserverRegisterPage({ params }: { params: { locale: string } }) {
+  unstable_setRequestLocale(params.locale);
   return (
     <div className="max-w-2xl mx-auto px-6 py-10">
       <h1 className="text-2xl font-bold">Observer registration</h1>

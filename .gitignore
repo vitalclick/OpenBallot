@@ -21,6 +21,12 @@ __pycache__
 *.egg-info
 tsconfig.tsbuildinfo
 package-lock.json
+
+# next-pwa build output (auto-generated under public/)
+web/public/sw.js
+web/public/workbox-*.js
+web/public/sw.js.map
+web/public/workbox-*.js.map
 *.log
 coverage
 .coverage

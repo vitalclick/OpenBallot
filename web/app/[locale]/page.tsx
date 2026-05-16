@@ -1,9 +1,16 @@
 import { useTranslations } from 'next-intl';
+import { unstable_setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 
 import { LiveCounters } from '@/components/LiveCounters';
 
-export default function LandingPage() {
+// next-intl opts pages into dynamic rendering unless setRequestLocale
+// is called at the page level. We want static rendering for the
+// landing page so the build can pre-render every locale; calling
+// setRequestLocale here is the documented opt-in.
+
+export default function LandingPage({ params }: { params: { locale: string } }) {
+  unstable_setRequestLocale(params.locale);
   const t = useTranslations('landing');
   return (
     <div>

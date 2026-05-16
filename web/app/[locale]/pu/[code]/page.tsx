@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_setRequestLocale } from 'next-intl/server';
 
 import { PollingUnitDetailView } from '@/components/PollingUnitDetail';
 
@@ -26,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function PUDetailPage({ params, searchParams }: Props) {
+  unstable_setRequestLocale(params.locale);
   const electionId = searchParams.election ?? '2027-presidential';
   const code = decodeURIComponent(params.code);
   return (

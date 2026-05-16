@@ -33,7 +33,12 @@ const withPWA = withPWAInit({
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: { typedRoutes: true },
+  // typedRoutes is experimental and makes <Link href> reject plain
+  // string props, which breaks helper components that pass dynamically-
+  // chosen routes (e.g. the landing page's Audience cards). Switching
+  // off until either the prop API stabilises or we adopt the Route<>
+  // type everywhere.
+  // experimental: { typedRoutes: true },
   async headers() {
     return [
       {

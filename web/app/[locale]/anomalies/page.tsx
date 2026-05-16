@@ -1,6 +1,9 @@
+import { unstable_setRequestLocale } from 'next-intl/server';
+
 import { AnomalyRegister } from '@/components/AnomalyRegister';
 
-export default function AnomaliesPage() {
+export default function AnomaliesPage({ params }: { params: { locale: string } }) {
+  unstable_setRequestLocale(params.locale);
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
       <h1 className="text-2xl font-bold">Anomaly Register</h1>
