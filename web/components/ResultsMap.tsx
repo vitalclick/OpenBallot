@@ -3,17 +3,32 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { MapboxRenderer } from '@/components/MapboxRenderer';
-import { NIGERIA_BBOX, NIGERIA_BOUNDARY } from '@/lib/nigeria-outline';
 import { STATUS_COLOURS, type PollingUnitDetail, type VerificationStatus } from '@/lib/types';
+
+// Nigeria's geographic bounding box. Coordinates from Natural Earth.
+const NIGERIA_BBOX = { lngMin: 2.5, lngMax: 14.7, latMin: 4.0, latMax: 14.0 };
+
+type GeoFeature = {
+  type: 'Feature';
+  properties: { name: string; kind: 'country' | 'state'; iso?: string };
+  geometry:
+    | { type: 'Polygon'; coordinates: number[][][] }
+    | { type: 'MultiPolygon'; coordinates: number[][][][] };
+};
+type GeoCollection = { type: 'FeatureCollection'; features: GeoFeature[] };
 
 // The public results map.
 //
 // In production this is a Mapbox GL JS choropleth with polling-unit dot
 // layers. The runtime requires NEXT_PUBLIC_MAPBOX_TOKEN. To keep the
 // scaffold runnable without that token (so investors can see the page on a
-// fresh clone), we render a deterministic SVG fallback when no token is
-// configured. The data binding and interaction layer are identical to the
-// real map, so swapping the renderer is a one-file change.
+// fresh clone), we render an SVG fallback that draws a real Nigeria
+// outline plus 36 state boundaries + FCT from /public/nigeria.geo.json.
+// That file is extracted from Natural Earth (public domain): the country
+// outline is the 50m admin-0 layer and the state boundaries are the 10m
+// admin-1 layer, with coordinates rounded to 4 decimals (~11 m). The
+// data binding and interaction layer are identical to the real map, so
+// swapping the renderer is a one-file change.
 
 const STATUS_LABEL: Record<VerificationStatus, string> = {
   no_data: 'No data',
@@ -147,9 +162,30 @@ function SvgFallback({
   const toX = (lng: number) => ((lng - lngMin) / (lngMax - lngMin)) * W;
   const toY = (lat: number) => H - ((lat - latMin) / (latMax - latMin)) * H;
 
-  const boundaryPoints = NIGERIA_BOUNDARY
-    .map(([lng, lat]) => `${toX(lng).toFixed(1)},${toY(lat).toFixed(1)}`)
-    .join(' ');
+  const [geo, setGeo] = useState<GeoCollection | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/nigeria.geo.json')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (!cancelled && j) setGeo(j as GeoCollection); })
+      .catch(() => {/* fall back to bare background */});
+    return () => { cancelled = true; };
+  }, []);
+
+  const ringToPath = (ring: number[][]) =>
+    ring
+      .map(([lng, lat], i) => `${i === 0 ? 'M' : 'L'}${toX(lng).toFixed(1)} ${toY(lat).toFixed(1)}`)
+      .join(' ') + ' Z';
+
+  const featureToPath = (f: GeoFeature) => {
+    const polys =
+      f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+    return polys.map((poly) => poly.map(ringToPath).join(' ')).join(' ');
+  };
+
+  const states = geo?.features.filter((f) => f.properties.kind === 'state') ?? [];
+  const country = geo?.features.find((f) => f.properties.kind === 'country');
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
@@ -160,20 +196,47 @@ function SvgFallback({
         </linearGradient>
         <filter id="ng-shadow" x="-5%" y="-5%" width="110%" height="110%">
           <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
-          <feOffset dx="0" dy="1" result="off" />
+          <feOffset dx="0" dy="1" />
           <feComponentTransfer><feFuncA type="linear" slope="0.25" /></feComponentTransfer>
           <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
       <rect x={0} y={0} width={W} height={H} fill="#e6eef5" />
-      <polygon
-        points={boundaryPoints}
-        fill="url(#ng-land)"
-        stroke="#64748b"
-        strokeWidth={1.5}
-        strokeLinejoin="round"
-        filter="url(#ng-shadow)"
-      />
+
+      {country && (
+        <path
+          d={featureToPath(country)}
+          fill="url(#ng-land)"
+          stroke="none"
+          filter="url(#ng-shadow)"
+        />
+      )}
+
+      {states.map((s) => (
+        <path
+          key={s.properties.iso ?? s.properties.name}
+          d={featureToPath(s)}
+          fill="none"
+          stroke="#94a3b8"
+          strokeWidth={0.6}
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+        >
+          <title>{s.properties.name}</title>
+        </path>
+      ))}
+
+      {country && (
+        <path
+          d={featureToPath(country)}
+          fill="none"
+          stroke="#475569"
+          strokeWidth={1.4}
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      )}
+
       {units.map((u) => (
         <circle
           key={u.pu_code}
