@@ -18,7 +18,7 @@ export default function MapPage({ params }: { params: { locale: string } }) {
           <p className="text-xs text-slate-500 max-w-3xl">
             Each polling unit on the map shows the verification state of its EC8A form.
             Use this view to investigate where independent sources agree, where they
-            disagree, and where INEC's published figure conflicts with the consensus.
+            disagree, and where INEC&apos;s published figure conflicts with the consensus.
             For headline totals, see the{' '}
             <a href="/en/results" className="underline hover:no-underline">Results Dashboard</a>.
           </p>
