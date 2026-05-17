@@ -193,20 +193,33 @@ def upsert_state(cur, code: str, name: str, zone: str) -> None:
     )
 
 
-def upsert_lga(cur, code: str, name: str, state_code: str) -> None:
+def upsert_lga(cur, code: str, name: str, state_code: str) -> str:
+    """Returns the effective LGA code, which may differ from `code` when
+    INEC's roster lists the same LGA twice under different numeric delim
+    prefixes. In that case we merge into the first-seen row and re-parent
+    subsequent wards under the existing code."""
     cur.execute(
-        "INSERT INTO lgas (code, name, state_code) VALUES (%s, %s, %s) "
-        "ON CONFLICT (code) DO UPDATE SET name = EXCLUDED.name",
+        """
+        INSERT INTO lgas (code, name, state_code) VALUES (%s, %s, %s)
+        ON CONFLICT (state_code, name) DO UPDATE SET name = EXCLUDED.name
+        RETURNING code
+        """,
         (code, name, state_code),
     )
+    return cur.fetchone()[0]
 
 
-def upsert_ward(cur, code: str, name: str, lga_code: str) -> None:
+def upsert_ward(cur, code: str, name: str, lga_code: str) -> str:
+    """Returns the effective ward code (see upsert_lga rationale)."""
     cur.execute(
-        "INSERT INTO wards (code, name, lga_code) VALUES (%s, %s, %s) "
-        "ON CONFLICT (code) DO UPDATE SET name = EXCLUDED.name",
+        """
+        INSERT INTO wards (code, name, lga_code) VALUES (%s, %s, %s)
+        ON CONFLICT (lga_code, name) DO UPDATE SET name = EXCLUDED.name
+        RETURNING code
+        """,
         (code, name, lga_code),
     )
+    return cur.fetchone()[0]
 
 
 def upsert_pu_batch(cur, rows: list[tuple]) -> None:
@@ -260,9 +273,16 @@ def load_state_file(cur, payload: dict) -> tuple[int, int, int, int]:
             )
             continue
 
-        lga_code = f"{state_code}-{lga_seg}"
-        upsert_lga(cur, lga_code, lga_name, state_code)
-        lgas += 1
+        requested_lga = f"{state_code}-{lga_seg}"
+        lga_code = upsert_lga(cur, requested_lga, lga_name, state_code)
+        if lga_code != requested_lga:
+            print(
+                f"  merged LGA {state_code}/{lga_name}: {requested_lga} -> {lga_code}"
+                " (existing row with same name)",
+                file=sys.stderr,
+            )
+        else:
+            lgas += 1
 
         for ward in lga.get("wards", []):
             ward_name = title_case(ward.get("ward_name") or ward.get("ward_id") or "")
@@ -282,9 +302,16 @@ def load_state_file(cur, payload: dict) -> tuple[int, int, int, int]:
                 )
                 continue
 
-            ward_code = f"{lga_code}-{ward_seg}"
-            upsert_ward(cur, ward_code, ward_name, lga_code)
-            wards += 1
+            requested_ward = f"{lga_code}-{ward_seg}"
+            ward_code = upsert_ward(cur, requested_ward, ward_name, lga_code)
+            if ward_code != requested_ward:
+                print(
+                    f"  merged ward {lga_code}/{ward_name}: {requested_ward} -> {ward_code}"
+                    " (existing row with same name)",
+                    file=sys.stderr,
+                )
+            else:
+                wards += 1
 
             batch: list[tuple] = []
             for pu in ward.get("polling_units", []):
