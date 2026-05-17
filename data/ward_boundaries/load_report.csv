@@ -135,7 +135,7 @@ ANSAJL16,Anambra,Orumba North,Oko 2,AN-19-14,0.800,needs_review,loaded
 ABSKPU15,Abia,Isiala-Ngwa North,Ngwaukwu 2,AB-06-04,0.857,needs_review,loaded
 IMSAFR12,Imo,Ahiazu-Mbaise,Okirika-Nweke 2,IM-02-07,0.929,fuzzy,loaded
 ANSNEN16,Anambra,Anaocha,Neni 2,AN-05-15,0.833,needs_review,loaded
-ABSNGK03,Abia,Obi Nwga,Abayi 2,,0.000,no_lga,skipped_no_match
+ABSNGK03,Abia,Obi Nwga,Abayi 2,AB-09-01,0.857,needs_review,loaded
 ANSJJT03,Anambra,Idemili South,Awka Etiti 2,AN-11-04,0.917,fuzzy,loaded
 ANSNNE02,Anambra,Nnewi North,Nnewichi 2,AN-14-01,0.818,needs_review,loaded
 IMSMGD02,Imo,Oru East,Akata 2,IM-23-09,0.833,needs_review,loaded
@@ -239,7 +239,7 @@ IMSAFR11,Imo,Ahiazu-Mbaise,Okirika-Nweke 1,IM-02-07,0.929,fuzzy,loaded
 IMSUML12,Imo,Isiala Mbano,Osu-Owerre 1,IM-09-05,0.917,fuzzy,loaded
 ANSNEN13,Anambra,Anaocha,Ichida 1,AN-05-13,0.875,needs_review,loaded
 IMSETU12,Imo,Ezinihitte,Onicha 1,IM-04-04,0.744,needs_review,skipped_low_confidence
-ABSNGK02,Abia,Obi Nwga,Abayi 1,,0.000,no_lga,skipped_no_match
+ABSNGK02,Abia,Obi Nwga,Abayi 1,AB-09-01,0.857,needs_review,loaded
 50603,Kebbi,Birnin Kebbi,Gwadangwaji,KE-06-08,0.952,fuzzy,loaded
 ANSJJT05,Anambra,Idemili South,Nnobi 1,AN-11-06,0.857,needs_review,loaded
 ANSNNE03,Anambra,Nnewi North,Otolo 1,AN-14-03,0.857,needs_review,loaded
@@ -314,7 +314,7 @@ EKSEKW03,Ekiti,Ekiti South-West,Ifakin,,0.462,no_ward,skipped_no_match
 62007,Sokoto,Tureta,Lamba Tureta,SO-20-06,0.960,fuzzy,loaded
 60705,Sokoto,Gwadabawa,Gigane,SO-07-08,1.000,exact,loaded
 62005,Sokoto,Tureta,Kuruwa,SO-20-08,1.000,exact,loaded
-61305,Sokoto,Sabon Birni,Lajinge,,0.000,no_lga,skipped_no_match
+61305,Sokoto,Sabon Birni,Lajinge,SO-13-11,1.000,exact,loaded
 61908,Sokoto,Tangaza,Salewa,SO-19-04,1.000,exact,loaded
 OSSBOE02,Osun,Boripe,Araromi,,0.500,no_ward,skipped_no_match
 OSSIEW06,Osun,Ilesha West,Ilaje,OS-19-07,0.952,lga_fuzzy_exact_ward,loaded
@@ -483,7 +483,7 @@ IMSNGB10,Imo,Oru West,Ohakpu,IM-24-06,1.000,exact,loaded
 IMSNGB03,Imo,Oru West,Eleh,,0.571,no_ward,skipped_no_match
 IMSURU18,Imo,Ideato North,Umuzeaga,,0.593,no_ward,skipped_no_match
 ABSSSM06,Abia,Osisioma Ngwa,Amavo Etiti,,0.531,no_ward,skipped_no_match
-ABSNGK09,Abia,Obi Nwga,Mgboko Amiri,,0.000,no_lga,skipped_no_match
+ABSNGK09,Abia,Obi Nwga,Mgboko Amiri,AB-09-06,0.880,needs_review,loaded
 IMSRLU08,Imo,Orlu,Obibi / Ogberuru,,0.571,no_ward,skipped_no_match
 IMSAFR14,Imo,Ahiazu-Mbaise,Oru / Lude,IM-02-03,0.842,needs_review,loaded
 ANSAGU14,Anambra,Aguata,Nkpologwu,AN-01-14,1.000,exact,loaded
@@ -544,7 +544,7 @@ NISMNA11,Niger,Chanchaga,T / Wada S,,0.667,no_ward,skipped_no_match
 ABSUMA12,Abia,Umuahia North,Nkwoegwu,AB-15-09,1.000,exact,loaded
 ANSAGU13,Anambra,Aguata,Isuofia,AN-01-13,1.000,exact,loaded
 IMSURU05,Imo,Ideato North,Isiokpo,IM-05-02,1.000,exact,loaded
-ABSNGK08,Abia,Obi Nwga,Isiala Itu,,0.000,no_lga,skipped_no_match
+ABSNGK08,Abia,Obi Nwga,Isiala Itu,,0.400,no_ward,skipped_no_match
 IMSAMG14,Imo,Nwangele,Isu / Umunakara,,0.359,no_ward,skipped_no_match
 ABSGWB04,Abia,Ugwunagbo,Asa Umunka / Ward Seven,,0.476,no_ward,skipped_no_match
 IMSRLU09,Imo,Orlu,Okporo Ohaeke,,0.514,no_ward,skipped_no_match
@@ -556,13 +556,13 @@ IMSAMG09,Imo,Nwangele,Amaigbo 4,,0.552,no_ward,skipped_no_match
 IMSNGB09,Imo,Oru West,Nempi,,0.667,no_ward,skipped_no_match
 ANSNEN11,Anambra,Anaocha,Aguluzigbo,AN-05-11,0.870,needs_review,loaded
 IMSETU10,Imo,Ezinihitte,Oboama / Umunama,IM-04-11,0.850,lga_fuzzy_exact_ward,loaded
-ABSNGK04,Abia,Obi Nwga,Ahiaba / Abala,,0.000,no_lga,skipped_no_match
+ABSNGK04,Abia,Obi Nwga,Ahiaba / Abala,,0.667,no_ward,skipped_no_match
 ABSSSM01,Abia,Osisioma Ngwa,Amaise Amapuife,,0.443,no_ward,skipped_no_match
 ANSHAL02,Anambra,Ihiala,Amawu Ward B Ihiala,,0.636,no_ward,skipped_no_match
 EDSBEN12,Edo,Oredo,Unueru / Ogboka,ED-12-10,1.000,exact,loaded
 IMSNGB04,Imo,Oru West,Ibiasoegbe,IM-24-04,0.952,fuzzy,loaded
 ABSABA02,Abia,Aba South,Aba Town Hall,AB-02-12,1.000,exact,loaded
-ABSNGK06,Abia,Obi Nwga,Akumaimo,,0.000,no_lga,skipped_no_match
+ABSNGK06,Abia,Obi Nwga,Akumaimo,AB-09-08,1.000,exact,loaded
 LASSUE04,Lagos,Surulere,Akinhanmi Cole,LA-20-04,1.000,exact,loaded
 IMSAFR13,Imo,Ahiazu-Mbaise,Okirika-Nwenkwo,IM-02-05,1.000,exact,loaded
 IMSNSA04,Imo,Njaba,Amucha,IM-13-04,0.857,needs_review,loaded
@@ -1240,7 +1240,7 @@ OGSADO16,Ogun,Ado Odo/Ota,Sango,OG-03-04,1.000,exact,loaded
 OGSADO11,Ogun,Ado Odo/Ota,Ilogbo Ward,OG-03-08,1.000,exact,loaded
 OYSIJA05,Oyo,Iwajowa,Ijio / Ayegun,,0.273,no_ward,skipped_no_match
 OGSADO09,Ogun,Ado Odo/Ota,Ijoko,,0.545,no_ward,skipped_no_match
-OGSYES10,Ogun,Yewa South,Owode 1,,0.000,no_lga,skipped_no_match
+OGSYES10,Ogun,Yewa South,Owode 1,OG-05-07,0.857,needs_review,loaded
 BYSBRS05,Bayelsa,Brass,Kongho,BY-01-07,1.000,exact,loaded
 OYSIJA06,Oyo,Iwajowa,Ilaji / Idiko Ile,,0.385,no_ward,skipped_no_match
 OYSIBAN08,Oyo,Ibarapa North,Ofiki 2,OY-13-07,0.857,needs_review,loaded
@@ -1535,7 +1535,7 @@ DTSALA02,Delta,Udu,Egini / Ovwian 2,,0.636,no_ward,skipped_no_match
 DTSGRA11,Delta,Ethiope West,Ogharefe 5 / Oghara 5,,0.519,no_ward,skipped_no_match
 DTSGRA08,Delta,Ethiope West,Ogharefe 2 / Oghara 2,,0.519,no_ward,skipped_no_match
 DTSGRA09,Delta,Ethiope West,Ogharefe 3 / Oghara 3,,0.519,no_ward,skipped_no_match
-OGSYEN10,Ogun,Yewa North,Ohunbe,,0.000,no_lga,skipped_no_match
+OGSYEN10,Ogun,Yewa North,Ohunbe,OG-04-08,1.000,exact,loaded
 DTSJRT08,Delta,Ughelli South,Jeremi 4,DE-20-08,0.875,needs_review,loaded
 DTSGRA06,Delta,Ethiope West,Mosogar 2,DE-06-01,0.889,needs_review,loaded
 DTSGRA04,Delta,Ethiope West,Jesse 4,DE-06-03,0.857,needs_review,loaded
@@ -2013,7 +2013,7 @@ KN4101,Kano,Tudun Wada,Baburi,KN-41-01,1.000,exact,loaded
 IMSURU04,Imo,Ideato North,Iheme 2,,0.429,no_ward,skipped_no_match
 IMSNSA06,Imo,Njaba,Atta 2,IM-13-01,0.833,needs_review,loaded
 IMSDFB09,Imo,Ideato South,Ogboko 2,IM-06-08,0.875,needs_review,loaded
-ABSNGK12,Abia,Obi Nwga,Mgboko Umuanunu 2,,0.000,no_lga,skipped_no_match
+ABSNGK12,Abia,Obi Nwga,Mgboko Umuanunu 2,AB-09-03,0.938,fuzzy,loaded
 KN0908,Kano,Dawakin Kudu,Jido,KN-09-08,0.957,lga_fuzzy_exact_ward,loaded
 IMSNWA10,Imo,Mbatoli,Ogwa 2,IM-11-06,0.778,needs_review,skipped_low_confidence
 ANSUMZ13,Anambra,Orumba South,Owelle-Ezukala 2,AN-20-13,0.812,needs_review,loaded
@@ -2034,7 +2034,7 @@ ABSMBL07,Abia,Isuikwuato,Ikeagha 2,AB-08-08,0.889,needs_review,loaded
 ENSJRV02,Enugu,Oji-River,Inyi 4,EN-14-15,0.833,needs_review,loaded
 12504,Borno,Ngala,Gamboru C,BO-25-04,1.000,exact,loaded
 11604,Borno,Konduga,Dalwa,,0.556,no_ward,skipped_no_match
-OGSYEN01,Ogun,Yewa North,Ayetoro 1,,0.000,no_lga,skipped_no_match
+OGSYEN01,Ogun,Yewa North,Ayetoro 1,OG-04-02,0.842,needs_review,loaded
 ANSNNE09,Anambra,Nnewi North,Uruagu 2,AN-14-08,0.875,needs_review,loaded
 10404,Borno,Bayo,Gamadadi,BO-04-04,1.000,exact,loaded
 ENSJRV08,Enugu,Oji-River,Achi-Uno 4,EN-14-11,0.842,needs_review,loaded
@@ -2126,7 +2126,7 @@ ENSJRV20,Enugu,Oji-River,Oji River 4,EN-14-01,0.909,fuzzy,loaded
 ENSDBR15,Enugu,Aninri,Oduma 3 /,EN-01-01,0.857,needs_review,loaded
 11201,Borno,Hawul,Bilingwi,BO-12-01,1.000,exact,loaded
 KGSLAM06,Kogi,Olamaboro,Ikeji 4,,0.429,no_ward,skipped_no_match
-KN0810,Kano,Dambatta,San San,,0.000,no_lga,skipped_no_match
+KN0810,Kano,Dambatta,San San,KN-08-10,0.923,fuzzy,loaded
 IMSAMG11,Imo,Nwangele,Amaigbo 6,,0.552,no_ward,skipped_no_match
 ANSUKP18,Anambra,Nnewi South,Ukpor 6,AN-15-13,0.857,needs_review,loaded
 OSSICL10,Osun,Ife Central,Iremo 5,OS-11-09,0.857,needs_review,loaded
@@ -2142,7 +2142,7 @@ AKSAEE04,Akwa Ibom,Etim Ekpo,Ward 4,,0.000,no_ward,skipped_no_match
 KN0107,Kano,Ajingi,Gurduba,KN-01-07,1.000,exact,loaded
 KWSFUF05,Kwara,Ilorin South,Akanbi 5,KW-07-01,0.875,needs_review,loaded
 ANSHAL11,Anambra,Ihiala,Ogboro / Ward 5,,0.714,no_ward,skipped_no_match
-OGSYEN02,Ogun,Yewa North,Ayetoro 2,,0.000,no_lga,skipped_no_match
+OGSYEN02,Ogun,Yewa North,Ayetoro 2,OG-04-02,0.842,needs_review,loaded
 ENSENZ12,Enugu,Igbo-Eze North,Umuozzi 5,EN-08-11,0.889,needs_review,loaded
 ENSGBO05,Enugu,Igbo-Etiti,Ukehe 5,EN-07-16,0.857,needs_review,loaded
 ENSGBO14,Enugu,Igbo-Etiti,Aku 5,EN-07-01,0.800,needs_review,loaded
@@ -2267,7 +2267,7 @@ KWSKSB10,Kwara,Baruten,Yashikira 1,KW-02-11,0.900,fuzzy,loaded
 KWSKMA06,Kwara,Kaiama,Kaiama 1,KW-11-06,1.000,exact,loaded
 KWSLAF05,Kwara,Edu,Tsonga 1,KW-03-08,1.000,exact,loaded
 KWSSHA02,Kwara,Ifelodun,Idofian 1,KW-05-17,1.000,exact,loaded
-KN0808,Kano,Dambatta,Kore,,0.000,no_lga,skipped_no_match
+KN0808,Kano,Dambatta,Kore,KN-08-08,1.000,exact,loaded
 KWSSHA14,Kwara,Ifelodun,Share 1,KW-05-09,1.000,exact,loaded
 KWSFUF01,Kwara,Ilorin South,Akanbi 1,KW-07-01,1.000,exact,loaded
 KWSLFF04,Kwara,Oke Ero,Idofin / Igbana 1,KW-14-06,1.000,exact,loaded
@@ -2303,7 +2303,7 @@ KGSBAS01,Kogi,Bassa,Akuba 1,KO-04-01,0.857,needs_review,loaded
 KGSKFU10,Kogi,Ofu,Ugwolawo 1,KO-14-05,0.900,fuzzy,loaded
 ANSNKK02,Anambra,Ayamelum,Ifite-O 1,,0.696,no_ward,skipped_no_match
 ENSBBG15,Enugu,Igbo-Eze-South,Iheaka 1,,0.583,no_ward,skipped_no_match
-OGSYEN05,Ogun,Yewa North,Idofoi,,0.000,no_lga,skipped_no_match
+OGSYEN05,Ogun,Yewa North,Idofoi,OG-04-01,0.923,fuzzy,loaded
 ANSNKK06,Anambra,Ayamelum,Omor 1,AN-02-06,0.833,needs_review,loaded
 ANSAAH13,Anambra,Anambra East,Umuleri 1,AN-03-14,0.842,needs_review,loaded
 ANSAAH06,Anambra,Anambra East,Nando 1,AN-03-06,0.857,needs_review,loaded
@@ -2312,7 +2312,7 @@ ANSAAH01,Anambra,Anambra East,Aguleri 1,AN-03-01,0.875,needs_review,loaded
 ANSAAH11,Anambra,Anambra East,Otuocha 1,AN-03-11,0.889,needs_review,loaded
 ANSHTE07,Anambra,Oyi,Nteje 1,AN-21-05,0.857,needs_review,loaded
 ANSKPP04,Anambra,Dunukofia,Nwagu 1,,0.714,no_ward,skipped_no_match
-OGSYEN03,Ogun,Yewa North,Ebute,,0.000,no_lga,skipped_no_match
+OGSYEN03,Ogun,Yewa North,Ebute,,0.556,no_ward,skipped_no_match
 IMSAWD08,Imo,Orsu,Okwuamaraihe 1,IM-22-04,0.897,needs_review,loaded
 OGSION06,Ogun,Imeko Afon,Ilara,,0.588,no_ward,skipped_no_match
 ABSMBL19,Abia,Isuikwuato,Umunnekwu 1,AB-08-06,0.900,fuzzy,loaded
@@ -2338,7 +2338,7 @@ EBSBKL25,Ebonyi,Izzi,Oyege,,0.273,no_ward,skipped_no_match
 JI1704,Jigawa,Kazaure,Dandi,JI-17-04,1.000,exact,loaded
 EBSEDA04,Ebonyi,Afikpo South,Ameke,,0.588,no_ward,skipped_no_match
 EBSAKL02,Ebonyi,Abakaliki,Agbaja,,0.667,no_ward,skipped_no_match
-ABSNGK11,Abia,Obi Nwga,Mgboko Umuanunu 1,,0.000,no_lga,skipped_no_match
+ABSNGK11,Abia,Obi Nwga,Mgboko Umuanunu 1,AB-09-03,0.938,fuzzy,loaded
 IMSKGE10,Imo,Okigwe,Okigwe Urban 1,,0.636,no_ward,skipped_no_match
 ENSJRV18,Enugu,Oji-River,Oji River 1 / Agbalaenyi,,0.667,no_ward,skipped_no_match
 IMSURU03,Imo,Ideato North,Iheme 1,,0.429,no_ward,skipped_no_match
@@ -2454,7 +2454,7 @@ OGSABN10,Ogun,Abeokuta North,Olorunda,,0.727,no_ward,skipped_no_match
 EBSZLL22,Ebonyi,Ishielu,Ezzagu 1 / Ogboji 1,EB-08-07,0.875,needs_review,loaded
 ENSMGL08,Enugu,Nkanu East,Nkerefi 1,EN-11-07,0.889,needs_review,loaded
 EBSSKA06,Ebonyi,Ivo,Ihenta 1 / Ihenta 2 / Ihenta Ogidi,,0.571,no_ward,skipped_no_match
-61303,Sokoto,Sabon Birni,Kalgo,,0.000,no_lga,skipped_no_match
+61303,Sokoto,Sabon Birni,Kalgo,SO-13-09,1.000,exact,loaded
 EBSSKA17,Ebonyi,Ivo,Umobor 1 / Umobor 2,,0.455,no_ward,skipped_no_match
 ABSBND11,Abia,Bende,Itumbuzo 1,AB-04-09,0.842,needs_review,loaded
 ABSKWU07,Abia,Ikwuano,Ibere 1,AB-05-03,0.857,needs_review,loaded
@@ -2801,7 +2801,7 @@ JI0207,Jigawa,Babura,Jigawa,JI-02-07,1.000,exact,loaded
 KN3508,Kano,Shanono,Shakogi,KN-35-08,1.000,exact,loaded
 BNSNAK10,Benue,Gwer West,Saghev Ukusu,BE-08-11,1.000,exact,loaded
 JI2503,Jigawa,Sule Tankarkar,Dangwanki,JI-25-03,1.000,exact,loaded
-KN0809,Kano,Dambatta,Saidawa,,0.000,no_lga,skipped_no_match
+KN0809,Kano,Dambatta,Saidawa,KN-08-09,1.000,exact,loaded
 BNSGBG09,Benue,Logo,Turan,BE-12-08,1.000,exact,loaded
 BNSWNN07,Benue,Tarka,Mbakyo / Yia,BE-20-06,0.833,needs_review,loaded
 NASKRV08,Nasarawa,Karu,Keffi-Shanu Betti,NA-04-05,0.882,needs_review,loaded
@@ -3375,7 +3375,7 @@ NISWSH03,Niger,Wushishi,Gwarijiko,NI-25-03,0.941,fuzzy,loaded
 ODSAKS01,Ondo,Akure South,Apomu,ON-06-01,0.909,fuzzy,loaded
 ODSAKS10,Ondo,Akure South,Oshodi,,0.667,no_ward,skipped_no_match
 ODSAKS07,Ondo,Akure South,Oda,,0.400,no_ward,skipped_no_match
-KN0807,Kano,Dambatta,Gwarabjawa,,0.000,no_lga,skipped_no_match
+KN0807,Kano,Dambatta,Gwarabjawa,KN-08-07,1.000,exact,loaded
 ODSAKS04,Ondo,Akure South,Ijomu,,0.588,no_ward,skipped_no_match
 ODSANW04,Ondo,Akoko North West,Arigidi 2,ON-02-02,0.842,needs_review,loaded
 ODSOSE09,Ondo,Ose,Imeri,ON-17-09,1.000,exact,loaded
@@ -4874,7 +4874,7 @@ JI1710,Jigawa,Kazaure,Unguwar Gabas,JI-17-10,1.000,exact,loaded
 KGSERE01,Kogi,Yagba West,Ejiba,KO-21-01,1.000,exact,loaded
 81407,Zamfara,Zurmi,Mayasa Kuturu,,0.462,no_ward,skipped_no_match
 KN1501,Kano,Garun Malam,Chiromawa,KN-15-01,1.000,exact,loaded
-KN0803,Kano,Dambatta,Dambatta West,,0.000,no_lga,skipped_no_match
+KN0803,Kano,Dambatta,Dambatta West,KN-08-03,0.923,fuzzy,loaded
 PLSBKK20,Plateau,Bokkos,Toff,PL-03-14,1.000,exact,loaded
 KN2113,Kano,Kano Municipal,Zango,,0.429,no_ward,skipped_no_match
 KN0403,Kano,Bebeji,Bebeji,KN-04-03,1.000,exact,loaded
@@ -4896,7 +4896,7 @@ BA1207,Bauchi,Katagum,Bidir,,0.556,no_ward,skipped_no_match
 41506,Katsina,Ingawa,Ingawa,KT-15-03,1.000,exact,loaded
 81405,Zamfara,Zurmi,Kwashabawa,ZA-14-06,0.947,fuzzy,loaded
 81302,Zamfara,Tsafe,Chediya,ZA-13-09,1.000,exact,loaded
-KN0805,Kano,Dambatta,Goron Maje,,0.000,no_lga,skipped_no_match
+KN0805,Kano,Dambatta,Goron Maje,KN-08-05,1.000,exact,loaded
 KN4305,Kano,Warawa,Imawa,KN-43-05,1.000,exact,loaded
 JI1209,Jigawa,Gwiwa,Shafe,JI-12-09,1.000,exact,loaded
 KN0413,Kano,Bebeji,Tariwa,KN-04-13,1.000,exact,loaded
@@ -5257,7 +5257,7 @@ KN1306,Kano,Gabasawa,Tarauni,KN-13-06,1.000,exact,loaded
 81404,Zamfara,Zurmi,Kanwa,ZA-14-05,1.000,exact,loaded
 JI0907,Jigawa,Gumel,Gusau,JI-09-07,1.000,exact,loaded
 BA0309,Bauchi,Bogoro,Gambar,,0.333,no_ward,skipped_no_match
-KN0802,Kano,Dambatta,Dambatta East,,0.000,no_lga,skipped_no_match
+KN0802,Kano,Dambatta,Dambatta East,KN-08-02,0.923,fuzzy,loaded
 KN4304,Kano,Warawa,Gogel,KN-43-04,1.000,exact,loaded
 KN0402,Kano,Bebeji,Baguda,KN-04-02,1.000,exact,loaded
 43205,Katsina,Safana,Runka A,KT-32-03,1.000,exact,loaded
@@ -5267,7 +5267,7 @@ JI1504,Jigawa,Kafin Hausa,Jabbo,JI-15-04,0.889,needs_review,loaded
 81303,Zamfara,Tsafe,Danjibga,,0.533,no_ward,skipped_no_match
 41501,Katsina,Ingawa,Agayawa,KT-15-04,1.000,exact,loaded
 KN3201,Kano,Rano,Dawaki,KN-32-01,1.000,exact,loaded
-KN0806,Kano,Dambatta,Gwanda,,0.000,no_lga,skipped_no_match
+KN0806,Kano,Dambatta,Gwanda,KN-08-06,1.000,exact,loaded
 BA1713,Bauchi,Tafawa-Balewa,Bununu B,BA-17-11,0.857,needs_review,loaded
 KN2512,Kano,Kumbotso,Unguwar Rimi,KN-25-11,1.000,exact,loaded
 80306,Zamfara,Birnin Magaji-Kiyaw,Gusami Gari,ZA-03-04,0.850,lga_fuzzy_exact_ward,loaded
@@ -5437,7 +5437,7 @@ KN1107,Kano,Doguwa,Shere,,0.333,no_ward,skipped_no_match
 JI0704,Jigawa,Gagarawa,Kore Balatu,JI-08-04,1.000,exact,loaded
 42503,Katsina,Malumfashi,Dayi,KT-25-11,0.947,lga_fuzzy_exact_ward,loaded
 KN1607,Kano,Gaya,Kazurawa,KN-16-07,1.000,exact,loaded
-OGSYES05,Ogun,Yewa South,Ilaro 3,,0.000,no_lga,skipped_no_match
+OGSYES05,Ogun,Yewa South,Ilaro 3,OG-05-01,0.857,needs_review,loaded
 42003,Katsina,Kankia,Galadima A,KT-20-02,0.900,fuzzy,loaded
 40704,Katsina,Dandume,Dantankari,KT-07-08,1.000,exact,loaded
 42903,Katsina,Musawa,Garu,KT-29-10,1.000,exact,loaded
@@ -5668,7 +5668,7 @@ FCTABC11,Fct,Municipal Area Council,Orozo,FC-06-09,1.000,exact,loaded
 40905,Katsina,Dan Musa,Dan Musa B,KT-09-04,1.000,exact,loaded
 KN3907,Kano,Tofa,Kwami,KN-39-07,1.000,exact,loaded
 JI0801,Jigawa,Garki,Buduru,JI-07-01,1.000,exact,loaded
-KN0804,Kano,Dambatta,Fagwalawa,,0.000,no_lga,skipped_no_match
+KN0804,Kano,Dambatta,Fagwalawa,KN-08-04,1.000,exact,loaded
 JI0705,Jigawa,Gagarawa,Madaka,JI-08-05,1.000,exact,loaded
 KN0101,Kano,Ajingi,Ajingi,KN-01-01,1.000,exact,loaded
 FCTKUJ02,Fct,Kuje,Gaube,FC-04-03,1.000,exact,loaded
@@ -5728,10 +5728,10 @@ KGSBJK05,Kogi,Omala,Icheke,,0.571,no_ward,skipped_no_match
 KGSBJK03,Kogi,Omala,Akpacha,KO-19-06,1.000,exact,loaded
 KGSBJK11,Kogi,Omala,Opada / Ofejiji,KO-19-03,0.923,fuzzy,loaded
 KGSBJK09,Kogi,Omala,Okpotala,KO-19-05,0.875,needs_review,loaded
-KGSKKF04,Kogi,Kogi,Gegu North,,0.000,no_lga,skipped_no_match
+KGSKKF04,Kogi,Kogi,Gegu North,KO-11-08,0.800,needs_review,loaded
 PLSWAS16,Plateau,Wase,Saluwe,PL-17-10,1.000,exact,loaded
-KGSKKF08,Kogi,Kogi,Kks East,,0.000,no_lga,skipped_no_match
-KGSKKF05,Kogi,Kogi,Gegu South,,0.000,no_lga,skipped_no_match
+KGSKKF08,Kogi,Kogi,Kks East,,0.552,no_ward,skipped_no_match
+KGSKKF05,Kogi,Kogi,Gegu South,KO-11-09,0.800,needs_review,loaded
 KGSBJK08,Kogi,Omala,Ojiaji,KO-19-10,0.923,fuzzy,loaded
 KGSBJK04,Kogi,Omala,Bagana,KO-19-04,1.000,exact,loaded
 PLSDNG02,Plateau,Kanam,Dengi,PL-07-02,1.000,exact,loaded
@@ -5743,7 +5743,7 @@ KD1504,Kaduna,Kubau,Haskiya,KD-15-08,1.000,exact,loaded
 KD0306,Kaduna,Giwa,Kakangi,KD-03-02,1.000,exact,loaded
 KD0406,Kaduna,Igabi,Kerawa,KD-04-09,1.000,exact,loaded
 KD0107,Kaduna,Birnin Gwari,Damari,,0.462,no_ward,skipped_no_match
-OGSYEN04,Ogun,Yewa North,Eggua,,0.000,no_lga,skipped_no_match
+OGSYEN04,Ogun,Yewa North,Eggua,,0.667,no_ward,skipped_no_match
 KD1906,Kaduna,Sabon Gari,Jama A,KD-19-02,1.000,exact,loaded
 KD1502,Kaduna,Kubau,Damau,KD-15-05,1.000,exact,loaded
 KD1802,Kaduna,Makarfi,Danguziri,KD-18-04,1.000,exact,loaded
@@ -6700,17 +6700,17 @@ FCTKWL03,Fct,Kwali,Gumbo,FC-05-08,1.000,exact,loaded
 FCTABJ06,Fct,Abaji,North East,FC-01-02,0.769,needs_review,skipped_low_confidence
 FCTABJ08,Fct,Abaji,Pandagi,,0.667,no_ward,skipped_no_match
 KGSKNA03,Kogi,Dekina,Dekina,,0.706,no_ward,skipped_no_match
-KGSKKF02,Kogi,Kogi,Chikara North,,0.000,no_lga,skipped_no_match
-KGSKKF03,Kogi,Kogi,Chikara South,,0.000,no_lga,skipped_no_match
+KGSKKF02,Kogi,Kogi,Chikara North,KO-11-10,1.000,exact,loaded
+KGSKKF03,Kogi,Kogi,Chikara South,KO-11-11,1.000,exact,loaded
 NASNTT08,Nasarawa,Toto,Shaffa-Kwatto,NA-12-10,0.857,needs_review,loaded
 KN3404,Kano,Rogo,Gwangwan,KN-34-04,1.000,exact,loaded
-KGSKKF10,Kogi,Kogi,Tawari,,0.000,no_lga,skipped_no_match
+KGSKKF10,Kogi,Kogi,Tawari,KO-11-07,1.000,exact,loaded
 BNSPKG10,Benue,Okpokwu,Okpoga South,BE-18-10,1.000,exact,loaded
 NASDMA01,Nasarawa,Doma,Agbashi,NA-03-03,1.000,exact,loaded
 NASNTT12,Nasarawa,Toto,Umaisha,NA-12-04,1.000,exact,loaded
 NASNTT11,Nasarawa,Toto,Ugya,NA-12-07,1.000,exact,loaded
 NASNTT06,Nasarawa,Toto,Kenyehu,NA-12-06,0.857,needs_review,loaded
-KGSKKF01,Kogi,Kogi,Akpasu,,0.000,no_lga,skipped_no_match
+KGSKKF01,Kogi,Kogi,Akpasu,KO-11-06,1.000,exact,loaded
 NISGWU11,Niger,Gurara,Tufa,NI-09-10,1.000,exact,loaded
 NISGWU01,Niger,Gurara,Bono,NI-09-01,0.750,needs_review,skipped_low_confidence
 NISGWU08,Niger,Gurara,Lambata,NI-09-07,1.000,exact,loaded
@@ -6776,14 +6776,14 @@ EBSNCA25,Ebonyi,Onicha,Umuechuma,,0.522,no_ward,skipped_no_match
 ABSGWB05,Abia,Ugwunagbo,Ihie Obeaku 9,,0.333,no_ward,skipped_no_match
 10312,Borno,Bama,Soye,,0.320,no_ward,skipped_no_match
 KN3606,Kano,Sumaila,Magami,KN-36-06,1.000,exact,loaded
-ABSNGK10,Abia,Obi Nwga,Mgboko Itungwa,,0.000,no_lga,skipped_no_match
+ABSNGK10,Abia,Obi Nwga,Mgboko Itungwa,AB-09-04,1.000,exact,loaded
 ABSKEK14,Abia,Ukwa East,Umuigube Achara,AB-13-04,1.000,exact,loaded
 41002,Katsina,Daura,Madobi A,KT-10-10,1.000,exact,loaded
 ANSAJL14,Anambra,Orumba North,Ndiukwuenu,,0.741,no_ward,skipped_no_match
 IMSNGB12,Imo,Oru West,Ozara,IM-24-07,1.000,exact,loaded
 IMSNGN09,Imo,Ngor-Okpala,Obiangwu,IM-12-10,1.000,exact,loaded
 ABSUNC02,Abia,Umu-Nneochi,Amorie,,0.364,no_ward,skipped_no_match
-ABSNGK05,Abia,Obi Nwga,Akpaa Mbato,,0.000,no_lga,skipped_no_match
+ABSNGK05,Abia,Obi Nwga,Akpaa Mbato,,0.526,no_ward,skipped_no_match
 IMSTTK12,Imo,Obowo,Umungwa,,0.667,no_ward,skipped_no_match
 IMSUMG09,Imo,Owerri West,Obinze,IM-27-08,1.000,exact,loaded
 12710,Borno,Shani,Shani,BO-27-10,1.000,exact,loaded
@@ -6964,7 +6964,7 @@ ABSKEK03,Abia,Ukwa East,Azumini,AB-13-03,1.000,exact,loaded
 IMSETU01,Imo,Ezinihitte,Amumara,IM-04-01,0.850,lga_fuzzy_exact_ward,loaded
 RVSBER04,Rivers,Omumma,Omward 4,,0.280,no_ward,skipped_no_match
 IMSNKR02,Imo,Nkwerre,Eziama-Obaire,IM-14-10,1.000,exact,loaded
-ABSNGK14,Abia,Obi Nwga,Ntighauzor,,0.000,no_lga,skipped_no_match
+ABSNGK14,Abia,Obi Nwga,Ntighauzor,AB-09-10,0.769,needs_review,skipped_low_confidence
 ABSUMA13,Abia,Umuahia North,Okaiuga-Alike,,0.429,no_ward,skipped_no_match
 ABSGWB10,Abia,Ugwunagbo,Obegu / Ward One,,0.500,no_ward,skipped_no_match
 ANSAJL10,Anambra,Orumba North,Ndiokolo,,0.571,no_ward,skipped_no_match
@@ -7229,7 +7229,7 @@ IMSRRT10,Imo,Owerri North,Naze,IM-26-02,1.000,exact,loaded
 ABSUMA16,Abia,Umuahia North,Umuhu,AB-15-11,1.000,exact,loaded
 DTSKWC07,Delta,Ndokwa West,Ogume 6,DE-12-06,0.857,needs_review,loaded
 DTSKWC09,Delta,Ndokwa West,Onitcha Ukwuani,DE-12-05,0.929,fuzzy,loaded
-ABSNGK07,Abia,Obi Nwga,Alaukwu Ohanze,,0.000,no_lga,skipped_no_match
+ABSNGK07,Abia,Obi Nwga,Alaukwu Ohanze,AB-09-07,1.000,exact,loaded
 IMSNGN15,Imo,Ngor-Okpala,Umuhu,IM-12-09,1.000,exact,loaded
 RVSRUM09,Rivers,Obio/Akpor,Obward 9,,0.462,no_ward,skipped_no_match
 DTSABH09,Delta,Ndokwa East,Ossissa,DE-11-01,1.000,exact,loaded
@@ -7301,7 +7301,7 @@ BYSGBB07,Bayelsa,Ogbia,Ologi-Ward 3,BY-05-03,0.833,needs_review,loaded
 JI1809,Jigawa,Kiri Kasama,Tasheguwa,JI-18-09,0.818,fuzzy,loaded
 71201,Yobe,Nangere,Chillariye,YO-12-01,0.947,fuzzy,loaded
 CRSCKK13,Cross River,Yala,Mfuma,,0.556,no_ward,skipped_no_match
-KN0801,Kano,Dambatta,Ajumawa,,0.000,no_lga,skipped_no_match
+KN0801,Kano,Dambatta,Ajumawa,KN-08-01,1.000,exact,loaded
 70203,Yobe,Bursari,Kurnawa,YO-02-09,1.000,exact,loaded
 BYSGBB01,Bayelsa,Ogbia,Ayama-Ward 4,BY-05-04,0.769,needs_review,skipped_low_confidence
 80105,Zamfara,Anka,Magaji,ZA-01-05,1.000,exact,loaded
@@ -7485,11 +7485,11 @@ KGSKFU06,Kogi,Ofu,Itobe / Okokenyi,KO-14-04,1.000,exact,loaded
 KGSKFU04,Kogi,Ofu,Iboko / Efakwu,KO-14-11,1.000,exact,loaded
 KGSKNE07,Kogi,Okene,Okene-Eba / Agassa,KO-17-07,0.821,needs_review,loaded
 KGSKNE11,Kogi,Okene,Ukpogoro / Odenku,KO-17-11,0.966,fuzzy,loaded
-KGSKKF09,Kogi,Kogi,Odaki,,0.000,no_lga,skipped_no_match
+KGSKKF09,Kogi,Kogi,Odaki,,0.455,no_ward,skipped_no_match
 EBSBKL14,Ebonyi,Izzi,Ndiezoke,,0.343,no_ward,skipped_no_match
-KGSKKF06,Kogi,Kogi,Girinya,,0.000,no_lga,skipped_no_match
-KGSKKF11,Kogi,Kogi,Ukwo,,0.000,no_lga,skipped_no_match
-KGSKKF07,Kogi,Kogi,Irenodu Riverine,,0.000,no_lga,skipped_no_match
+KGSKKF06,Kogi,Kogi,Girinya,KO-11-04,1.000,exact,loaded
+KGSKKF11,Kogi,Kogi,Ukwo,,0.400,no_ward,skipped_no_match
+KGSKKF07,Kogi,Kogi,Irenodu Riverine,,0.609,no_ward,skipped_no_match
 KGSKKH11,Kogi,Okehi,Uboro / Ohuepe / Omare,,0.611,no_ward,skipped_no_match
 KGSKKH03,Kogi,Okehi,Obangede,,0.696,no_ward,skipped_no_match
 KGSKKH06,Kogi,Okehi,Oboroke Eba,KO-16-05,1.000,exact,loaded
@@ -8045,11 +8045,11 @@ OGSSAU08,Ogun,Shagamu,Isote,OG-20-12,0.923,lga_fuzzy_exact_ward,loaded
 61403,Sokoto,Shagari,Jaredi,SO-14-01,1.000,exact,loaded
 61907,Sokoto,Tangaza,Sakkwai,SO-19-10,1.000,exact,loaded
 ADSHNG05,Adamawa,Hong,Hildi,AD-07-05,1.000,exact,loaded
-61301,Sokoto,Sabon Birni,Gangara,,0.000,no_lga,skipped_no_match
+61301,Sokoto,Sabon Birni,Gangara,SO-13-08,1.000,exact,loaded
 61211,Sokoto,Rabah,Tsamiya,SO-12-08,1.000,exact,loaded
 60706,Sokoto,Gwadabawa,Gwadabawa,SO-07-06,1.000,exact,loaded
 62006,Sokoto,Tureta,Kwarare,SO-20-10,1.000,exact,loaded
-61306,Sokoto,Sabon Birni,Makuwana,,0.000,no_lga,skipped_no_match
+61306,Sokoto,Sabon Birni,Makuwana,SO-13-10,1.000,exact,loaded
 61904,Sokoto,Tangaza,Magonho,SO-19-09,1.000,exact,loaded
 60602,Sokoto,Gudu,Bachaka,SO-06-03,1.000,exact,loaded
 62104,Sokoto,Wamakko,Gidan Bubu,,0.522,no_ward,skipped_no_match
@@ -8060,7 +8060,7 @@ OGSRMN03,Ogun,Remo North,Ipara,OG-19-07,1.000,exact,loaded
 60208,Sokoto,Bodinga,Sifawa Lukuyawa,SO-02-04,1.000,exact,loaded
 60401,Sokoto,Gada,Dukamaje,SO-04-07,0.762,needs_review,skipped_low_confidence
 62205,Sokoto,Wurno,Dinawa,SO-22-07,1.000,exact,loaded
-61309,Sokoto,Sabon Birni,Tarah,,0.000,no_lga,skipped_no_match
+61309,Sokoto,Sabon Birni,Tarah,SO-13-05,0.889,needs_review,loaded
 62203,Sokoto,Wurno,Chacho-Marnona,SO-22-06,1.000,exact,loaded
 61010,Sokoto,Kebbe,Ungushi,SO-11-09,1.000,exact,loaded
 61007,Sokoto,Kebbe,Margai West,,0.737,no_ward,skipped_no_match
@@ -8087,7 +8087,7 @@ AKSUFG03,Akwa Ibom,Urue Offong/Oruko,Oruko 7,AK-30-06,0.857,needs_review,loaded
 60304,Sokoto,Dange Shuni,Ge Ere Gajara,SO-03-09,0.880,needs_review,loaded
 60103,Sokoto,Binji,Gawazai,SO-01-06,0.933,fuzzy,loaded
 62002,Sokoto,Tureta,Duma,SO-20-01,1.000,exact,loaded
-61311,Sokoto,Sabon Birni,Unguwar Lalle,,0.000,no_lga,skipped_no_match
+61311,Sokoto,Sabon Birni,Unguwar Lalle,SO-13-04,1.000,exact,loaded
 61710,Sokoto,Sokoto South,Tudun Wada A,SO-17-03,0.800,needs_review,loaded
 60206,Sokoto,Bodinga,Kaura Miyo,,0.516,no_ward,skipped_no_match
 62208,Sokoto,Wurno,Lahodu,,0.600,no_ward,skipped_no_match
@@ -8387,7 +8387,7 @@ GMSYDB08,Gombe,Yamaltu/Deba,Lano / Kuri / Lambam,,0.660,no_ward,skipped_no_match
 OSSESH09,Osun,Ede South,Oloki / Akoda,OS-08-09,1.000,exact,loaded
 OYSATIB04,Oyo,Atisbo,Irawo-Ile,OY-04-03,1.000,exact,loaded
 ANSNZM09,Anambra,Anambra West,Umueze Anam 1,AN-04-08,0.923,fuzzy,loaded
-ABSNGK13,Abia,Obi Nwga,Ndiakata,,0.000,no_lga,skipped_no_match
+ABSNGK13,Abia,Obi Nwga,Ndiakata,,0.571,no_ward,skipped_no_match
 BNSALD01,Benue,Gwer East,Akpachai,BE-07-01,0.889,needs_review,loaded
 61103,Sokoto,Kware,Durbawa,SO-10-08,1.000,exact,loaded
 GMSAKK02,Gombe,Akko,Garko,GO-01-02,1.000,exact,loaded
@@ -8429,14 +8429,14 @@ OYSIWU05,Oyo,Itesiwaju,Okaka 1,OY-17-05,0.857,needs_review,loaded
 CRSAKP03,Cross River,Biase,Adim,CR-06-02,1.000,exact,loaded
 EBSNCA03,Ebonyi,Onicha,Amanator / Amanator-Isu,,0.727,no_ward,skipped_no_match
 62008,Sokoto,Tureta,Lofa,SO-20-02,1.000,exact,loaded
-61304,Sokoto,Sabon Birni,Kurawa,,0.000,no_lga,skipped_no_match
+61304,Sokoto,Sabon Birni,Kurawa,SO-13-07,1.000,exact,loaded
 61910,Sokoto,Tangaza,Tangaza,SO-19-01,1.000,exact,loaded
 61004,Sokoto,Kebbe,Kebbe West,SO-11-02,1.000,exact,loaded
 61206,Sokoto,Rabah,Rabah,SO-12-01,1.000,exact,loaded
 AKSPNG06,Akwa Ibom,Ibeno,Inua Eyet Ikot,,0.364,no_ward,skipped_no_match
 AKSPNG08,Akwa Ibom,Ibeno,Itak Abasi,,0.333,no_ward,skipped_no_match
 61701,Sokoto,Sokoto South,Gagi A,SO-17-07,1.000,exact,loaded
-61302,Sokoto,Sabon Birni,Gatawa,,0.000,no_lga,skipped_no_match
+61302,Sokoto,Sabon Birni,Gatawa,SO-13-06,1.000,exact,loaded
 61508,Sokoto,Silame,Gaukai,,0.500,no_ward,skipped_no_match
 60805,Sokoto,Illela,Gidan Hamma,SO-08-06,0.778,needs_review,skipped_low_confidence
 60707,Sokoto,Gwadabawa,Huchi,SO-07-11,1.000,exact,loaded
@@ -8790,7 +8790,7 @@ NISKUG08,Niger,Lavun,Kuchi Bussu,,0.476,no_ward,skipped_no_match
 CRSBKS03,Cross River,Bakassi,Efut Inyang,CR-04-08,0.909,fuzzy,loaded
 NISLMU03,Niger,Gbako,Edo Kota,NI-08-03,0.933,fuzzy,loaded
 DTSAYB04,Delta,Ika North East,Idumuesah,DE-07-10,1.000,exact,loaded
-61310,Sokoto,Sabon Birni,Tsamaye,,0.000,no_lga,skipped_no_match
+61310,Sokoto,Sabon Birni,Tsamaye,SO-13-03,1.000,exact,loaded
 DTSALA06,Delta,Udu,Opete,,0.600,no_ward,skipped_no_match
 DTSALA09,Delta,Udu,Ovwian,DE-18-07,0.857,needs_review,loaded
 DTSBMA09,Delta,Bomadi,Ogo / Eze,DE-03-10,1.000,exact,loaded
@@ -8823,7 +8823,7 @@ NISWSH02,Niger,Wushishi,Barwa,NI-25-02,1.000,exact,loaded
 60201,Sokoto,Bodinga,Darhela Badau,,0.538,no_ward,skipped_no_match
 EBSHKW29,Ebonyi,Ohaukwu,Umuagura Urevene,,0.581,no_ward,skipped_no_match
 NISKAG03,Niger,Rafi,Gunna South,,0.560,no_ward,skipped_no_match
-61308,Sokoto,Sabon Birni,Takatsaba,,0.000,no_lga,skipped_no_match
+61308,Sokoto,Sabon Birni,Takatsaba,,0.500,no_ward,skipped_no_match
 NISPAK04,Niger,Paikoro,Ishau,NI-19-04,1.000,exact,loaded
 AKSABK08,Akwa Ibom,Abak,Afaha Obong 1,AK-01-05,1.000,exact,loaded
 62209,Sokoto,Wurno,Magarya,SO-22-02,1.000,exact,loaded
@@ -9028,7 +9028,7 @@ EBSSKA04,Ebonyi,Ivo,Amagu / Ihie / Akanu / Amanta,,0.357,no_ward,skipped_no_matc
 61501,Sokoto,Silame,Gande,,0.667,no_ward,skipped_no_match
 62307,Sokoto,Yabo,Dagawa,,0.533,no_ward,skipped_no_match
 60605,Sokoto,Gudu,Gwazange,SO-06-04,0.762,needs_review,skipped_low_confidence
-61307,Sokoto,Sabon Birni,Sabon Birni,,0.000,no_lga,skipped_no_match
+61307,Sokoto,Sabon Birni,Sabon Birni,,0.609,no_ward,skipped_no_match
 CRSAKP07,Cross River,Biase,Ehom,CR-06-06,1.000,exact,loaded
 60607,Sokoto,Gudu,Karfe Sarki,SO-06-01,0.957,fuzzy,loaded
 60409,Sokoto,Gada,Kwarma,SO-04-11,1.000,exact,loaded
@@ -9310,7 +9310,7 @@ KD0410,Kaduna,Igabi,Sabon Birnin,KD-04-08,0.828,needs_review,loaded
 KD0402,Kaduna,Igabi,Birnin Yero,KD-04-04,1.000,exact,loaded
 60907,Sokoto,Isa,Turba,SO-09-03,1.000,exact,loaded
 60906,Sokoto,Isa,Tsabre,,0.462,no_ward,skipped_no_match
-OGSYES01,Ogun,Yewa South,Ajilete,,0.000,no_lga,skipped_no_match
+OGSYES01,Ogun,Yewa South,Ajilete,OG-05-10,1.000,exact,loaded
 JI1810,Jigawa,Kiri Kasama,Turabu,JI-18-10,0.725,needs_review,skipped_low_confidence
 JI1310,Jigawa,Hadejia,Yankoli,JI-13-10,1.000,exact,loaded
 KD1902,Kaduna,Sabon Gari,Bomo,KD-19-03,1.000,exact,loaded
@@ -9341,11 +9341,11 @@ OGSOBE02,Ogun,Obafemi Owode,Ajura,OG-15-04,1.000,exact,loaded
 OGSOBE06,Ogun,Obafemi Owode,Maloko Asipa,OG-15-05,0.917,fuzzy,loaded
 OGSOBE04,Ogun,Obafemi Owode,Egbeda,OG-15-08,1.000,exact,loaded
 OGSOBE11,Ogun,Obafemi Owode,Onidundu,OG-15-06,1.000,exact,loaded
-OGSYES02,Ogun,Yewa South,Idogo,,0.000,no_lga,skipped_no_match
+OGSYES02,Ogun,Yewa South,Idogo,OG-05-05,1.000,exact,loaded
 OGSOBE05,Ogun,Obafemi Owode,Kajola,OG-15-09,1.000,exact,loaded
-OGSYES08,Ogun,Yewa South,Oke Odan,,0.000,no_lga,skipped_no_match
-OGSYES04,Ogun,Yewa South,Ilaro 2,,0.000,no_lga,skipped_no_match
-OGSYES06,Ogun,Yewa South,Ilobi / Erinja,,0.000,no_lga,skipped_no_match
+OGSYES08,Ogun,Yewa South,Oke Odan,OG-05-06,1.000,exact,loaded
+OGSYES04,Ogun,Yewa South,Ilaro 2,OG-05-01,0.857,needs_review,loaded
+OGSYES06,Ogun,Yewa South,Ilobi / Erinja,OG-05-09,1.000,exact,loaded
 OGSOBE13,Ogun,Obafemi Owode,Mowe,,0.667,no_ward,skipped_no_match
 OGSADO07,Ogun,Ado Odo/Ota,Ere,OG-03-11,1.000,exact,loaded
 OGSIFO04,Ogun,Ifo,Ibogun,OG-07-11,1.000,exact,loaded
@@ -9360,22 +9360,22 @@ OGSSAU10,Ogun,Shagamu,Latawa,OG-20-08,0.923,lga_fuzzy_exact_ward,loaded
 OGSIFO10,Ogun,Ifo,Ososun,OG-07-08,1.000,exact,loaded
 OGSIFO06,Ogun,Ifo,Ifo 2,OG-07-01,0.800,needs_review,loaded
 OGSIFO08,Ogun,Ifo,Ojodu / Isheri,,0.588,no_ward,skipped_no_match
-OGSYES09,Ogun,Yewa South,Owode 2,,0.000,no_lga,skipped_no_match
+OGSYES09,Ogun,Yewa South,Owode 2,OG-05-07,0.857,needs_review,loaded
 OGSOBE10,Ogun,Obafemi Owode,Ofada,OG-15-02,1.000,exact,loaded
 OGSIFO11,Ogun,Ifo,Sunren,OG-07-09,1.000,exact,loaded
 OGSEWO09,Ogun,Ewekoro,Papa,,0.615,no_ward,skipped_no_match
 OGSEWO07,Ogun,Ewekoro,Obada,,0.714,no_ward,skipped_no_match
-OGSYES03,Ogun,Yewa South,Ilaro 1,,0.000,no_lga,skipped_no_match
-OGSYES07,Ogun,Yewa South,Iwoye,,0.000,no_lga,skipped_no_match
+OGSYES03,Ogun,Yewa South,Ilaro 1,OG-05-01,0.857,needs_review,loaded
+OGSYES07,Ogun,Yewa South,Iwoye,OG-05-04,1.000,exact,loaded
 OGSOBE08,Ogun,Obafemi Owode,Oba,OG-15-07,1.000,exact,loaded
 OGSOBE07,Ogun,Obafemi Owode,Molokiki,OG-15-01,0.750,needs_review,skipped_low_confidence
 OGSEWO08,Ogun,Ewekoro,Owowo,OG-06-09,1.000,exact,loaded
 OGSEWO04,Ogun,Ewekoro,Elere,,0.526,no_ward,skipped_no_match
-OGSYEN08,Ogun,Yewa North,Imasayi,,0.000,no_lga,skipped_no_match
-OGSYEN09,Ogun,Yewa North,Joga / Iboro,,0.000,no_lga,skipped_no_match
-OGSYEN07,Ogun,Yewa North,Ijoun,,0.000,no_lga,skipped_no_match
-OGSYEN06,Ogun,Yewa North,Igbogila / Ibese,,0.000,no_lga,skipped_no_match
-OGSYEN11,Ogun,Yewa North,Sunwa,,0.000,no_lga,skipped_no_match
+OGSYEN08,Ogun,Yewa North,Imasayi,OG-04-06,0.923,fuzzy,loaded
+OGSYEN09,Ogun,Yewa North,Joga / Iboro,,0.522,no_ward,skipped_no_match
+OGSYEN07,Ogun,Yewa North,Ijoun,OG-04-10,1.000,exact,loaded
+OGSYEN06,Ogun,Yewa North,Igbogila / Ibese,,0.526,no_ward,skipped_no_match
+OGSYEN11,Ogun,Yewa North,Sunwa,OG-04-04,1.000,exact,loaded
 OGSION07,Ogun,Imeko Afon,Imeko,OG-13-01,1.000,exact,loaded
 KGSERE03,Kogi,Yagba West,Isanluessa / Okoleke,,0.682,no_ward,skipped_no_match
 KGSERE07,Kogi,Yagba West,Odo Eri,,0.706,no_ward,skipped_no_match
