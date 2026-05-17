@@ -871,11 +871,18 @@ function SvgFallback({
   // wards without a GRID3 polygon match come through with geometry=null
   // and the renderer falls back to a proportional-symbol circle for
   // them (see the ward render block below).
+  //
+  // Effect keys on lga_code (not the whole focus) so the data is
+  // preserved when the user drills LGA -> ward focus and only
+  // refetched when they switch to a different LGA. Without this, the
+  // ward-focus view would clear wardGeo and lose all neighbouring
+  // ward outlines.
+  const focusedLgaCode =
+    focus.level === 'lga' || focus.level === 'ward' ? focus.lga_code : null;
   useEffect(() => {
-    if (focus.level !== 'lga') { setWardGeo(null); return; }
-    const lgaCode = focus.lga_code;
+    if (!focusedLgaCode) { setWardGeo(null); return; }
     let cancelled = false;
-    fetch(`/api/v1/lgas/${encodeURIComponent(lgaCode)}/wards`)
+    fetch(`/api/v1/lgas/${encodeURIComponent(focusedLgaCode)}/wards`)
       .then((r) => (r.ok ? r.json() : null))
       .then((payload: { data?: WardCollection } | null) => {
         if (cancelled || !payload?.data) return;
@@ -883,7 +890,7 @@ function SvgFallback({
       })
       .catch(() => {/* fall back to circle symbols */});
     return () => { cancelled = true; };
-  }, [focus]);
+  }, [focusedLgaCode]);
 
   // Reset manual zoom/pan whenever the user drills in or out.
   useEffect(() => { setZoomScale(1); setPanOffset([0, 0]); }, [focus]);

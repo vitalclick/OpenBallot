@@ -22,7 +22,14 @@ export async function GET(req: NextRequest, { params }: Params) {
     if (pu)    filtered = filtered.filter((u) => u.pu_code === pu);
     return jsonOk(filtered);
   }
-  let q = supabaseAdmin().from('v_pu_live_status').select('*').eq('election_id', params.id);
+  let q = supabaseAdmin().from('v_pu_live_status').select('*');
+  // Include PUs that have submissions for this election PLUS PUs that
+  // have no verified_results row at all (those come through the
+  // LEFT JOIN in v_pu_live_status with election_id = NULL and would
+  // otherwise be filtered out, leaving every ward map blank
+  // pre-election). The "status" column already coalesces to 'no_data'
+  // for the NULL case, so the client sees a clean unified shape.
+  q = q.or(`election_id.eq.${params.id},election_id.is.null`);
   if (state) q = q.eq('state_code', state);
   if (lga)   q = q.eq('lga_code', lga);
   if (ward)  q = q.eq('ward_code', ward);
