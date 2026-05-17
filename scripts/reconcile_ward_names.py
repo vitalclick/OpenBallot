@@ -52,7 +52,8 @@ NOISE_TOKENS = {"ward", "district", "area", "council"}
 # mismatches go here, keyed by the GRID3 statecode. Add new entries as
 # the load_report surfaces them (look for whole-state no_lga clusters).
 GRID3_TO_INEC_STATE_CODE = {
-    "BR": "BO",  # Borno
+    "BR": "BO",  # Borno  (GRID3 v1 + v2)
+    "KB": "KE",  # Kebbi  (GRID3 v1, not in v2 coverage)
 }
 
 
