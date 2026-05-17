@@ -239,6 +239,125 @@ ORDER BY match_confidence;
 Add entries to `data/ward_boundaries/overrides.csv` and re-run the
 loader to fix any incorrect joins. Overrides are idempotent.
 
+## May 2026 update — GRID3 v1.0 + v2.0, current coverage
+
+GRID3 now publishes two ward layers that are **complementary, not
+sequential**:
+
+- **v2.0 (Apr 2026)** — 4,044 features. Covers 15 states only:
+  Adamawa, Bauchi, Bayelsa, Borno, Delta, Gombe, Jigawa, Kano,
+  Katsina, Kwara, Niger, Ogun, Osun, Oyo, Yobe. These are the
+  states GRID3 has republished against current INEC ward naming.
+- **v1.0 (Dec 2020)** — 9,410 features. All 37 states, older
+  layout. v2.0 supersedes for the 15 included states.
+- **Coming soon** (GRID3 roadmap, no public ETA) — v2.x updates
+  for the remaining 22 states.
+
+Load order — v1.0 first, then v2.0 — because the loader does
+`ON CONFLICT (ward_code) DO UPDATE`; the second file overwrites
+the first wherever both match.
+
+```bash
+python scripts/load_ward_boundaries.py \
+    data/ward_boundaries/wards_v1.geojson
+python scripts/load_ward_boundaries.py \
+    data/ward_boundaries/main_GRID3_NGA_operational_wards_v2_0_<id>.geojson
+```
+
+### Schema drift between vintages
+
+The two vintages use different property names. The reconciler's
+`SOURCE_PROPS` covers all of them; no code change needed when
+loading either:
+
+| Field | OCHA COD-AB | GRID3 v1.0 | GRID3 v2.0 |
+|---|---|---|---|
+| State name | `ADM1_EN` | `statename` | `state` |
+| State 2-letter code | n/a | `statecode` | `statecode` |
+| LGA name | `ADM2_EN` | `lganame` | `lga` |
+| Ward name | `ADM3_EN` | `wardname` | `ward` |
+| Ward alt names | n/a | n/a | `ward_alt_names` |
+| Ward ID | `ADM3_PCODE` | `wardcode`, `globalid`, `FID` | `OBJECTID` |
+
+### State-code aliases (GRID3 ↔ INEC)
+
+GRID3 uses a couple of 2-letter codes that don't match INEC
+convention. Each is one entry in
+`reconcile_ward_names.py:GRID3_TO_INEC_STATE_CODE`:
+
+| GRID3 code | INEC code | State |
+|---|---|---|
+| `BR` | `BO` | Borno |
+| `KB` | `KE` | Kebbi |
+
+All other 35 codes match. Add new aliases if a future GRID3 vintage
+surfaces more — diagnose by dumping
+`Counter((f['properties'].get('state'), f['properties'].get('statecode')) for f in features)`
+and looking for `(name, mismatched-code)` pairs.
+
+### LGA-name aliases
+
+Seven LGAs survived state-code aliasing, substring matching, and
+fuzzy ≥ 0.82 with names that diverge too far to bridge automatically.
+Each is one entry in `LGA_NAME_ALIASES` keyed
+`(state_code, normalised_grid3_lga)`:
+
+| GRID3 (state / LGA) | INEC LGA | Reason |
+|---|---|---|
+| Abia / Obi Nwga | OBINGWA | Spelling drift |
+| Sokoto / Sabon Birni | S/BIRNI | INEC abbreviation |
+| Ogun / Yewa North | EGBADO NORTH | Historical rename (Yewa = current; Egbado = colonial-era) |
+| Ogun / Yewa South | EGBADO SOUTH | Same |
+| Kogi / Kogi | KOGI . K. K. | INEC abbreviation; sub-5-char prefix excluded from substring match |
+| Kano / Dambatta | DANBATA | Spelling drift |
+| Borno / Abadam | *(not in DB)* | INEC's Abadam has zero PUs in the May 2026 roster, so no bucket exists; the 10 GRID3 wards in Abadam are unrecoverable |
+
+### Current coverage
+
+After loading both vintages with all aliases applied:
+
+| | Count | % |
+|---|---|---|
+| INEC wards in DB | 8,712 | 100% |
+| Wards with a polygon | ~6,170 | ~71% |
+| Wards rendered as centroid circle | ~2,540 | ~29% |
+| `no_lga` (genuinely unmatched at LGA level) | 10 | 0.1% |
+
+The 29% gap concentrates in southern states GRID3 hasn't republished
+under v2.x yet — Lagos (31%), Rivers (12%), Akwa Ibom (26%), Anambra
+(45%), Abia (48%), Ekiti (44%), Ondo (42%), Ebonyi (41%), Imo (54%).
+The remaining `no_lga` cases are all Borno / Abadam (no INEC LGA
+bucket to match into).
+
+### Why not push the threshold or add wholesale overrides
+
+See ADR-0013. The map paints each region by the leading party, so a
+wrong polygon visually misattributes a leader to the wrong piece of
+ground. Manual overrides at scale would force pre-2020 GRID3 v1
+boundaries onto post-2020 INEC ward layouts (INEC has consolidated
+many southern wards), introducing exactly the kind of misattribution
+the choropleth contract is designed to prevent. The map's centroid-
+circle fallback for unmatched wards is **strictly correct** — same
+leader colour, same drill-down, just rendered as a sized circle
+instead of an area fill. Wait for GRID3 v2.x to cover the
+remaining states.
+
+### Alternative sources investigated and rejected (May 2026)
+
+- **OSM `admin_level=8`** for Lagos: diagnostic confirmed OSM Lagos
+  has zero ward-level admin polygons (1 state, 20 LGAs, no wards).
+  Nigerian OSM contributors haven't mapped wards because they're an
+  election-administrative concept, not a physical/cultural boundary.
+  `scripts/fetch_osm_wards.py` is kept in the repo for future use if
+  the picture changes.
+- **GADM v4.1 level-3**: same source data vintage as GRID3 v1.0
+  (pre-2020 INEC boundaries), so would inherit the same southern-
+  state divergence. Conversion from Geopackage / Shapefile to
+  GeoJSON adds friction without solving the underlying problem.
+- **eHealth Africa, HOTOSM**: not investigated in depth; viable
+  candidates if a future audit pushes the requirement above what
+  GRID3 + circles can deliver.
+
 ## Why not Voronoi?
 
 If GRID3 ever becomes unavailable, the fallback is to generate Voronoi

@@ -21,6 +21,9 @@ text are by ADR number (e.g. "see ADR-0004").
 | 0008 | Three-layer anomaly detection | Accepted |
 | 0009 | AGPL-3.0 licence | Accepted |
 | 0010 | Per-install device fingerprinting for agent JWTs | Accepted |
+| 0011 | Geographic identifiers derived from INEC's `delim` | Accepted |
+| 0012 | GRID3 ↔ INEC ward reconciliation strategy | Accepted |
+| 0013 | Choropleth fill = leading party at every level | Accepted |
 
 ## How to add an ADR
 
