@@ -46,13 +46,34 @@ type LgaFeature = {
 };
 type LgaCollection = { type: 'FeatureCollection'; features: LgaFeature[] };
 
+// Ward GeoJSON fetched on-demand from /api/v1/lgas/{code}/wards once
+// the user drills into an LGA. Polygons come from the GRID3 Nigeria
+// Operational Wards layer (loaded via scripts/load_ward_boundaries.py).
+// Wards without a reconciled polygon arrive with geometry=null; the
+// renderer falls back to the proportional-symbol circle for those.
+type WardFeature = {
+  type: 'Feature';
+  properties: {
+    ward_code: string;
+    name: string;
+    lga_code: string;
+    state_code: string;
+    match_confidence: number | null;
+    source: string | null;
+  };
+  geometry: Geom | null;
+};
+type WardCollection = { type: 'FeatureCollection'; features: WardFeature[] };
+
 
 // The public results map.
 //
 // Rendering hierarchy (see lib/map-focus.ts):
-//   country -> proportional symbols at state centroids (37 circles)
-//   state   -> proportional symbols at LGA centroids (~20-60)
-//   lga     -> proportional symbols at ward centroids (~10-25)
+//   country -> state polygons (37) from nigeria.topo.json
+//   state   -> LGA polygons (~20-60) from the same TopoJSON file
+//   lga     -> ward polygons (~10-25) from /api/v1/lgas/{code}/wards,
+//              with proportional-symbol fallback for any ward whose
+//              GRID3 reconciliation hasn't produced a polygon yet
 //   ward    -> one dot per polling unit (5..~282)
 //
 // The "13,325 dots on Lagos" anti-pattern is gone: PU dots only appear
@@ -651,6 +672,7 @@ function SvgFallback({
 }) {
   const [geo, setGeo] = useState<GeoCollection | null>(null);
   const [lgaGeo, setLgaGeo] = useState<LgaCollection | null>(null);
+  const [wardGeo, setWardGeo] = useState<WardCollection | null>(null);
   const [zoomScale, setZoomScale] = useState(1);
   const [panOffset, setPanOffset] = useState<[number, number]>([0, 0]);
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -724,6 +746,25 @@ function SvgFallback({
     return () => { cancelled = true; };
   }, []);
 
+  // Ward polygons lazy-loaded when the user drills into an LGA. The API
+  // returns a GeoJSON FeatureCollection of every ward in that LGA;
+  // wards without a GRID3 polygon match come through with geometry=null
+  // and the renderer falls back to a proportional-symbol circle for
+  // them (see the ward render block below).
+  useEffect(() => {
+    if (focus.level !== 'lga') { setWardGeo(null); return; }
+    const lgaCode = focus.lga_code;
+    let cancelled = false;
+    fetch(`/api/v1/lgas/${encodeURIComponent(lgaCode)}/wards`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((payload: { data?: WardCollection } | null) => {
+        if (cancelled || !payload?.data) return;
+        setWardGeo(payload.data);
+      })
+      .catch(() => {/* fall back to circle symbols */});
+    return () => { cancelled = true; };
+  }, [focus]);
+
   // Reset manual zoom/pan whenever the user drills in or out.
   useEffect(() => { setZoomScale(1); setPanOffset([0, 0]); }, [focus]);
 
@@ -759,6 +800,16 @@ function SvgFallback({
     for (const r of aggregates) m.set(r.name.toLowerCase(), r);
     return m;
   }, [aggregates]);
+  // Set of ward codes that have a GRID3 polygon loaded, so the
+  // fallback symbol layer can skip them and avoid double-rendering.
+  const wardsWithPolygons = useMemo(() => {
+    const s = new Set<string>();
+    if (!wardGeo) return s;
+    for (const w of wardGeo.features) {
+      if (w.geometry !== null) s.add(w.properties.ward_code);
+    }
+    return s;
+  }, [wardGeo]);
 
   // viewBox = bbox of country / focused state / focused LGA / focused ward.
   // For LGA & ward we don't have boundary polygons in the SVG fallback,
@@ -1006,14 +1057,62 @@ function SvgFallback({
       )}
 
       {/*
-        Ward proportional symbols at LGA focus. (No client-side ward
-        polygon GeoJSON exists yet, so we still render wards as sized
-        circles inside the focused LGA's polygon.) At country / state
-        focus the polygons above are the visualization, so no overlay.
+        Ward layer at LGA focus.
+
+        Wards with a GRID3 polygon (from ward_boundaries, fetched via
+        /api/v1/lgas/{code}/wards) render as filled polygons coloured by
+        % verified — same visual language as states/LGAs. Wards still
+        awaiting reconciliation (geometry: null) fall back to the
+        proportional-symbol circle so nothing disappears from the map.
+        Clicking either form descends into ward focus, which shows the
+        polling units in that ward as dots.
+      */}
+      {focus.level === 'lga' && wardGeo && wardGeo.features
+        .filter((w) => w.geometry !== null && w.properties.lga_code === focus.lga_code)
+        .map((w) => {
+          const agg = aggregatesByCode.get(w.properties.ward_code);
+          const fill = agg ? regionFill(agg) : '#f1f5f9';
+          const stroke = agg && agg.units_inec_conflict > 0
+            ? '#dc2626'
+            : agg && agg.units_discrepancy > 0
+              ? '#f97316'
+              : '#94a3b8';
+          return (
+            <path
+              key={w.properties.ward_code}
+              d={featureToPath(w as unknown as GeoFeature)}
+              fill={fill}
+              fillOpacity={1}
+              stroke={stroke}
+              strokeWidth={0.6}
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+              style={{ cursor: 'pointer' }}
+              onClick={guarded(() => {
+                if (!agg) return;
+                onSelectRegion(agg);
+                onFocus(descend(focus, {
+                  code: agg.code, name: agg.name, state_code: agg.state_code,
+                }));
+              })}
+            >
+              <title>
+                {w.properties.name}
+                {agg ? ` — ${pctVerified(agg)}% verified, ${agg.pu_count.toLocaleString()} PUs` : ' — no data'}
+              </title>
+            </path>
+          );
+        })}
+
+      {/*
+        Fallback proportional-symbol circles at LGA focus for any ward
+        whose GRID3 polygon hasn't been reconciled yet (or for the brief
+        window before wardGeo finishes loading). Wards that DO have a
+        polygon are filtered out so we don't double-render.
       */}
       {focus.level === 'lga' && (
         <AggregateSymbols
-          regions={aggregates}
+          regions={aggregates.filter((r) => !wardsWithPolygons.has(r.code))}
           project={(lng, lat) => ({ x: toX(lng), y: toY(lat) })}
           pxPerUnit={pxPerUnit}
           onSelect={guarded((r) => {
