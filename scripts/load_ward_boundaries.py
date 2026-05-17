@@ -59,7 +59,12 @@ def main(geojson_path: str) -> int:
         print(f"GeoJSON not found: {src}", file=sys.stderr)
         return 2
 
-    min_confidence = float(os.environ.get("WARD_LOAD_MIN_CONFIDENCE", "0.90"))
+    # Default 0.80 covers fuzzy-LGA + exact-ward matches (e.g. "Damban"
+    # vs "Dambam" -> 0.83) and substring LGA matches ("Maiduguri" ⊂
+    # "Maiduguri M. C." -> 0.85). Set higher via the env var to demand
+    # only near-exact matches; set lower to accept more reconciliation
+    # noise (and inspect load_report.csv afterwards).
+    min_confidence = float(os.environ.get("WARD_LOAD_MIN_CONFIDENCE", "0.80"))
     report_path = Path(os.environ.get("WARD_LOAD_REPORT", "data/ward_boundaries/load_report.csv"))
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
