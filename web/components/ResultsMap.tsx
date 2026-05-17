@@ -932,8 +932,13 @@ function SvgFallback({
   }, [wardGeo]);
 
   // viewBox = bbox of country / focused state / focused LGA / focused ward.
-  // For LGA & ward we don't have boundary polygons in the SVG fallback,
-  // so we derive a bbox from the aggregate / unit centroids in scope.
+  // Prefer real polygon geometries when available (state polygon from
+  // nigeria.topo.json, LGA polygon from same, ward polygons from
+  // /api/v1/lgas/<code>/wards), falling back to aggregate centroids
+  // and PU coordinates only when no polygon is loaded for the focus
+  // level. This matters because the INEC roster carries no GPS for
+  // polling units, so mv_ward_centroids can return (0,0)/NULL and the
+  // centroid path produces a degenerate bbox that renders blank.
   const viewBox = useMemo<[number, number, number, number]>(() => {
     let bbox: [number, number, number, number] = [
       NIGERIA_BBOX.lngMin, NIGERIA_BBOX.latMin, NIGERIA_BBOX.lngMax, NIGERIA_BBOX.latMax,
@@ -943,20 +948,60 @@ function SvgFallback({
       if (s) bbox = geomBbox(s.geometry);
     }
     if (focus.level === 'lga' || focus.level === 'ward') {
-      const pts = aggregates.map((a) => a.centroid);
-      const inferred = pointsBbox(pts);
-      if (inferred) bbox = inferred;
+      // 1st choice: the LGA polygon itself (always present in
+      // nigeria.topo.json — no dependency on submission data).
+      const lgaCode = focus.level === 'lga' ? focus.lga_code : focus.lga_code;
+      const lgaName = focus.level === 'lga' ? focus.lga_name : focus.lga_name;
+      const lgaFeat = lgaGeo?.features.find(
+        (l) => l.properties.state_code === focus.state_code && l.properties.name === lgaName,
+      );
+      if (lgaFeat) {
+        bbox = geomBbox(lgaFeat.geometry);
+      } else {
+        // 2nd choice: union of ward polygon bboxes in this LGA.
+        const wardsHere = wardGeo?.features.filter(
+          (w) => w.geometry !== null && w.properties.lga_code === lgaCode,
+        ) ?? [];
+        if (wardsHere.length > 0) {
+          let lngMin = Infinity, lngMax = -Infinity, latMin = Infinity, latMax = -Infinity;
+          for (const w of wardsHere) {
+            const [x1, y1, x2, y2] = geomBbox(w.geometry as Geom);
+            if (x1 < lngMin) lngMin = x1;
+            if (x2 > lngMax) lngMax = x2;
+            if (y1 < latMin) latMin = y1;
+            if (y2 > latMax) latMax = y2;
+          }
+          if (lngMin !== Infinity) bbox = [lngMin, latMin, lngMax, latMax];
+        } else {
+          // 3rd choice: aggregate centroids (works only when PUs
+          // carry GPS — typically not true for the INEC roster).
+          const pts = aggregates
+            .map((a) => a.centroid)
+            .filter((c) => c.lng !== 0 || c.lat !== 0);
+          const inferred = pointsBbox(pts);
+          if (inferred) bbox = inferred;
+        }
+      }
     }
     if (focus.level === 'ward') {
-      const pts = units.map((u) => u.coordinates);
-      const inferred = pointsBbox(pts);
-      if (inferred) bbox = inferred;
+      // Drill further: prefer the focused ward's own polygon, fall
+      // back to PU coordinates if it has neither polygon nor GPS.
+      const wardFeat = wardGeo?.features.find(
+        (w) => w.geometry !== null && w.properties.ward_code === focus.ward_code,
+      );
+      if (wardFeat) {
+        bbox = geomBbox(wardFeat.geometry as Geom);
+      } else {
+        const pts = units.map((u) => u.coordinates).filter((c) => c.lng !== 0 || c.lat !== 0);
+        const inferred = pointsBbox(pts);
+        if (inferred) bbox = inferred;
+      }
     }
     const [vx, vy, vw, vh] = bboxToViewBox(bbox);
     const cx = vx + vw / 2, cy = vy + vh / 2;
     const w = vw / zoomScale, h = vh / zoomScale;
     return [cx - w / 2 + panOffset[0], cy - h / 2 + panOffset[1], w, h];
-  }, [focus, states, aggregates, units, zoomScale, panOffset]);
+  }, [focus, states, aggregates, units, lgaGeo, wardGeo, zoomScale, panOffset]);
 
   // Drag-to-pan with click-vs-drag disambiguation.
   const DRAG_THRESHOLD = 5;
