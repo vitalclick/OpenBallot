@@ -36,4 +36,7 @@ coverage
 .vscode
 
 # Ward boundary downloads (~60 MB, re-fetchable via scripts/fetch_ward_boundaries.sh)
+data/ward_boundaries/*
+!data/ward_boundaries/.gitkeep
+!data/ward_boundaries/overrides.csv
 
