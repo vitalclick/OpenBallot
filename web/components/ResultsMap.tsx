@@ -549,6 +549,46 @@ function Legend({ level, regions }: { level: MapFocus['level']; regions: RegionA
           Discrepancy
         </div>
       </div>
+      {/*
+        Ward geometry key — only meaningful at LGA focus, where the
+        renderer mixes real GRID3 polygons (where reconciled) with
+        centroid circles (fallback). Both glyphs carry the same
+        meaning: the leading party of the ward they represent. The
+        polygon is just spatially more precise; the dashed variant
+        flags GRID3↔INEC fuzzy matches whose boundary may be off by
+        a neighbouring ward.
+      */}
+      {level === 'lga' && (
+        <div>
+          <div className="font-semibold mb-1">Ward geometry</div>
+          <div className="flex flex-col gap-1 text-[10px] text-slate-600">
+            <span className="flex items-center gap-2">
+              <span
+                className="inline-block w-3 h-3 border border-slate-500"
+                style={{ background: 'rgba(74, 222, 128, 0.6)' }}
+              />
+              GRID3 boundary
+            </span>
+            <span className="flex items-center gap-2">
+              <span
+                className="inline-block w-3 h-3 border border-slate-500"
+                style={{
+                  background: 'rgba(74, 222, 128, 0.42)',
+                  borderStyle: 'dashed',
+                }}
+              />
+              Approx. boundary (fuzzy match)
+            </span>
+            <span className="flex items-center gap-2">
+              <span
+                className="inline-block w-3 h-3 rounded-full border border-slate-500"
+                style={{ background: 'rgba(74, 222, 128, 0.6)' }}
+              />
+              Centroid (no polygon yet)
+            </span>
+          </div>
+        </div>
+      )}
       {/* CC BY 4.0 attribution for the boundary dataset. */}
       <div className="text-[9px] text-slate-400 pt-1 border-t border-slate-100">
         Boundaries © GRID3 (CC BY 4.0)
@@ -1077,14 +1117,23 @@ function SvgFallback({
             : agg && agg.units_discrepancy > 0
               ? '#f97316'
               : '#94a3b8';
+          // Dashed stroke for low-confidence reconciliations (GRID3 ↔
+          // INEC fuzzy match below 0.95). The polygon may be slightly
+          // off the actual INEC ward boundary, so signal that
+          // visually rather than implying boundary precision we don't
+          // have. Confidence 1.0 = exact name match; ~0.83 = LGA
+          // fuzzy + exact ward; lower = ward fuzzy.
+          const conf = w.properties.match_confidence;
+          const isLowConf = conf !== null && conf < 0.95;
           return (
             <path
               key={w.properties.ward_code}
               d={featureToPath(w as unknown as GeoFeature)}
               fill={fill}
-              fillOpacity={1}
+              fillOpacity={isLowConf ? 0.7 : 1}
               stroke={stroke}
               strokeWidth={0.6}
+              strokeDasharray={isLowConf ? '2 2' : undefined}
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
               style={{ cursor: 'pointer' }}
@@ -1099,6 +1148,7 @@ function SvgFallback({
               <title>
                 {w.properties.name}
                 {agg ? ` — ${pctVerified(agg)}% verified, ${agg.pu_count.toLocaleString()} PUs` : ' — no data'}
+                {isLowConf ? ` · approx. boundary (GRID3 match ${(conf! * 100).toFixed(0)}%)` : ''}
               </title>
             </path>
           );
