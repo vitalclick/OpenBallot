@@ -45,7 +45,15 @@ from typing import Iterable
 
 FUZZY_ACCEPT = 0.90    # >= this -> accept, marked low-confidence below 1.0
 FUZZY_REVIEW = 0.75    # >= this -> emit as needs-review, do not auto-apply
+LGA_FUZZY_ACCEPT = 0.82  # >= this -> treat as same LGA when exact fails
 NOISE_TOKENS = {"ward", "district", "area", "council"}
+
+# GRID3 and INEC don't always agree on 2-letter state codes. Discovered
+# mismatches go here, keyed by the GRID3 statecode. Add new entries as
+# the load_report surfaces them (look for whole-state no_lga clusters).
+GRID3_TO_INEC_STATE_CODE = {
+    "BR": "BO",  # Borno
+}
 
 
 @dataclass(frozen=True)
@@ -211,6 +219,28 @@ def _bucket_by_lga(wards: list[InecWard]) -> dict[tuple[str, str], list[InecWard
     return buckets
 
 
+def _index_lgas_by_state(
+    wards: list[InecWard],
+) -> dict[str, list[tuple[str, str]]]:
+    """For fuzzy LGA fallback: per state_key, a list of (normalised LGA
+    name, original LGA name) pairs. Allows us to scan all LGAs in a
+    state when the exact LGA name from the source doesn't bucket."""
+    out: dict[str, list[tuple[str, str]]] = {}
+    seen: dict[str, set[str]] = {}
+    for w in wards:
+        for state_key in (w.state_code.upper(), normalise(w.state_name)):
+            if not state_key:
+                continue
+            n = normalise(w.lga_name)
+            if state_key not in seen:
+                seen[state_key] = set()
+            if n in seen[state_key]:
+                continue
+            seen[state_key].add(n)
+            out.setdefault(state_key, []).append((n, w.lga_name))
+    return out
+
+
 def reconcile(
     source_features: Iterable[tuple[dict, dict]],
     inec_wards: list[InecWard],
@@ -218,6 +248,7 @@ def reconcile(
 ) -> list[Match]:
     overrides = overrides or {}
     by_lga = _bucket_by_lga(inec_wards)
+    lgas_by_state = _index_lgas_by_state(inec_wards)
     inec_by_code = {w.ward_code: w for w in inec_wards}
     matches: list[Match] = []
 
@@ -236,19 +267,52 @@ def reconcile(
                 matches.append(Match(src_id, src_state, src_lga, src_ward, target, 1.0, "override"))
                 continue
 
-        # Prefer the 2-letter state code when GRID3 supplies one (v2
-        # has a `statecode` column that matches INEC convention 1:1);
-        # fall back to normalised state name for older COD-AB vintages.
-        state_key = src_state_code.strip().upper() or normalise(src_state)
+        # Prefer the 2-letter state code when the source supplies one
+        # (GRID3 v1 and v2 both ship `statecode`); fall back to
+        # normalised state name when absent. Apply the known GRID3 ->
+        # INEC code alias map (e.g. GRID3's "BR" for Borno -> INEC "BO").
+        raw_code = src_state_code.strip().upper()
+        state_key = GRID3_TO_INEC_STATE_CODE.get(raw_code, raw_code) or normalise(src_state)
         n_lga   = normalise(src_lga)
         n_ward  = normalise(src_ward)
 
+        # 2. Exact LGA match first; if missing, fuzzy-match the LGA
+        # name against every LGA in the state. Covers single-letter
+        # typos ("Damban" vs "Dambam"), slash/space variants
+        # ("Kala/Balge" vs "Kala Balge"), and suffix omissions
+        # ("Maiduguri" vs "Maiduguri M. C."). The LGA confidence then
+        # caps any ward-level confidence so we never claim "exact" on
+        # top of a fuzzy parent.
         bucket = by_lga.get((state_key, n_lga))
+        lga_conf = 1.0
+        if not bucket and n_lga:
+            best_lga: tuple[float, str] | None = None
+            for inec_n, _inec_orig in lgas_by_state.get(state_key, ()):
+                # Substring containment first: handles "Maiduguri" vs
+                # "Maiduguri M. C." cleanly (GRID3 often drops the
+                # municipal council / area council suffix). Require the
+                # shorter side to be at least 5 chars so single-token
+                # collisions like "Aba" ⊂ "Abaji" don't fire.
+                shorter, longer = sorted((n_lga, inec_n), key=len)
+                if len(shorter) >= 5 and (
+                    longer.startswith(shorter) or longer.endswith(shorter)
+                    or f" {shorter} " in f" {longer} "
+                ):
+                    # Substring match is a strong signal: floor at 0.85
+                    # so it always clears LGA_FUZZY_ACCEPT (0.82).
+                    ratio = max(len(shorter) / len(longer), 0.85)
+                else:
+                    ratio = SequenceMatcher(None, n_lga, inec_n).ratio()
+                if best_lga is None or ratio > best_lga[0]:
+                    best_lga = (ratio, inec_n)
+            if best_lga and best_lga[0] >= LGA_FUZZY_ACCEPT:
+                bucket = by_lga.get((state_key, best_lga[1]))
+                lga_conf = best_lga[0]
         if not bucket:
             matches.append(Match(src_id, src_state, src_lga, src_ward, None, 0.0, "no_lga"))
             continue
 
-        # 2. Exact ward match within the LGA bucket. Also try comma-
+        # 3. Exact ward match within the LGA bucket. Also try comma-
         # separated alt names (GRID3 v2 ward_alt_names column).
         candidates = {n_ward}
         for alt in src_alt.split(",") if src_alt else ():
@@ -256,13 +320,15 @@ def reconcile(
         candidates.discard("")
         exact = [w for w in bucket if normalise(w.ward_name) in candidates]
         if len(exact) == 1:
-            matches.append(Match(src_id, src_state, src_lga, src_ward, exact[0].ward_code, 1.0, "exact"))
+            conf = round(1.0 * lga_conf, 3)
+            reason = "exact" if lga_conf == 1.0 else "lga_fuzzy_exact_ward"
+            matches.append(Match(src_id, src_state, src_lga, src_ward, exact[0].ward_code, conf, reason))
             continue
         if len(exact) > 1:
             matches.append(Match(src_id, src_state, src_lga, src_ward, None, 0.0, "ambiguous"))
             continue
 
-        # 3. Fuzzy fallback within the same LGA - try every candidate
+        # 4. Fuzzy fallback within the same LGA - try every candidate
         # (primary ward + alt names) against every INEC ward, keep the
         # best ratio.
         best: tuple[float, InecWard] | None = None
@@ -273,12 +339,16 @@ def reconcile(
                 ratio = SequenceMatcher(None, cand, normalise(w.ward_name)).ratio()
                 if best is None or ratio > best[0]:
                     best = (ratio, w)
-        if best and best[0] >= FUZZY_ACCEPT:
-            matches.append(Match(src_id, src_state, src_lga, src_ward, best[1].ward_code, round(best[0], 3), "fuzzy"))
-        elif best and best[0] >= FUZZY_REVIEW:
-            matches.append(Match(src_id, src_state, src_lga, src_ward, best[1].ward_code, round(best[0], 3), "needs_review"))
+        if best:
+            final = round(best[0] * lga_conf, 3)
+            if best[0] >= FUZZY_ACCEPT:
+                matches.append(Match(src_id, src_state, src_lga, src_ward, best[1].ward_code, final, "fuzzy"))
+            elif best[0] >= FUZZY_REVIEW:
+                matches.append(Match(src_id, src_state, src_lga, src_ward, best[1].ward_code, final, "needs_review"))
+            else:
+                matches.append(Match(src_id, src_state, src_lga, src_ward, None, final, "no_ward"))
         else:
-            matches.append(Match(src_id, src_state, src_lga, src_ward, None, round(best[0], 3) if best else 0.0, "no_ward"))
+            matches.append(Match(src_id, src_state, src_lga, src_ward, None, 0.0, "no_ward"))
 
     return matches
 
