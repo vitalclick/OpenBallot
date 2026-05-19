@@ -1,0 +1,41 @@
+{
+    "success": true,
+    "request_time": 1779230735049,
+    "data": {
+        "pus": 5720,
+        "documents": 5711,
+        "latest": {
+            "status": "ACTIVE",
+            "is_zero_pu": false,
+            "_id": "68fbd919f2b7c78fc99182d1",
+            "polling_unit_id": 11535,
+            "election_id": 2919,
+            "election": "68fbd8c9f2b7c78fc9917c22",
+            "polling_unit": "5f0f47dfc440353badb103a5",
+            "name": "UMUIKE CENTRAL SCHOOL II",
+            "code": "009",
+            "pu_code": "04/15/18/009",
+            "ward_id": 18489,
+            "ward": "5f0f3ac88f77bb3acad0915c",
+            "lga_id": 3186,
+            "lga": "5f0f39804d89fc3a883de113",
+            "state": "5f0eb6e16dda22674979bf25",
+            "old_documents": [],
+            "__v": 0,
+            "document": {
+                "external": true,
+                "status": 1,
+                "is_supplement": false,
+                "_id": "692316325a113f08d475e3de",
+                "url": "https://inc-s3-cache.incportals.com/cached/express/results/2831/4/84/964/11526/da8c3750-4545-4545-8da1-5f53787ed041.jpg",
+                "size": 1001,
+                "updated_at": "2025-11-23T14:12:02.426Z"
+            },
+            "result_updated_time": 1763907122404,
+            "session": "1763907122403",
+            "updated_at": "2025-11-23T14:12:02.426Z"
+        },
+        "expected": 5720,
+        "not_expected": 0
+    }
+}

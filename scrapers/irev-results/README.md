@@ -225,22 +225,29 @@ and the response has no `total`, `next`, or `Link` header. Walking past
 the most recent 400 elections via this endpoint is not currently
 possible; the SPA must be using a route we haven't discovered.
 
-**Presidential elections are not in the `/elections` listing
-(verified 2026-05-19).** Across all probed pages, `election_type_id`
-values seen are only `2..7` (Gov, Senate, Reps, Assembly, Chairman,
-Councillor). No `election_type_id=1` row appears. Every state document
-carries a top-level `presidential` ObjectId
-(`5f0eb67db39f166717b8411f`) and `presidential_id: 1`. That ObjectId
-*is accepted* by `/elections/{id}/lga` (route returns 200) but yields
-`data:[]` — i.e. Presidential is wired in the schema but no active
-Presidential election is currently mapped to it in the live DB. The
-2023 Presidential traversal will need to be discovered when INEC
-re-publishes it, or via the SPA's `/pres/elections` Angular route (the
-SPA bundle has a router config at `pres/elections/:election` but no
-hardcoded election_id, suggesting the SPA fetches the active
-Presidential reference from somewhere we haven't found — `/presidential`,
-`/pres/elections`, `/presidentials`, `/presidential-elections` and
-`/election/1` all return Express 404, ruling out the obvious guesses).
+**Presidential elections are not currently scrapable
+(verified 2026-05-19, re-confirmed with deeper bundle scan).** The
+post-2026 IReV API does not expose Presidential. Concretely:
+
+- `/elections` returns 400 most-recent rows, all of type 2..7 (Gov /
+  Senate / Reps / Assembly / Chairman / Councillor). No
+  `election_type_id=1` row appears at any pagination key.
+- Every state document carries a top-level `presidential` ObjectId
+  (`5f0eb67db39f166717b8411f`) and `presidential_id: 1`. That
+  ObjectId *is accepted* by `/elections/{id}/lga` (route returns 200)
+  but yields `data:[]` — the schema slot exists, the data does not.
+- The SPA's Presidential component (`/pres/elections/:election`) calls
+  `election-reports/election/{election_id}`. **That route now returns
+  Express 404** ("Cannot GET /api/v1/election-reports/election/...")
+  for every id format tried — the SPA's own Presidential page would
+  404 if a user clicked it.
+- Guessed routes `/presidential`, `/pres/elections`, `/presidentials`,
+  `/presidential-elections`, `/election/1` all return Express 404.
+
+Conclusion: Presidential is server-side missing, not just client-side
+hard-to-find. Any Presidential backfill must wait for INEC to
+re-publish 2023 Presidential data via the current API, or provide a
+separate archive endpoint. We cannot fix this client-side.
 
 ### The traversal model (discovered 2026-05-19 via SPA bundle scrape)
 
@@ -288,8 +295,13 @@ GET /api/v1/elections/{election_objectId}/pus?ward={ward_objectId}
 GET /api/v1/elections/{election_objectId}/pus/recent
     -> recently-uploaded PU results for this election
 
-GET /api/v1/elections/{election_objectId}/result/stats
-    -> aggregate vote tallies (requires &election=… query)
+GET /api/v1/elections/{election_objectId}/result/stats[?election=…]
+    -> upload-progress metrics (NOT vote tallies — verified 2026-05-19):
+       { pus, documents, expected, not_expected,
+         latest: <full PU entry, most recently uploaded> }
+       Query params are ignored. The IReV API does not expose vote
+       tallies via any endpoint — per ADR-0001, the EC8A image is the
+       canonical evidence and tallies are produced via OCR downstream.
 ```
 
 The PU-result `document.url` returned in the 2025 Anambra sample

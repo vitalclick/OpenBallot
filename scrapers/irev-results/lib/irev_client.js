@@ -73,10 +73,19 @@ async function listPusByWard(electionObjectId, wardObjectId, electionIntegerId) 
 }
 
 async function fetchResultStats(electionObjectId, electionIntegerId) {
-  // Aggregate vote tallies. Schema not yet verified at the field level —
-  // call sites should treat the shape as opaque until we capture a fixture.
+  // Upload-progress metrics (NOT vote tallies — verified 2026-05-19).
+  // Response shape:
+  //   data.pus         - total expected PU count for this election
+  //   data.documents   - count of PUs with an uploaded EC8A
+  //   data.expected    - same as data.pus
+  //   data.not_expected - count of PUs not expected to upload
+  //                       (e.g. is_zero_pu=true)
+  //   data.latest      - the most recently uploaded PU entry (full record
+  //                      with document.url, same shape as listPusByWard()
+  //                      elements)
   const q = electionIntegerId ? `?election=${encodeURIComponent(electionIntegerId)}` : '';
-  return getJSON(apiUrl(`/elections/${electionObjectId}/result/stats${q}`));
+  const res = await getJSON(apiUrl(`/elections/${electionObjectId}/result/stats${q}`));
+  return res?.data || null;
 }
 
 // ─── Image fetch ───────────────────────────────────────────────────────────

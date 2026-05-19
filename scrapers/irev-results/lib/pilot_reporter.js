@@ -45,6 +45,7 @@ function build({ runStats, dbStats, chainResult }) {
       pus_attempted: runStats.pus_attempted,
       pus_succeeded: runStats.pus_succeeded,
       pus_not_uploaded: runStats.pus_not_uploaded,
+      pus_image_blocked: runStats.pus_image_blocked || 0,
       pus_errored: runStats.pus_errored,
       success_rate_pct:
         runStats.pus_attempted > 0
@@ -94,9 +95,22 @@ function build({ runStats, dbStats, chainResult }) {
 
 function _verdict(runStats, fixtureSummary, chainResult) {
   const issues = [];
+  const blocked = runStats.pus_image_blocked || 0;
   if (runStats.pus_attempted === 0) issues.push('no PUs attempted - configuration error');
-  if (runStats.pus_succeeded === 0 && runStats.pus_attempted > 0) {
+  if (
+    runStats.pus_succeeded === 0 &&
+    runStats.pus_attempted > 0 &&
+    blocked === runStats.pus_attempted
+  ) {
+    issues.push(
+      'every PU blocked by CDN allowlist - request inclusion via INEC, or scrape with --catalog-only'
+    );
+  } else if (runStats.pus_succeeded === 0 && runStats.pus_attempted > 0) {
     issues.push('zero successful scrapes - parser likely incompatible with current IReV schema');
+  } else if (blocked > 0) {
+    issues.push(
+      `${blocked} PU(s) image-blocked by CDN - catalog rows captured, images need a backfill run from an allowlisted host`
+    );
   }
   if (chainResult && chainResult.ok === false) {
     issues.push(`audit chain broken at seq=${chainResult.first_broken_seq}`);
@@ -142,6 +156,7 @@ function asMarkdown(report) {
     `| PUs attempted | ${r.pilot.pus_attempted.toLocaleString()} |`,
     `| PUs scraped successfully | ${r.pilot.pus_succeeded.toLocaleString()} |`,
     `| PUs missing from IReV | ${r.pilot.pus_not_uploaded.toLocaleString()} |`,
+    `| PUs image-blocked (CDN ACL) | ${r.pilot.pus_image_blocked.toLocaleString()} |`,
     `| PUs errored | ${r.pilot.pus_errored.toLocaleString()} |`,
     `| Success rate | ${r.pilot.success_rate_pct}% |`,
     ``,

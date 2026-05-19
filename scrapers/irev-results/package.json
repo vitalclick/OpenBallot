@@ -8,8 +8,11 @@
     "scrape": "node scrape.js",
     "scrape:dry": "node scrape.js --dry-run",
     "scrape:catalog": "node scrape.js --catalog-only",
+    "stats": "node scrape.js --stats",
     "verify": "node scripts/discover-endpoints.js",
+    "check-cdn": "node scrape.js --check-cdn",
     "smoke": "node scrape.js --smoke --catalog-only --dry-run",
+    "pilot": "node scripts/pilot.js",
     "test": "node --test test/*.js"
   },
   "dependencies": {

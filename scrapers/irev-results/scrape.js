@@ -26,6 +26,11 @@
 //                         (inc-s3-cache.incportals.com) is unreachable —
 //                         it allowlists by host so external scrapers get
 //                         HTTP 403. See README "Image fetch limitation".
+//   --stats               Print upload-progress per matching election and
+//                         exit (no scrape). Useful pre-flight check.
+//   --check-cdn           Verify the EC8A CDN is reachable from this host
+//                         (one image fetch) before committing to a long
+//                         run. Exits 0 if reachable, 1 if blocked.
 //   --dry-run             Skip DB + storage writes
 //   --reset               Discard progress and start over
 
@@ -48,6 +53,8 @@ function parseArgs(argv) {
     smoke: false,
     reset: false,
     catalogOnly: false,
+    stats: false,
+    checkCdn: false,
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -60,6 +67,8 @@ function parseArgs(argv) {
     else if (a === '--smoke') out.smoke = true;
     else if (a === '--reset') out.reset = true;
     else if (a === '--catalog-only') out.catalogOnly = true;
+    else if (a === '--stats') out.stats = true;
+    else if (a === '--check-cdn') out.checkCdn = true;
   }
   return out;
 }
@@ -229,12 +238,68 @@ async function scrapeElection(progressState, election, args) {
   return processed;
 }
 
+async function printElectionStats(elections) {
+  console.log('upload progress per election (pus / documents / latest upload):\n');
+  for (const e of elections) {
+    const s = await client.fetchResultStats(e._id, e.election_id);
+    if (!s) {
+      console.log(`  irev:${e.election_id}  ${e.full_name}  (no stats)`);
+      continue;
+    }
+    const pct = s.pus ? ((100 * s.documents) / s.pus).toFixed(1) : '0.0';
+    const latest = s.latest?.updated_at || s.latest?.result_updated_time || '—';
+    console.log(
+      `  irev:${e.election_id}  ${e.full_name}\n` +
+        `    ${s.documents}/${s.pus} uploaded (${pct}%), expected=${s.expected}, ` +
+        `not_expected=${s.not_expected}, latest=${latest}`
+    );
+  }
+}
+
+async function checkCdnReachable() {
+  // Probe one EC8A image to confirm the CDN allowlist lets this host
+  // through. Picks the latest-uploaded image from an arbitrary election
+  // so the URL is fresh.
+  const elections = await client.listElections();
+  for (const e of elections) {
+    const s = await client.fetchResultStats(e._id, e.election_id);
+    const url = s?.latest?.document?.url;
+    if (!url) continue;
+    console.log(`probing ${url}`);
+    try {
+      const { bytes } = await client.fetchImage(url);
+      console.log(`OK — fetched ${bytes.length} bytes`);
+      return true;
+    } catch (err) {
+      if (err.status === 403) {
+        console.log(`BLOCKED — HTTP 403 (CDN allowlist). See README "Image fetch limitation".`);
+      } else {
+        console.log(`FAILED — ${err.message}`);
+      }
+      return false;
+    }
+  }
+  console.log('no images available to probe');
+  return false;
+}
+
 async function main() {
   const args = parseArgs(process.argv);
   if (args.reset) progress.reset();
   const progressState = progress.load();
 
-  if (!args.electionId && !args.types.length && !args.year && !args.state && !args.smoke) {
+  if (args.checkCdn) {
+    const ok = await checkCdnReachable();
+    process.exit(ok ? 0 : 1);
+  }
+
+  if (
+    !args.electionId &&
+    !args.types.length &&
+    !args.year &&
+    !args.state &&
+    !args.smoke
+  ) {
     console.error(
       'refusing to scrape with no filters — pass --election-id, --type, --year, --state, or --smoke'
     );
@@ -249,6 +314,11 @@ async function main() {
   console.log(
     `matched ${elections.length} election(s)` + (config.dryRun ? ' [DRY RUN]' : '')
   );
+
+  if (args.stats) {
+    await printElectionStats(elections);
+    return;
+  }
 
   if (args.smoke) {
     // Pick the first matching election; --max defaults to Infinity but we
