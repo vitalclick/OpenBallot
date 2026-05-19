@@ -229,14 +229,84 @@ possible; the SPA must be using a route we haven't discovered.
 (verified 2026-05-19).** Across all probed pages, `election_type_id`
 values seen are only `2..7` (Gov, Senate, Reps, Assembly, Chairman,
 Councillor). No `election_type_id=1` row appears. Every state document
-carries a top-level `presidential` ObjectId (e.g.
-`5f0eb67db39f166717b8411f`) and `presidential_id: 1`, suggesting
-Presidential is modelled as a singleton outside the `/elections`
-collection. Guessed routes that returned 404: `/presidential`,
-`/presidentials`, `/presidential-elections`, `/election/1`. Hitting
-`/elections/<presidential ObjectId>` returns `{success:true, data:null}`.
-The redesign step "find 2023 Presidential election_id" must be done via
-the browser-DevTools probe — API guessing has been exhausted.
+carries a top-level `presidential` ObjectId
+(`5f0eb67db39f166717b8411f`) and `presidential_id: 1`. That ObjectId
+*is accepted* by `/elections/{id}/lga` (route returns 200) but yields
+`data:[]` — i.e. Presidential is wired in the schema but no active
+Presidential election is currently mapped to it in the live DB. The
+2023 Presidential traversal will need to be discovered when INEC
+re-publishes it, or via the SPA's `/pres/elections` Angular route (the
+SPA bundle has a router config at `pres/elections/:election` but no
+hardcoded election_id, suggesting the SPA fetches the active
+Presidential reference from somewhere we haven't found — `/presidential`,
+`/pres/elections`, `/presidentials`, `/presidential-elections` and
+`/election/1` all return Express 404, ruling out the obvious guesses).
+
+### The traversal model (discovered 2026-05-19 via SPA bundle scrape)
+
+The Angular SPA at `https://irev.inecnigeria.org/` bundles its API
+paths as string literals. Scraping `main.f5b6ab32c0c08cea.js` and
+verifying each route against the live API revealed the full traversal:
+
+**Key insight: the `:election` URL parameter is the Mongo `_id`
+(ObjectId), NOT the integer `election_id`.** The integer goes in the
+query string. Earlier attempts that put the integer in the path all
+returned `{success:false, error_code:6}` — that's the API's "no such
+document" response, not a routing error.
+
+Confirmed working endpoints (each tested against Anambra Gov 2025,
+`election_id=2919`, `_id=68fbd8c9f2b7c78fc9917c22`):
+
+```
+GET /api/v1/election-types
+    -> all 7 election type definitions
+
+GET /api/v1/elections
+    -> 400 most-recent elections (Presidential absent — see above)
+
+GET /api/v1/elections/elections/latest
+    -> recently-updated elections (same shape as /elections)
+
+GET /api/v1/elections/result/latest
+    -> recently-updated PU result documents (across all elections)
+
+GET /api/v1/elections/{election_objectId}/lga[?election={election_id}]
+    -> { success, data: [{ _id, election, lga, wards:[…], … }] }
+       Returns all LGAs in the election's state with embedded ward arrays.
+       Query string is optional but the SPA always sends it.
+
+GET /api/v1/elections/{election_objectId}/lga/state/{state_id}
+    -> LGAs filtered to one state (for multi-state elections)
+
+GET /api/v1/elections/{election_objectId}/pus?ward={ward_objectId}
+    -> { success, data:[…PU result entries…], pus:[…], results:[…] }
+       Each entry has: pu_code ("04/17/06/010"), polling_unit_id,
+       polling_unit (full PU doc with state/lga/ward), and document.url
+       (direct EC8A image URL — see image storage note below).
+       Can also scope with &lga={lga_objectId} or just &election=.
+
+GET /api/v1/elections/{election_objectId}/pus/recent
+    -> recently-uploaded PU results for this election
+
+GET /api/v1/elections/{election_objectId}/result/stats
+    -> aggregate vote tallies (requires &election=… query)
+```
+
+The PU-result `document.url` returned in the 2025 Anambra sample
+points to `https://inc-s3-cache.incportals.com/cached/express/results/…`
+— that is, EC8A images are served from a CDN cache layer
+(`inc-s3-cache.incportals.com`), NOT directly from the S3 buckets
+listed above. The S3 buckets are still the origin per ADR-0001, but
+the scraper should follow whatever URL the API returns.
+
+### Mapping IReV IDs back to INEC delim codes
+
+The good news: the per-PU response includes
+`polling_unit.pu_code = "04/17/06/010"` and
+`polling_unit.pu_code_string = "041706010"` directly. So the
+INEC-delim ↔ IReV-id mapping table the original redesign plan called
+for (step 3 below) is **not needed** — we can join on `pu_code` at
+ingest time without a discovery pass.
 
 Schema fragments observed in responses:
 
@@ -280,37 +350,46 @@ through `state_id → lga_id → ward_id → polling_unit_id` (all
 IReV-internal integers, not our INEC delim codes), then fetch the result
 for a single `(election_id, pu_id)` pair.
 
-Switching to that model requires:
+Switching to that model requires (steps revised 2026-05-19 after the
+SPA bundle scrape resolved most of the discovery work):
 
-1. **Find the 2023 Presidential `election_id`.** ~~It is buried far back
-   in `/api/v1/elections`~~ — superseded 2026-05-19: Presidential rows do
-   not appear in `/elections` at all, and `?page=` / `?election_type_id=`
-   are ignored (see "Pagination is not exposed" above). Discovery must
-   come from the DevTools probe on <https://irev.inecnigeria.org/> — the
-   Presidential entry point is on a separate route the SPA calls.
-2. **Find the traversal endpoints.** Plausible patterns to probe (none
-   verified yet):
-   - `/api/v1/elections/{election_id}/states`
-   - `/api/v1/elections/{election_id}/states/{state_id}/lgas`
-   - `/api/v1/elections/{election_id}/.../polling-units`
-   - `/api/v1/elections/{election_id}/polling-units/{pu_id}/result`
-   The reliable way to find these is to open
-   <https://irev.inecnigeria.org/> in a browser, open DevTools → Network
-   → Fetch/XHR, and click through to a polling unit result. Each click
-   reveals the exact path.
-3. **Build a mapping from INEC delim codes to IReV internal IDs.** Our
-   geo loader (scripts/load_polling_units.py) keys on INEC's delim
-   ("25-11-04-007"). IReV stores its own MongoDB ObjectIds and integer
-   IDs per state/LGA/ward/PU. The mapping table needs to be populated
-   once via a discovery pass that traverses IReV's hierarchy and joins
-   by name. Probably a new table `irev_pu_mapping (inec_pu_code,
-   irev_pu_id, irev_object_id, confidence)`.
-4. **Rewrite `lib/irev_client.js` and `scrape.js`** around the election-
-   first traversal. The existing `parse.js` is likely still useful for
-   the per-PU result payload (assuming the result shape hasn't changed
-   much) but won't be exercisable until step 3 produces a real PU ID.
-5. **Update `lib/endpoint_discovery.js` `CANDIDATE_TEMPLATES`** with the
-   actually-discovered templates from step 2.
+1. ~~Find the 2023 Presidential `election_id`.~~ **Deferred.**
+   Presidential is wired in the schema (ObjectId
+   `5f0eb67db39f166717b8411f`, accepted by `/elections/{id}/lga`) but
+   the active Presidential election is not currently mapped — the
+   endpoint returns `data:[]`. Picks up when INEC re-publishes
+   Presidential. Note: the rest of the scraper can work on Gov/Senate/
+   Reps/Assembly/Chairman/Councillor data right now without this.
+2. ~~Find the traversal endpoints.~~ **Done** — see "The traversal
+   model" section above. All paths verified against Anambra Gov 2025.
+3. ~~Build a mapping from INEC delim codes to IReV internal IDs.~~
+   **Not needed.** The per-PU response includes `pu_code` and
+   `pu_code_string` directly — join by `pu_code` at ingest.
+4. **Rewrite `lib/irev_client.js` and `scrape.js`** around the
+   election-first traversal:
+     ```
+     for each election in GET /elections (filter by type/year):
+       lgas = GET /elections/{_id}/lga?election={election_id}
+       for each lga, for each ward in lga.wards:
+         pus = GET /elections/{_id}/pus?ward={ward._id}&election={election_id}
+         for each pu in pus.data:
+           if pu.document?.url:
+             download pu.document.url -> object store
+             persist (pu.pu_code, pu.election_id, pu.document.url, hash)
+     ```
+   The existing `parse.js` will need a rewrite — the new response
+   shape is materially different from the 2023 payload it was built
+   for. Vote tallies appear to be absent from `/pus` (the document
+   image is the canonical evidence per ADR-0001); aggregate tallies
+   are on `/elections/{_id}/result/stats` — verify shape before
+   wiring.
+5. **Update `lib/endpoint_discovery.js`.** The
+   `CANDIDATE_TEMPLATES` array is now obsolete — the SPA bundle is
+   the source of truth and the templates above are verified. Either
+   replace `CANDIDATE_TEMPLATES` with the verified set (and reframe
+   the file as "current API contract" rather than "candidates to
+   probe") or delete it and document the contract in `irev_client.js`
+   directly.
 
 ### Pending verification
 
@@ -318,18 +397,33 @@ Switching to that model requires:
   `dolphin-app-sleqh.ondigitalocean.app` for high-volume traversal
   (the diagnostic curls returned 200 with no apparent throttling, but
   walking 174,175 PUs is a different volume profile).
-- Whether the EC8A image URLs returned by the per-PU result endpoint
+- ~~Whether the EC8A image URLs returned by the per-PU result endpoint
   reference the S3 buckets above directly or go through a signed-URL
-  proxy.
-- Whether the 2023 Presidential election rows include the `parties[]`
-  list inline (newer elections in `/api/v1/elections` show
-  `parties: []` empty) or need a separate endpoint.
+  proxy.~~ Answered 2026-05-19: a 2025 Anambra Gov PU returned
+  `document.url = https://inc-s3-cache.incportals.com/cached/express/results/…`
+  — i.e. an unsigned CDN cache URL. Whether older 2023 elections
+  still point at the S3 origins or have been migrated to the cache
+  layer is unverified.
+- Whether `parties[]` on the election doc ever gets populated.
+  Currently empty on every sampled election; party affiliation may
+  only be reachable via `/result/stats` or by parsing the EC8A
+  image.
+- Whether the SPA's POST traffic to
+  `irev-v2.herokuapp.com` / `lv001-r.inecelectionresults.ng` (the
+  guest-URL fallback referenced in the bundle) matters for our use
+  case. Heroku returns `Host not in allowlist` even with the right
+  Origin; the dead lv001-r host means the SPA is broken 1/6 of the
+  time for POSTs. None of our planned reads need POST.
 
 ### Where to pick up
 
-Open <https://irev.inecnigeria.org/> in a browser, DevTools → Network
-→ Fetch/XHR, click Presidential → 2023 → any state → any LGA → any
-ward → any PU. The 5-6 XHR requests that fire are the exact API paths
-this scraper needs. Update `lib/endpoint_discovery.js`
-`CANDIDATE_TEMPLATES` and the new `IREV_BASE` default in `config.js`,
-then proceed with the redesign per the steps above.
+The API contract is now known (see "The traversal model" section).
+Next concrete piece of work is step 4 above: rewrite
+`lib/irev_client.js` and `scrape.js` against the verified endpoints,
+then rewrite `lib/parse.js` for the new per-PU payload shape.
+
+If Presidential discovery becomes urgent before then, the DevTools
+probe on <https://irev.inecnigeria.org/pres/elections> is still the
+right move — that's the SPA route that resolves Presidential, and
+its Network tab will reveal whatever bootstrap endpoint we haven't
+located via static bundle scraping.
