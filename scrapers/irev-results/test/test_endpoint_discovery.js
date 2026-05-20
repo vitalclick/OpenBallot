@@ -3,31 +3,21 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { looksLikeResultPayload, expand } = require('../lib/endpoint_discovery');
+const ed = require('../lib/endpoint_discovery');
+const client = require('../lib/irev_client');
 
-test('looksLikeResultPayload accepts the three known IReV shapes', () => {
-  assert.equal(looksLikeResultPayload({ result: { scores: [] } }), true);
-  assert.equal(looksLikeResultPayload({ data: { results: {} } }), true);
-  assert.equal(looksLikeResultPayload({ Votes: [] }), true);
+test('exports the contract verification surface', () => {
+  assert.equal(typeof ed.verify, 'function');
+  assert.ok(Array.isArray(ed.CONTRACT));
+  assert.ok(Array.isArray(ed.PER_ELECTION_CONTRACT));
+  for (const c of ed.CONTRACT) {
+    assert.equal(typeof c.name, 'string');
+    assert.equal(typeof c.run, 'function');
+    assert.equal(typeof c.ok, 'function');
+  }
 });
 
-test('looksLikeResultPayload rejects unrecognised shapes', () => {
-  assert.equal(looksLikeResultPayload(null), false);
-  assert.equal(looksLikeResultPayload({}), false);
-  assert.equal(looksLikeResultPayload({ random: 'junk' }), false);
-  assert.equal(looksLikeResultPayload({ result: {} }), false); // no scores or results inside
-});
-
-test('expand substitutes both tokens and URL-encodes them', () => {
-  const url = expand(
-    '/api/v1/elections/{election_id}/polling-units/{pu_code}',
-    'presidential-2023',
-    '25/11/04/007'
-  );
-  assert.ok(url.endsWith('/api/v1/elections/presidential-2023/polling-units/25%2F11%2F04%2F007'));
-});
-
-test('expand handles query-string template form', () => {
-  const url = expand('/api/v1/pu/{pu_code}?election={election_id}', 'pres-2023', '25-11-04-007');
-  assert.ok(url.endsWith('/api/v1/pu/25-11-04-007?election=pres-2023'));
+test('client builds the live API base correctly', () => {
+  assert.match(client.apiUrl('/elections'), /\/api\/v1\/elections$/);
+  assert.match(client.apiUrl('elections'), /\/api\/v1\/elections$/);
 });

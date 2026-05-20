@@ -6,14 +6,21 @@
 // re-verify everything offline.
 
 const crypto = require('crypto');
-const { S3Client, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
 
 const config = require('../config');
 
 let _client = null;
+let _sdk = null;
+
+function _loadSdk() {
+  if (_sdk) return _sdk;
+  _sdk = require('@aws-sdk/client-s3');
+  return _sdk;
+}
 
 function client() {
   if (_client) return _client;
+  const { S3Client } = _loadSdk();
   _client = new S3Client({
     endpoint: config.storage.endpoint,
     region: config.storage.region,
@@ -33,6 +40,7 @@ function objectKey({ electionId, puCode }) {
 }
 
 async function existsByKey(key) {
+  const { HeadObjectCommand } = _loadSdk();
   try {
     await client().send(new HeadObjectCommand({ Bucket: config.storage.bucket, Key: key }));
     return true;
@@ -50,6 +58,7 @@ async function uploadImage({ electionId, puCode, bytes, contentType }) {
     return { key, sha256, bytes: bytes.length, skipped: true };
   }
 
+  const { PutObjectCommand } = _loadSdk();
   await client().send(
     new PutObjectCommand({
       Bucket: config.storage.bucket,

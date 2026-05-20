@@ -11,13 +11,13 @@
 // existing INEC submission rather than creating a duplicate, because
 // `(election_id, pu_code, source_type=inec_irev)` is logically unique.
 
-const { Client } = require('pg');
 const config = require('../config');
 
 let _db = null;
 
 async function db() {
   if (_db) return _db;
+  const { Client } = require('pg');
   _db = new Client({ connectionString: config.databaseUrl });
   await _db.connect();
   return _db;

@@ -22,6 +22,7 @@ const EMPTY = {
     ok: 0,
     skipped: 0,
     not_uploaded: 0,
+    image_blocked: 0,
     error: 0,
   },
 };
@@ -44,7 +45,8 @@ function done(state, electionId, puCode, status) {
 
 function fail(state, electionId, puCode, message) {
   state.errors[key(electionId, puCode)] = message;
-  state.counts.error += 1;
+  const bucket = message && message.startsWith('image_blocked') ? 'image_blocked' : 'error';
+  state.counts[bucket] = (state.counts[bucket] || 0) + 1;
 }
 
 function isDone(state, electionId, puCode) {

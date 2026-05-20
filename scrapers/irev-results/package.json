@@ -1,13 +1,18 @@
 {
   "name": "@openballot/irev-results-scraper",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Scrape 2023 INEC IReV results, mirror EC8A images, and ingest into OpenBallot.",
+  "description": "Scrape INEC IReV results, mirror EC8A images, and ingest into OpenBallot.",
   "main": "scrape.js",
   "scripts": {
     "scrape": "node scrape.js",
-    "scrape:state": "node scrape.js --state",
     "scrape:dry": "node scrape.js --dry-run",
+    "scrape:catalog": "node scrape.js --catalog-only",
+    "stats": "node scrape.js --stats",
+    "verify": "node scripts/discover-endpoints.js",
+    "check-cdn": "node scrape.js --check-cdn",
+    "smoke": "node scrape.js --smoke --catalog-only --dry-run",
+    "pilot": "node scripts/pilot.js",
     "test": "node --test test/*.js"
   },
   "dependencies": {

@@ -73,6 +73,37 @@ test('percentiles roughly correct', () => {
   assert.ok(r.latency.p95_ms >= 900);
 });
 
+test('verdict surfaces image_blocked as a hold reason', () => {
+  const r = reporter.build({
+    runStats: baseStats({
+      pus_succeeded: 0,
+      pus_image_blocked: 200,
+      pus_errored: 0,
+      images_downloaded: 0,
+      bytes_downloaded: 0,
+    }),
+    dbStats: { hash_check_sampled: 0, hash_check_matches: 0 },
+    chainResult: null,
+  });
+  assert.equal(r.verdict.ship_full_scrape, false);
+  assert.ok(r.verdict.issues.some((i) => i.includes('CDN allowlist')));
+  // Crucially, do NOT misdiagnose as "parser likely incompatible".
+  assert.ok(!r.verdict.issues.some((i) => i.includes('parser')));
+});
+
+test('partial image_blocked is reported but is not the sole hold reason', () => {
+  const r = reporter.build({
+    runStats: baseStats({
+      pus_succeeded: 100,
+      pus_image_blocked: 50,
+      pus_errored: 0,
+    }),
+    dbStats: { hash_check_sampled: 5, hash_check_matches: 5 },
+    chainResult: { ok: true, events_checked: 100 },
+  });
+  assert.ok(r.verdict.issues.some((i) => i.includes('image-blocked')));
+});
+
 test('markdown rendering does not throw on a valid report', () => {
   const r = reporter.build({
     runStats: baseStats(),

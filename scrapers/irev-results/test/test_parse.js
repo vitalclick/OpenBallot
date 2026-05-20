@@ -5,59 +5,49 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { parseIRevPU } = require('../lib/parse');
+const { parsePuEntry } = require('../lib/parse');
 
-const sampleA = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'sample_shape_a.json'), 'utf-8')
+const sample = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'sample_pu_entry.json'), 'utf-8')
 );
-const sampleB = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'sample_shape_b.json'), 'utf-8')
+const sampleNoDoc = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'sample_pu_no_document.json'), 'utf-8')
 );
 
-test('parses IReV shape A (result.scores)', () => {
-  const out = parseIRevPU(sampleA, '25-11-04-007');
-  assert.ok(out);
-  assert.equal(out.extracted.candidate_votes.APC, 142);
-  assert.equal(out.extracted.candidate_votes.LP, 203);
-  assert.equal(out.extracted.total_valid_votes, 434);
-  assert.equal(out.extracted.total_votes_cast, 446);
-  assert.equal(out.image_url, 'https://lv.irev.inecnigeria.org/uploads/2023/pres/25-11-04-007.jpg');
+test('parses a PU entry with an uploaded EC8A document', () => {
+  const out = parsePuEntry(sample);
+  assert.ok(out, 'expected non-null parse result');
+  assert.equal(out.extracted.pu_code, sample.pu_code);
+  assert.equal(out.image_url, sample.document.url);
+  assert.ok(out.image_url.startsWith('http'), 'image_url should be absolute');
+  assert.equal(out.raw_meta.irev_election_id, sample.election_id);
+  assert.equal(out.raw_meta.irev_record_id, sample._id);
+  // Vote counts intentionally absent in the MVP — image is canonical (ADR-0001).
+  assert.equal(out.extracted.candidate_votes, null);
+  assert.equal(out.extracted.total_valid_votes, null);
 });
 
-test('parses IReV shape B (data.results map)', () => {
-  const out = parseIRevPU(sampleB, '25-11-04-007');
-  assert.ok(out);
-  assert.equal(out.extracted.candidate_votes.PDP, 89);
-  assert.equal(out.extracted.total_valid_votes, 434);
+test('returns null when the PU has no uploaded document', () => {
+  assert.equal(parsePuEntry(sampleNoDoc), null);
 });
 
-test('returns null when payload is empty or unrecognised', () => {
-  assert.equal(parseIRevPU(null, 'x'), null);
-  assert.equal(parseIRevPU({}, 'x'), null);
-  assert.equal(parseIRevPU({ random: 'junk' }, 'x'), null);
+test('returns null for empty / malformed inputs', () => {
+  assert.equal(parsePuEntry(null), null);
+  assert.equal(parsePuEntry(undefined), null);
+  assert.equal(parsePuEntry({}), null);
+  assert.equal(parsePuEntry({ pu_code: 'X' }), null); // no document
+  assert.equal(parsePuEntry({ document: { url: 'x' } }), null); // no pu_code
 });
 
-test('arithmetic sums match across shapes', () => {
-  const a = parseIRevPU(sampleA, '25-11-04-007');
-  const b = parseIRevPU(sampleB, '25-11-04-007');
-  const sumA = Object.values(a.extracted.candidate_votes).reduce((x, y) => x + y, 0);
-  const sumB = Object.values(b.extracted.candidate_votes).reduce((x, y) => x + y, 0);
-  assert.equal(sumA, sumB);
-  assert.equal(sumA, a.extracted.total_valid_votes);
+test('exposes submitted_at as ISO from result_updated_time epoch', () => {
+  const out = parsePuEntry(sample);
+  if (sample.result_updated_time) {
+    assert.match(out.raw_meta.submitted_at, /^\d{4}-\d{2}-\d{2}T/);
+  }
 });
 
-test('normalises party codes to upper case', () => {
-  const out = parseIRevPU(
-    {
-      result: {
-        scores: [
-          { party: 'apc', score: 10 },
-          { party: ' pdp ', score: 20 },
-        ],
-      },
-      document_url: 'https://example.com/x.jpg',
-    },
-    'X'
-  );
-  assert.deepEqual(Object.keys(out.extracted.candidate_votes).sort(), ['APC', 'PDP']);
+test('flags is_zero_pu correctly', () => {
+  const zero = { ...sample, is_zero_pu: true };
+  const out = parsePuEntry(zero);
+  assert.equal(out.raw_meta.is_zero_pu, true);
 });

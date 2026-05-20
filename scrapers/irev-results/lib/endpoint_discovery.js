@@ -1,94 +1,117 @@
 'use strict';
 
-// Endpoint discovery.
+// IReV API contract (verified 2026-05-19).
 //
-// IReV's URL scheme is not officially documented and has changed across
-// election cycles. Rather than hard-code a single guess, the discovery
-// step probes a small set of plausible templates against a known PU and
-// returns whichever one returns a parseable JSON body. The operator can
-// pipe the result into IREV_RESULT_PATHS before the pilot scrape.
+// Discovered by scraping the Angular SPA bundle at irev.inecnigeria.org
+// and probing each route against the live backend. See README.md
+// "The traversal model" for the full discovery narrative.
 //
-// Conservative: at most one probe per template, then move on. We do not
-// hammer the portal.
-//
-// 2026-05-17 — discovery findings.
-//
-// The live API base is the DigitalOcean origin:
-//   https://dolphin-app-sleqh.ondigitalocean.app/api/v1/
-// (the Angular SPA at irev.inecnigeria.org calls this directly).
-//
-// Confirmed reachable endpoints:
-//   GET /                     -> heartbeat
-//   GET /elections            -> paginated list, reverse-chronological
-//   GET /states               -> 37 entries with INEC numeric codes
-//
-// EVERY template below currently 404s against the new API. The new
-// model is election-first (look up election_id integer, then traverse
-// state_id -> lga_id -> ward_id -> pu_id), not PU-first. See the
-// "May 2026 discovery notes" section in README.md for the redesign
-// path. New CANDIDATE_TEMPLATES will need to be filled in once the
-// browser-DevTools probe of irev.inecnigeria.org reveals the real
-// per-election traversal paths.
+// This module replaces the pre-2026 "candidate URL templates" probe with
+// a single verify() function: it walks the contract against a known-good
+// election and reports each route's status. Use it as a smoke test before
+// long-running scrapes.
 
-const config = require('../config');
-const { getJSON } = require('./http');
+const client = require('./irev_client');
 
-const CANDIDATE_TEMPLATES = [
-  // None of these match the live API as of 2026-05-17. Left in place
-  // for historical reference; the discovery script will report all as
-  // 404 until the redesign updates this list.
-  '/api/v1/elections/{election_id}/polling-units/{pu_code}',
-  '/api/v1/elections/{election_id}/results/{pu_code}',
-  '/api/elections/{election_id}/results/{pu_code}',
-  '/api/elections/{election_id}/polling-units/{pu_code}',
-  '/api/v1/pu/{pu_code}?election={election_id}',
-  '/api/pu/{pu_code}?election={election_id}',
-  '/api/v1/results/{election_id}/{pu_code}',
-  '/api/results/{election_id}/{pu_code}',
-  '/elections/{election_id}/polling-units/{pu_code}.json',
+const CONTRACT = [
+  {
+    name: 'GET /election-types',
+    run: () => client.listElectionTypes(),
+    ok: (r) => Array.isArray(r) && r.length === 7,
+  },
+  {
+    name: 'GET /elections',
+    run: () => client.listElections(),
+    ok: (r) => Array.isArray(r) && r.length > 0,
+  },
 ];
 
-function expand(template, electionId, puCode) {
-  return (
-    config.irevBase.replace(/\/$/, '') +
-    template
-      .replace('{election_id}', encodeURIComponent(electionId))
-      .replace('{pu_code}', encodeURIComponent(puCode))
-  );
-}
+const PER_ELECTION_CONTRACT = [
+  {
+    name: 'GET /elections/{_id}',
+    run: (e) => client.getElection(e._id),
+    ok: (r, e) => r && r.election_id === e.election_id,
+  },
+  {
+    name: 'GET /elections/{_id}/lga',
+    run: (e) => client.listLgas(e._id, e.election_id),
+    ok: (r) => Array.isArray(r) && r.length > 0 && Array.isArray(r[0].wards),
+  },
+  {
+    name: 'GET /elections/{_id}/pus?ward={...}',
+    run: async (e) => {
+      const lgas = await client.listLgas(e._id, e.election_id);
+      const ward = lgas[0]?.wards?.[0];
+      if (!ward) return null;
+      return client.listPusByWard(e._id, ward._id, e.election_id);
+    },
+    ok: (r) => Array.isArray(r),
+  },
+];
 
-function looksLikeResultPayload(json) {
-  if (!json || typeof json !== 'object') return false;
-  if (json.result && (json.result.scores || json.result.results)) return true;
-  if (json.data && (json.data.results || json.data.scores)) return true;
-  if (Array.isArray(json.Votes)) return true;
-  // Last resort: any nested array of {party, score|votes} pairs
-  return false;
-}
+/**
+ * Run every contract check. Returns { results: [...], allOk: bool }.
+ * Each result has { name, ok, took_ms, sample (truncated) }.
+ */
+async function verify({ probeElectionId = null } = {}) {
+  const results = [];
+  let allOk = true;
 
-async function discoverResultPath({ electionId, puCode }) {
-  const tried = [];
-  for (const tmpl of CANDIDATE_TEMPLATES) {
-    const url = expand(tmpl, electionId, puCode);
-    const t0 = Date.now();
-    try {
-      const json = await getJSON(url);
-      const elapsed = Date.now() - t0;
-      const ok = looksLikeResultPayload(json);
-      tried.push({ template: tmpl, url, status: 200, elapsed_ms: elapsed, parseable: ok });
-      if (ok) return { winner: tmpl, url, tried };
-    } catch (e) {
-      tried.push({
-        template: tmpl,
-        url,
-        status: e.status || 'network_error',
-        elapsed_ms: Date.now() - t0,
-        parseable: false,
-        error: e.message,
-      });
-    }
+  for (const c of CONTRACT) {
+    const r = await timed(c.name, c.run);
+    r.ok = r.ok && c.ok(r.value);
+    if (!r.ok) allOk = false;
+    results.push(redact(r));
   }
-  return { winner: null, url: null, tried };
+
+  // Pick an election to probe per-election routes against.
+  let probeElection = null;
+  const electionsResult = results.find((r) => r.name === 'GET /elections');
+  if (electionsResult && electionsResult.ok) {
+    const all = await client.listElections();
+    probeElection = probeElectionId
+      ? all.find((e) => e.election_id === probeElectionId)
+      : all[0];
+  }
+  if (!probeElection) {
+    results.push({
+      name: '(skip per-election probes)',
+      ok: false,
+      note: 'could not select a probe election',
+    });
+    return { results, allOk: false };
+  }
+
+  for (const c of PER_ELECTION_CONTRACT) {
+    const r = await timed(c.name, () => c.run(probeElection));
+    r.ok = r.ok && c.ok(r.value, probeElection);
+    if (!r.ok) allOk = false;
+    results.push(redact(r));
+  }
+  return { results, allOk, probeElectionId: probeElection.election_id };
 }
 
-module.exports = { discoverResultPath, CANDIDATE_TEMPLATES, expand, looksLikeResultPayload };
+async function timed(name, fn) {
+  const t0 = Date.now();
+  try {
+    const value = await fn();
+    return { name, ok: true, took_ms: Date.now() - t0, value };
+  } catch (e) {
+    return { name, ok: false, took_ms: Date.now() - t0, error: e.message };
+  }
+}
+
+function redact(r) {
+  const out = { name: r.name, ok: r.ok, took_ms: r.took_ms };
+  if (r.error) out.error = r.error;
+  if (r.value !== undefined) {
+    out.sample = Array.isArray(r.value)
+      ? `[${r.value.length} items]`
+      : r.value && typeof r.value === 'object'
+      ? `{${Object.keys(r.value).slice(0, 6).join(', ')}}`
+      : String(r.value).slice(0, 80);
+  }
+  return out;
+}
+
+module.exports = { verify, CONTRACT, PER_ELECTION_CONTRACT };
