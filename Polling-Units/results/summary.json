@@ -96,6 +96,12 @@
       "pollingUnits": 4000
     },
     {
+      "filename": "fct.json",
+      "lgas": 6,
+      "wards": 62,
+      "pollingUnits": 2762
+    },
+    {
       "filename": "gombe.json",
       "lgas": 11,
       "wards": 114,
@@ -226,18 +232,12 @@
       "lgas": 14,
       "wards": 147,
       "pollingUnits": 3529
-    },
-    {
-      "filename": "fct.json",
-      "lgas": 6,
-      "wards": 62,
-      "pollingUnits": 2762
     }
   ],
   "reconciliation": {
-    "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024)",
+    "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
     "reconciled_at": "2026-06-19",
-    "method": "Report provides authoritative counts only (no individual PU/ward records). Per-state files annotated with report baselines and gap flags; no records were fabricated.",
+    "method": "Report provides authoritative counts only (no individual PU/ward records). Per-state files annotated with report baselines and gap flags; no records fabricated.",
     "report_totals": {
       "states": 37,
       "lgas": 774,

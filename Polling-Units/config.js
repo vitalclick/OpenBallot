@@ -28,6 +28,14 @@ module.exports = {
 
   RESULTS_DIR: path.join(__dirname, "results"),
   PROGRESS_DIR: path.join(__dirname, "progress"),
+  RECONCILIATION_DIR: path.join(__dirname, "reconciliation"),
+
+  // Gap re-scrape inputs (see reconciliation/RECONCILIATION-2023.md).
+  // RESCRAPE_TARGETS lists the wards the scrape missed; REPORT_BASELINE holds
+  // the INEC report's authoritative per-state counts used to refresh the
+  // reconciliation annotations after a gap fill.
+  RESCRAPE_TARGETS_FILE: path.join(__dirname, "reconciliation", "rescrape-targets.json"),
+  REPORT_BASELINE_FILE: path.join(__dirname, "reconciliation", "report-baseline.json"),
 
   HEADERS: {
     "User-Agent":

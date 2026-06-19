@@ -97,14 +97,29 @@ deliberately avoided. Instead the dataset was annotated with the authoritative b
 To obtain the *actual* missing records (names/codes/GPS), a targeted re-scrape using
 `rescrape-targets.json` remains the only source.
 
-## 6. Recommended actions
+## 6. Tooling (implemented)
 
-1. **Re-scrape the 20 flagged states**, targeting the wards in `rescrape-targets.json` (87 empty
-   wards + Borno's 10 absent wards) rather than re-pulling everything.
-2. **Add a validation gate to the scraper**: fail/retry any ward returning 0 PUs, and assert
-   per-state PU totals against this report's baseline before writing results.
-3. **Investigate Borno separately** — its 10 missing wards look structural (whole LGAs/RAs absent
-   from the site listing), not a transient fetch error.
+The gap-fill workflow is wired into the scraper (`Polling-Units/scraper.js`):
+
+- **`node scraper.js --gap`** — re-scrapes **only** the wards listed in `rescrape-targets.json`
+  (87 empty wards + Borno's 10 absent wards), merging real records into the existing per-state
+  files. It never re-pulls complete states, never fabricates records, and never overwrites
+  records already present. `--gap --state "Borno"` scopes it to one state. After filling, it
+  refreshes every reconciliation block and rebuilds `all-polling-units.json`.
+- **`node scraper.js --reconcile`** — offline (no network); recomputes the per-state and national
+  reconciliation annotations from `report-baseline.json`. Use it to re-derive gaps after any data
+  change without hitting INEC.
+
+`report-baseline.json` holds the report's authoritative per-state counts and is the single source
+of truth both commands read from.
+
+## 7. Remaining recommendations
+
+1. **Run `--gap`** once INEC's endpoints are reachable to recover the 2,671 missing units.
+2. **Investigate Borno separately** — its 10 missing wards look structural (whole RAs absent
+   from the site listing), so confirm they exist on INEC's site rather than assuming a fetch error.
+3. **Add a validation gate to the full scrape** — fail/retry any ward returning 0 PUs, and assert
+   per-state PU totals against `report-baseline.json` before declaring a state complete.
 4. Optionally **capture registered-voter counts** per PU/ward during scraping to enable a turnout/
    voter reconciliation against the report in future.
 
