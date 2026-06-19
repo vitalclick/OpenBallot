@@ -1,0 +1,353 @@
+{
+  "generated_at": "2026-06-19T09:54:17.530474Z",
+  "source_report": "documents/2023-GENERAL-ELECTION-REPORT.pdf (INEC, Feb 2024)",
+  "scrape_snapshot": "Polling-Units/results/ (scraped 2026-05-16)",
+  "states": [
+    {
+      "state": "Abia",
+      "file": "abia.json",
+      "scraped_wards": 184,
+      "report_wards": 184,
+      "missing_wards": 0,
+      "scraped_pus": 4041,
+      "report_pus": 4062,
+      "missing_pus": 21,
+      "empty_wards_count": 1,
+      "empty_wards": [
+        "ISUIKWUATO / UMUANYI / ABSU"
+      ]
+    },
+    {
+      "state": "Adamawa",
+      "file": "adamawa.json",
+      "scraped_wards": 226,
+      "report_wards": 226,
+      "missing_wards": 0,
+      "scraped_pus": 3991,
+      "report_pus": 4104,
+      "missing_pus": 113,
+      "empty_wards_count": 4,
+      "empty_wards": [
+        "JADA / JADA II",
+        "JADA / LEKO",
+        "SONG / DUMNE",
+        "SONG / SONG GARI"
+      ]
+    },
+    {
+      "state": "Akwa Ibom",
+      "file": "akwa-ibom.json",
+      "scraped_wards": 329,
+      "report_wards": 329,
+      "missing_wards": 0,
+      "scraped_pus": 4095,
+      "report_pus": 4353,
+      "missing_pus": 258,
+      "empty_wards_count": 7,
+      "empty_wards": [
+        "NSIT IBOM / MBAISO 1",
+        "UDUNG UKO / UDUNG UKO V11",
+        "UYO / UYO URBAN 1",
+        "UYO / UYO URBAN 11",
+        "UYO / UYO URBAN 111",
+        "UYO / ETOI 1",
+        "UYO / OKU 11"
+      ]
+    },
+    {
+      "state": "Bauchi",
+      "file": "bauchi.json",
+      "scraped_wards": 212,
+      "report_wards": 212,
+      "missing_wards": 0,
+      "scraped_pus": 5315,
+      "report_pus": 5423,
+      "missing_pus": 108,
+      "empty_wards_count": 4,
+      "empty_wards": [
+        "BAUCHI / MAJIDADI 'A'",
+        "DASS / DOTT",
+        "JAMA'ARE / JAMA'ARE \"B\"",
+        "TORO / RAHAMA"
+      ]
+    },
+    {
+      "state": "Benue",
+      "file": "benue.json",
+      "scraped_wards": 276,
+      "report_wards": 276,
+      "missing_wards": 0,
+      "scraped_pus": 4960,
+      "report_pus": 5102,
+      "missing_pus": 142,
+      "empty_wards_count": 4,
+      "empty_wards": [
+        "OTUKPO / OTUKPO TOWN CENTRAL",
+        "OTUKPO / UGBOJU-OTAHE",
+        "VANDEIKYA / MBADEDE",
+        "VANDEIKYA / VANDEIKYA TOWNSHIP"
+      ]
+    },
+    {
+      "state": "Borno",
+      "file": "borno.json",
+      "scraped_wards": 302,
+      "report_wards": 312,
+      "missing_wards": 10,
+      "scraped_pus": 4978,
+      "report_pus": 5071,
+      "missing_pus": 93,
+      "empty_wards_count": 0,
+      "empty_wards": []
+    },
+    {
+      "state": "Ebonyi",
+      "file": "ebonyi.json",
+      "scraped_wards": 171,
+      "report_wards": 171,
+      "missing_wards": 0,
+      "scraped_pus": 2829,
+      "report_pus": 2946,
+      "missing_pus": 117,
+      "empty_wards_count": 6,
+      "empty_wards": [
+        "EBONYI / AGALEGU",
+        "EBONYI / ECHIABA",
+        "EBONYI / KPIRIKPIRI",
+        "IKWO / ENYIBICHIRI",
+        "IKWO / NDIAGU AMAGU II",
+        "IKWO / NDIAGU ECHARA II"
+      ]
+    },
+    {
+      "state": "Ekiti",
+      "file": "ekiti.json",
+      "scraped_wards": 177,
+      "report_wards": 177,
+      "missing_wards": 0,
+      "scraped_pus": 2132,
+      "report_pus": 2445,
+      "missing_pus": 313,
+      "empty_wards_count": 15,
+      "empty_wards": [
+        "ADO EKITI / ADO 'B'  INISA",
+        "ADO EKITI / ADO 'C'  IDOLOFIN",
+        "ADO EKITI / ADO 'D' IJIGBO",
+        "ADO EKITI / ADO 'F' OKEYINMI",
+        "ADO EKITI / ADO 'G' OKE ILA",
+        "ADO EKITI / ADO 'I' DALLIMORE",
+        "ADO EKITI / ADO 'L' IGBEHIN",
+        "ADO EKITI / ADO 'M' FARM SETTLEMENT",
+        "EMURE / ODO - EMURE   III",
+        "IJERO / IJERO WARD  \"B\"",
+        "IJERO / IJERO WARD 'D'",
+        "IJERO / IKORO WARD 'A'",
+        "IKERE / ARE ARAROMI",
+        "IREPODUN / IFELODUN / IWOROKO",
+        "ISE / ORUN / ODO ISE  I"
+      ]
+    },
+    {
+      "state": "Enugu",
+      "file": "enugu.json",
+      "scraped_wards": 260,
+      "report_wards": 260,
+      "missing_wards": 0,
+      "scraped_pus": 4000,
+      "report_pus": 4145,
+      "missing_pus": 145,
+      "empty_wards_count": 5,
+      "empty_wards": [
+        "ENUGU NORTH / INDEPENDENCE LAYOUT",
+        "ISI UZO / IKEM I",
+        "ISI UZO / UMUALOR",
+        "ISI UZO / EHAMUFU III",
+        "UDENU / OBOLLO-AFOR"
+      ]
+    },
+    {
+      "state": "FCT",
+      "file": "fct.json",
+      "scraped_wards": 62,
+      "report_wards": 62,
+      "missing_wards": 0,
+      "scraped_pus": 2762,
+      "report_pus": 2822,
+      "missing_pus": 60,
+      "empty_wards_count": 1,
+      "empty_wards": [
+        "MUNICIPAL / GUI"
+      ]
+    },
+    {
+      "state": "Imo",
+      "file": "imo.json",
+      "scraped_wards": 305,
+      "report_wards": 305,
+      "missing_wards": 0,
+      "scraped_pus": 4692,
+      "report_pus": 4758,
+      "missing_pus": 66,
+      "empty_wards_count": 4,
+      "empty_wards": [
+        "ABOH MBAISE / AMUZU",
+        "IDEATO NORTH / IZUOGU I",
+        "IDEATO NORTH / OZUAKOKI/UMUAGO",
+        "OGUTA / EGWE/EGBUOMA"
+      ]
+    },
+    {
+      "state": "Jigawa",
+      "file": "jigawa.json",
+      "scraped_wards": 287,
+      "report_wards": 287,
+      "missing_wards": 0,
+      "scraped_pus": 4450,
+      "report_pus": 4522,
+      "missing_pus": 72,
+      "empty_wards_count": 2,
+      "empty_wards": [
+        "BIRNIN KUDU / BIRNIN KUDU",
+        "BIRNIN KUDU / UNGUWAR\"YA"
+      ]
+    },
+    {
+      "state": "Kano",
+      "file": "kano.json",
+      "scraped_wards": 484,
+      "report_wards": 484,
+      "missing_wards": 0,
+      "scraped_pus": 11155,
+      "report_pus": 11222,
+      "missing_pus": 67,
+      "empty_wards_count": 1,
+      "empty_wards": [
+        "KANO MUNICIPAL / ZANGO"
+      ]
+    },
+    {
+      "state": "Katsina",
+      "file": "katsina.json",
+      "scraped_wards": 361,
+      "report_wards": 361,
+      "missing_wards": 0,
+      "scraped_pus": 6327,
+      "report_pus": 6652,
+      "missing_pus": 325,
+      "empty_wards_count": 11,
+      "empty_wards": [
+        "FASKARI / YANKARA",
+        "FUNTUA / UNG IBRAHIM",
+        "KAFUR / KAFUR",
+        "KAFUR / YARI BORI",
+        "KANKARA / KANKARA A&B",
+        "KANKARA / BURDUGAU",
+        "KANKIA / GALADIMA 'A'",
+        "KURFI / KURFI 'A'",
+        "KURFI / BARKIYYA",
+        "MALUFASHI / MALUM FASHI 'B'",
+        "SAFANA / RUNKA 'B'"
+      ]
+    },
+    {
+      "state": "Kebbi",
+      "file": "kebbi.json",
+      "scraped_wards": 225,
+      "report_wards": 225,
+      "missing_wards": 0,
+      "scraped_pus": 3599,
+      "report_pus": 3743,
+      "missing_pus": 144,
+      "empty_wards_count": 9,
+      "empty_wards": [
+        "DANDI / DOLEKAINA",
+        "SHANGA / BINUWA/GEBBE/BUKUNJI",
+        "SHANGA / DUGU TSOHO/DUGU RAHA",
+        "SHANGA / KAWARA/INGU/SARGO",
+        "SHANGA / RAFIN KIRYA/TAFKI TARA",
+        "SHANGA / SAKACE/GOLONGO/HUNDEJI",
+        "SHANGA / SAWASHI",
+        "SHANGA / SHANGA",
+        "SHANGA / TAKWARE"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "file": "lagos.json",
+      "scraped_wards": 245,
+      "report_wards": 245,
+      "missing_wards": 0,
+      "scraped_pus": 12944,
+      "report_pus": 13325,
+      "missing_pus": 381,
+      "empty_wards_count": 3,
+      "empty_wards": [
+        "IFAKO-IJAYE / NEW IFAKO/OYEMEKUN",
+        "IFAKO-IJAYE / IJAIYE/AGBADO/KOLLINGTON",
+        "KOSOFE / KETU/ALAPERE/AGIDI/ORISIGUN/KOSOFE/AJELOGO/AKANIMODO"
+      ]
+    },
+    {
+      "state": "Niger",
+      "file": "niger.json",
+      "scraped_wards": 274,
+      "report_wards": 274,
+      "missing_wards": 0,
+      "scraped_pus": 4812,
+      "report_pus": 4950,
+      "missing_pus": 138,
+      "empty_wards_count": 7,
+      "empty_wards": [
+        "KONTAGORA / AREWA",
+        "KONTAGORA / KUDU",
+        "KONTAGORA / NAGWAMATSE",
+        "LAVUN / BATATI",
+        "LAVUN / JIMA",
+        "LAVUN / KUSOTACHI",
+        "LAVUN / LAGUN"
+      ]
+    },
+    {
+      "state": "Ogun",
+      "file": "ogun.json",
+      "scraped_wards": 236,
+      "report_wards": 236,
+      "missing_wards": 0,
+      "scraped_pus": 4983,
+      "report_pus": 5042,
+      "missing_pus": 59,
+      "empty_wards_count": 1,
+      "empty_wards": [
+        "ADO ODO-OTA / IJOKO"
+      ]
+    },
+    {
+      "state": "Ondo",
+      "file": "ondo.json",
+      "scraped_wards": 203,
+      "report_wards": 203,
+      "missing_wards": 0,
+      "scraped_pus": 3904,
+      "report_pus": 3933,
+      "missing_pus": 29,
+      "empty_wards_count": 1,
+      "empty_wards": [
+        "AKURE SOUTH / ODA"
+      ]
+    },
+    {
+      "state": "Taraba",
+      "file": "taraba.json",
+      "scraped_wards": 168,
+      "report_wards": 168,
+      "missing_wards": 0,
+      "scraped_pus": 3577,
+      "report_pus": 3597,
+      "missing_pus": 20,
+      "empty_wards_count": 1,
+      "empty_wards": [
+        "KURMI / AKWENTO/BOKO"
+      ]
+    }
+  ]
+}
