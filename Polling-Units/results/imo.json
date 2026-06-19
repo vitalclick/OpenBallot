@@ -4,7 +4,29 @@
   "summary": {
     "lgas": 27,
     "wards": 305,
-    "polling_units": 4692
+    "polling_units": 4692,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 27,
+      "report_wards": 305,
+      "report_polling_units": 4758,
+      "report_registered_voters_2023": 2419922,
+      "scraped_lgas": 27,
+      "scraped_wards": 305,
+      "scraped_polling_units": 4692,
+      "ward_gap": 0,
+      "polling_unit_gap": 66,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "ABOH MBAISE / AMUZU",
+        "IDEATO NORTH / IZUOGU I",
+        "IDEATO NORTH / OZUAKOKI/UMUAGO",
+        "OGUTA / EGWE/EGBUOMA"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -1177,7 +1199,8 @@
           "ward_id": "AMUZU",
           "ward_name": "AMUZU",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "UMUHU",
@@ -6058,7 +6081,8 @@
           "ward_id": "IZUOGU I",
           "ward_name": "IZUOGU I",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "NDIMOKO",
@@ -6526,7 +6550,8 @@
           "ward_id": "OZUAKOKI/UMUAGO",
           "ward_name": "OZUAKOKI/UMUAGO",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "IZUOGU II",
@@ -20296,7 +20321,8 @@
           "ward_id": "EGWE/EGBUOMA",
           "ward_name": "EGWE/EGBUOMA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "IZOMBE",

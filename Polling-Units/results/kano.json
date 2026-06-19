@@ -4,7 +4,26 @@
   "summary": {
     "lgas": 44,
     "wards": 484,
-    "polling_units": 11155
+    "polling_units": 11155,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 44,
+      "report_wards": 484,
+      "report_polling_units": 11222,
+      "report_registered_voters_2023": 5921370,
+      "scraped_lgas": 44,
+      "scraped_wards": 484,
+      "scraped_polling_units": 11155,
+      "ward_gap": 0,
+      "polling_unit_gap": 67,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "KANO MUNICIPAL / ZANGO"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -41064,7 +41083,8 @@
           "ward_id": "ZANGO",
           "ward_name": "ZANGO",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         }
       ]
     },

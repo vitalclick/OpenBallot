@@ -233,5 +233,36 @@
       "wards": 62,
       "pollingUnits": 2762
     }
-  ]
+  ],
+  "reconciliation": {
+    "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024)",
+    "reconciled_at": "2026-06-19",
+    "method": "Report provides authoritative counts only (no individual PU/ward records). Per-state files annotated with report baselines and gap flags; no records were fabricated.",
+    "report_totals": {
+      "states": 37,
+      "lgas": 774,
+      "wards": 8809,
+      "polling_units": 176846,
+      "registered_voters_2023": 93469008
+    },
+    "scraped_totals": {
+      "states": 37,
+      "lgas": 774,
+      "wards": 8799,
+      "polling_units": 174175
+    },
+    "gaps": {
+      "wards": 10,
+      "polling_units": 2671,
+      "polling_units_pct": 1.51,
+      "states_matching_exactly": 17,
+      "states_incomplete": 20,
+      "empty_wards_in_scrape": 87,
+      "wards_absent_from_scrape": 10,
+      "wards_absent_states": [
+        "borno"
+      ]
+    },
+    "details": "See Polling-Units/reconciliation/ (RECONCILIATION-2023.md, per-state-reconciliation.csv, rescrape-targets.json)"
+  }
 }

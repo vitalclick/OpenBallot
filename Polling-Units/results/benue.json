@@ -4,7 +4,29 @@
   "summary": {
     "lgas": 23,
     "wards": 276,
-    "polling_units": 4960
+    "polling_units": 4960,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 23,
+      "report_wards": 276,
+      "report_polling_units": 5102,
+      "report_registered_voters_2023": 2777727,
+      "scraped_lgas": 23,
+      "scraped_wards": 276,
+      "scraped_polling_units": 4960,
+      "ward_gap": 0,
+      "polling_unit_gap": 142,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "OTUKPO / OTUKPO TOWN CENTRAL",
+        "OTUKPO / UGBOJU-OTAHE",
+        "VANDEIKYA / MBADEDE",
+        "VANDEIKYA / VANDEIKYA TOWNSHIP"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -30216,7 +30238,8 @@
           "ward_id": "OTUKPO TOWN CENTRAL",
           "ward_name": "OTUKPO TOWN CENTRAL",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "OTUKPO TOWN EAST",
@@ -30978,7 +31001,8 @@
           "ward_id": "UGBOJU-OTAHE",
           "ward_name": "UGBOJU-OTAHE",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         }
       ]
     },
@@ -35313,7 +35337,8 @@
           "ward_id": "MBADEDE",
           "ward_name": "MBADEDE",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "MBATYOUGH",
@@ -36698,7 +36723,8 @@
           "ward_id": "VANDEIKYA TOWNSHIP",
           "ward_name": "VANDEIKYA TOWNSHIP",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "MBANYUMANGBAGH",

@@ -4,7 +4,40 @@
   "summary": {
     "lgas": 16,
     "wards": 177,
-    "polling_units": 2132
+    "polling_units": 2132,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 16,
+      "report_wards": 177,
+      "report_polling_units": 2445,
+      "report_registered_voters_2023": 987647,
+      "scraped_lgas": 16,
+      "scraped_wards": 177,
+      "scraped_polling_units": 2132,
+      "ward_gap": 0,
+      "polling_unit_gap": 313,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "ADO EKITI / ADO 'B'  INISA",
+        "ADO EKITI / ADO 'C'  IDOLOFIN",
+        "ADO EKITI / ADO 'D' IJIGBO",
+        "ADO EKITI / ADO 'F' OKEYINMI",
+        "ADO EKITI / ADO 'G' OKE ILA",
+        "ADO EKITI / ADO 'I' DALLIMORE",
+        "ADO EKITI / ADO 'L' IGBEHIN",
+        "ADO EKITI / ADO 'M' FARM SETTLEMENT",
+        "EMURE / ODO - EMURE   III",
+        "IJERO / IJERO WARD  \"B\"",
+        "IJERO / IJERO WARD 'D'",
+        "IJERO / IKORO WARD 'A'",
+        "IKERE / ARE ARAROMI",
+        "IREPODUN / IFELODUN / IWOROKO",
+        "ISE / ORUN / ODO ISE  I"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -127,19 +160,22 @@
           "ward_id": "ADO 'B'  INISA",
           "ward_name": "ADO 'B'  INISA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ADO 'C'  IDOLOFIN",
           "ward_name": "ADO 'C'  IDOLOFIN",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ADO 'D' IJIGBO",
           "ward_name": "ADO 'D' IJIGBO",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ADO 'E' IJOKA",
@@ -278,13 +314,15 @@
           "ward_id": "ADO 'F' OKEYINMI",
           "ward_name": "ADO 'F' OKEYINMI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ADO 'G' OKE ILA",
           "ward_name": "ADO 'G' OKE ILA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ADO 'H' EREGURU",
@@ -451,7 +489,8 @@
           "ward_id": "ADO 'I' DALLIMORE",
           "ward_name": "ADO 'I' DALLIMORE",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ADO 'J' OKESA",
@@ -996,13 +1035,15 @@
           "ward_id": "ADO 'L' IGBEHIN",
           "ward_name": "ADO 'L' IGBEHIN",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ADO 'M' FARM SETTLEMENT",
           "ward_name": "ADO 'M' FARM SETTLEMENT",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         }
       ]
     },
@@ -5672,7 +5713,8 @@
           "ward_id": "ODO - EMURE   III",
           "ward_name": "ODO - EMURE   III",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ODO - EMURE   IV",
@@ -8279,7 +8321,8 @@
           "ward_id": "IJERO WARD  \"B\"",
           "ward_name": "IJERO WARD  \"B\"",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "IJERO WARD 'C'",
@@ -8341,7 +8384,8 @@
           "ward_id": "IJERO WARD 'D'",
           "ward_name": "IJERO WARD 'D'",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "IPOTI WARD 'A'",
@@ -8816,7 +8860,8 @@
           "ward_id": "IKORO WARD 'A'",
           "ward_name": "IKORO WARD 'A'",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "EKAMARUN WARD 'A'",
@@ -9668,7 +9713,8 @@
           "ward_id": "ARE ARAROMI",
           "ward_name": "ARE ARAROMI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "AFAO / KAJOLA",
@@ -12821,7 +12867,8 @@
           "ward_id": "IWOROKO",
           "ward_name": "IWOROKO",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "IYIN  I",
@@ -13155,7 +13202,8 @@
           "ward_id": "ODO ISE  I",
           "ward_name": "ODO ISE  I",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ODO ISE  II",

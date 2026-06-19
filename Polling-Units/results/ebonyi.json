@@ -4,7 +4,31 @@
   "summary": {
     "lgas": 13,
     "wards": 171,
-    "polling_units": 2829
+    "polling_units": 2829,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 13,
+      "report_wards": 171,
+      "report_polling_units": 2946,
+      "report_registered_voters_2023": 1597646,
+      "scraped_lgas": 13,
+      "scraped_wards": 171,
+      "scraped_polling_units": 2829,
+      "ward_gap": 0,
+      "polling_unit_gap": 117,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "EBONYI / AGALEGU",
+        "EBONYI / ECHIABA",
+        "EBONYI / KPIRIKPIRI",
+        "IKWO / ENYIBICHIRI",
+        "IKWO / NDIAGU AMAGU II",
+        "IKWO / NDIAGU ECHARA II"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -5129,13 +5153,15 @@
           "ward_id": "AGALEGU",
           "ward_name": "AGALEGU",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ECHIABA",
           "ward_name": "ECHIABA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "EGWUDINAGU",
@@ -5498,7 +5524,8 @@
           "ward_id": "KPIRIKPIRI",
           "ward_name": "KPIRIKPIRI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "MBEKE",
@@ -9575,7 +9602,8 @@
           "ward_id": "ENYIBICHIRI",
           "ward_name": "ENYIBICHIRI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ETAM",
@@ -10239,7 +10267,8 @@
           "ward_id": "NDIAGU AMAGU II",
           "ward_name": "NDIAGU AMAGU II",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "NDIAGU ECHARA I",
@@ -10371,7 +10400,8 @@
           "ward_id": "NDIAGU ECHARA II",
           "ward_name": "NDIAGU ECHARA II",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "NDUFU AMAGU I",

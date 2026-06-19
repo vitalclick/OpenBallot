@@ -78,7 +78,26 @@ Ekiti is the worst proportionally (−12.8%); Lagos the worst in absolute terms 
   (national 93,469,008) — carried into the CSV for reference — but the scraped JSON stores only
   structural counts (LGA/ward/PU), so voter totals can't be reconciled from current data.
 
-## 5. Recommended actions
+## 5. Dataset annotations applied (2026-06-19)
+
+The INEC report contains **counts only** — it has no individual polling-unit codes/names
+and no ward-name lists (results annexures are constituency-level). The missing records
+therefore **cannot be filled from this document without fabricating data**, which was
+deliberately avoided. Instead the dataset was annotated with the authoritative baseline:
+
+- **`results/*.json` → `summary.reconciliation`**: each state now carries the report's
+  expected `report_lgas / report_wards / report_polling_units / report_registered_voters_2023`,
+  the gaps, a `status` (`complete` / `incomplete`), the list of `empty_wards_in_scrape`, and
+  `wards_absent_from_scrape`.
+- **Empty ward objects** are tagged in place with `"reconciliation_flag": "no_polling_units_in_scrape"`.
+- **`results/summary.json` → `reconciliation`**: national totals, gaps, and counts.
+- **No records were invented or altered** — the 174,175 real polling-unit records are unchanged,
+  and `all-polling-units.json` was left untouched.
+
+To obtain the *actual* missing records (names/codes/GPS), a targeted re-scrape using
+`rescrape-targets.json` remains the only source.
+
+## 6. Recommended actions
 
 1. **Re-scrape the 20 flagged states**, targeting the wards in `rescrape-targets.json` (87 empty
    wards + Borno's 10 absent wards) rather than re-pulling everything.

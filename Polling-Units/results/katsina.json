@@ -4,7 +4,36 @@
   "summary": {
     "lgas": 34,
     "wards": 361,
-    "polling_units": 6327
+    "polling_units": 6327,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 34,
+      "report_wards": 361,
+      "report_polling_units": 6652,
+      "report_registered_voters_2023": 3516719,
+      "scraped_lgas": 34,
+      "scraped_wards": 361,
+      "scraped_polling_units": 6327,
+      "ward_gap": 0,
+      "polling_unit_gap": 325,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "FASKARI / YANKARA",
+        "FUNTUA / UNG IBRAHIM",
+        "KAFUR / KAFUR",
+        "KAFUR / YARI BORI",
+        "KANKARA / KANKARA A&B",
+        "KANKARA / BURDUGAU",
+        "KANKIA / GALADIMA 'A'",
+        "KURFI / KURFI 'A'",
+        "KURFI / BARKIYYA",
+        "MALUFASHI / MALUM FASHI 'B'",
+        "SAFANA / RUNKA 'B'"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -16495,7 +16524,8 @@
           "ward_id": "YANKARA",
           "ward_name": "YANKARA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "SHEME",
@@ -18628,7 +18658,8 @@
           "ward_id": "UNG IBRAHIM",
           "ward_name": "UNG IBRAHIM",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "UNGUWAR MUSA",
@@ -23055,7 +23086,8 @@
           "ward_id": "KAFUR",
           "ward_name": "KAFUR",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "MASARI",
@@ -23299,7 +23331,8 @@
           "ward_id": "YARI BORI",
           "ward_name": "YARI BORI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "SABUWAR KASA",
@@ -26124,7 +26157,8 @@
           "ward_id": "KANKARA A&B",
           "ward_name": "KANKARA A&B",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "GARAGI",
@@ -26249,7 +26283,8 @@
           "ward_id": "BURDUGAU",
           "ward_name": "BURDUGAU",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "WAWAR KAZA",
@@ -26723,7 +26758,8 @@
           "ward_id": "GALADIMA 'A'",
           "ward_name": "GALADIMA 'A'",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "GALADIMA 'B'",
@@ -31578,7 +31614,8 @@
           "ward_id": "KURFI 'A'",
           "ward_name": "KURFI 'A'",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "KURFI 'B'",
@@ -31976,7 +32013,8 @@
           "ward_id": "BARKIYYA",
           "ward_name": "BARKIYYA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "WURMA 'A'",
@@ -34884,7 +34922,8 @@
           "ward_id": "MALUM FASHI 'B'",
           "ward_name": "MALUM FASHI 'B'",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "YABA",
@@ -44529,7 +44568,8 @@
           "ward_id": "RUNKA 'B'",
           "ward_name": "RUNKA 'B'",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ZAKKA 'A'",

@@ -4,7 +4,29 @@
   "summary": {
     "lgas": 20,
     "wards": 212,
-    "polling_units": 5315
+    "polling_units": 5315,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 20,
+      "report_wards": 212,
+      "report_polling_units": 5423,
+      "report_registered_voters_2023": 2749268,
+      "scraped_lgas": 20,
+      "scraped_wards": 212,
+      "scraped_polling_units": 5315,
+      "ward_gap": 0,
+      "polling_unit_gap": 108,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "BAUCHI / MAJIDADI 'A'",
+        "DASS / DOTT",
+        "JAMA'ARE / JAMA'ARE \"B\"",
+        "TORO / RAHAMA"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -2198,7 +2220,8 @@
           "ward_id": "MAJIDADI 'A'",
           "ward_name": "MAJIDADI 'A'",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "MAJIDADI 'B'",
@@ -12812,7 +12835,8 @@
           "ward_id": "DOTT",
           "ward_name": "DOTT",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "DURR",
@@ -19953,7 +19977,8 @@
           "ward_id": "JAMA'ARE \"B\"",
           "ward_name": "JAMA'ARE \"B\"",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "JAMA'ARE \"C\"",
@@ -35828,7 +35853,8 @@
           "ward_id": "RAHAMA",
           "ward_name": "RAHAMA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         }
       ]
     },
