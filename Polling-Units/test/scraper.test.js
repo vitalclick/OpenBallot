@@ -770,7 +770,9 @@ describe("scraper data flow", () => {
     const state = { code: "1", name: "Test State" };
     const result = await scraper.scrapeState(state);
 
-    assert.equal(result.state_id, "1");
+    // INEC dropped numeric IDs; downstream calls use the name as the id,
+    // so state_id resolves to the state name (name-as-id).
+    assert.equal(result.state_id, "Test State");
     assert.equal(result.state_name, "Test State");
     assert.equal(result.lgas.length, 1);
     assert.equal(result.lgas[0].lga_name, "Test LGA");
@@ -793,45 +795,47 @@ describe("scraper data flow", () => {
     scraper.baseUrl = "https://mock.test";
     scraper.fetchLGAs = async () => [];
 
+    // s_name is preferred for both the name and the id (name-as-id).
     const state = { code: "25", s_name: "LAGOS" };
     const result = await scraper.scrapeState(state);
 
     assert.equal(result.state_name, "LAGOS");
-    assert.equal(result.state_id, "25");
+    assert.equal(result.state_id, "LAGOS");
 
     config.RESULTS_DIR = originalDir;
   });
 
-  it("scrapeState uses _key as state ID when no other ID field exists", async () => {
+  it("scrapeState falls back to _key as state ID when no name field exists", async () => {
     const originalDir = config.RESULTS_DIR;
     config.RESULTS_DIR = tempResults;
 
     scraper.baseUrl = "https://mock.test";
     scraper.fetchLGAs = async () => [];
 
-    const state = { _key: "24", s_name: "LAGOS" };
+    // No s_name/name/code: the numeric _key is the only id-like field.
+    const state = { _key: "24" };
     const result = await scraper.scrapeState(state);
 
-    assert.equal(result.state_name, "LAGOS");
     assert.equal(result.state_id, "24");
+    assert.equal(result.state_name, "State-24");
 
     config.RESULTS_DIR = originalDir;
   });
 
-  it("scrapeState uses lga.abbreviation as lgaId", async () => {
+  it("scrapeState uses the lga name as lgaId (name-as-id)", async () => {
     const originalDir = config.RESULTS_DIR;
     config.RESULTS_DIR = tempResults;
 
     scraper.baseUrl = "https://mock.test";
-    scraper.fetchLGAs = async () => [
-      { id: "999", abbreviation: "ALM", name: "Alimosho" },
-    ];
+    // lgaView.php returns {lga: "AGEGE"}; the name doubles as the id.
+    scraper.fetchLGAs = async () => [{ lga: "Alimosho" }];
     scraper.fetchWards = async () => [];
 
-    const state = { code: "25", s_name: "LAGOS" };
+    const state = { s_name: "LAGOS" };
     const result = await scraper.scrapeState(state);
 
-    assert.equal(result.lgas[0].lga_id, "ALM");
+    assert.equal(result.lgas[0].lga_id, "Alimosho");
+    assert.equal(result.lgas[0].lga_name, "Alimosho");
 
     config.RESULTS_DIR = originalDir;
   });
@@ -861,9 +865,10 @@ describe("scraper data flow", () => {
     config.PROGRESS_DIR = tempProgress;
 
     scraper.baseUrl = "https://mock.test";
+    // stateId is the state name (name-as-id), so key the mock off the name.
     scraper.fetchLGAs = async (stateId) => {
-      if (stateId === "1") return [{ id: "L1", name: "LGA One" }];
-      if (stateId === "2") return [{ id: "L2", name: "LGA Two" }];
+      if (stateId === "Alpha State") return [{ id: "L1", name: "LGA One" }];
+      if (stateId === "Beta State") return [{ id: "L2", name: "LGA Two" }];
       return [];
     };
     scraper.fetchWards = async () => [{ id: "W1", name: "Ward One" }];
