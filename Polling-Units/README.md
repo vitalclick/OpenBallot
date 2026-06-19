@@ -32,7 +32,36 @@ node scraper.js --detect-only
 
 # Clear progress and start fresh
 node scraper.js --reset
+
+# Re-scrape ONLY the wards the full scrape missed, then refresh the
+# reconciliation annotations and rebuild all-polling-units.json
+node scraper.js --gap                 # all flagged states
+node scraper.js --gap --state "Borno" # one state
+
+# Offline: refresh reconciliation annotations from the INEC report
+# baseline (no network requests)
+node scraper.js --reconcile
 ```
+
+## Reconciliation against the INEC 2023 report
+
+The scrape is validated against the official figures in
+`documents/2023-GENERAL-ELECTION-REPORT.pdf` (526-page INEC report). See
+[`reconciliation/RECONCILIATION-2023.md`](reconciliation/RECONCILIATION-2023.md)
+for the full analysis. In short, the scrape captured 174,175 of the report's
+176,846 polling units (−2,671), with gaps in 20 states caused by 87 wards that
+returned zero polling units and 10 wards entirely absent in Borno.
+
+- `reconciliation/report-baseline.json` — the report's authoritative per-state
+  LGA/ward/PU/registered-voter counts (the source of truth for annotations).
+- `reconciliation/rescrape-targets.json` — exactly which wards `--gap` should refetch.
+- `reconciliation/per-state-reconciliation.csv` — full per-state comparison.
+
+`--gap` refetches **only** those flagged wards and merges real records into the
+existing per-state files (it never fabricates records and never touches records
+already present); `--reconcile` recomputes the annotations offline. Each state
+file carries a `summary.reconciliation` block (`status`, gaps, `empty_wards_in_scrape`),
+and zero-PU wards are tagged with `"reconciliation_flag": "no_polling_units_in_scrape"`.
 
 **Requirements:** Node.js >= 18.0.0
 

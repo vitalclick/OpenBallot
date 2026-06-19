@@ -4,7 +4,24 @@
   "summary": {
     "lgas": 21,
     "wards": 326,
-    "polling_units": 5720
+    "polling_units": 5720,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 21,
+      "report_wards": 326,
+      "report_polling_units": 5720,
+      "report_registered_voters_2023": 2656437,
+      "scraped_lgas": 21,
+      "scraped_wards": 326,
+      "scraped_polling_units": 5720,
+      "ward_gap": 0,
+      "polling_unit_gap": 0,
+      "status": "complete",
+      "empty_wards_in_scrape": [],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {

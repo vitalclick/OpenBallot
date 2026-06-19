@@ -4,7 +4,28 @@
   "summary": {
     "lgas": 20,
     "wards": 245,
-    "polling_units": 12944
+    "polling_units": 12944,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 20,
+      "report_wards": 245,
+      "report_polling_units": 13325,
+      "report_registered_voters_2023": 7060195,
+      "scraped_lgas": 20,
+      "scraped_wards": 245,
+      "scraped_polling_units": 12944,
+      "ward_gap": 0,
+      "polling_unit_gap": 381,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "IFAKO-IJAYE / NEW IFAKO/OYEMEKUN",
+        "IFAKO-IJAYE / IJAIYE/AGBADO/KOLLINGTON",
+        "KOSOFE / KETU/ALAPERE/AGIDI/ORISIGUN/KOSOFE/AJELOGO/AKANIMODO"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -41488,7 +41509,8 @@
           "ward_id": "NEW IFAKO/OYEMEKUN",
           "ward_name": "NEW IFAKO/OYEMEKUN",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "FAGBA/AKUTE ROAD",
@@ -44168,7 +44190,8 @@
           "ward_id": "IJAIYE/AGBADO/KOLLINGTON",
           "ward_name": "IJAIYE/AGBADO/KOLLINGTON",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ALAKUKO/KOLLINGTON",
@@ -56890,7 +56913,8 @@
           "ward_id": "KETU/ALAPERE/AGIDI/ORISIGUN/KOSOFE/AJELOGO/AKANIMODO",
           "ward_name": "KETU/ALAPERE/AGIDI/ORISIGUN/KOSOFE/AJELOGO/AKANIMODO",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "IKOSI KETU/MILE 12/AGILITI/MAIDAN",

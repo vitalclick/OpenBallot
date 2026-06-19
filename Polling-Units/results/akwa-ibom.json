@@ -4,7 +4,32 @@
   "summary": {
     "lgas": 31,
     "wards": 329,
-    "polling_units": 4095
+    "polling_units": 4095,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 31,
+      "report_wards": 329,
+      "report_polling_units": 4353,
+      "report_registered_voters_2023": 2357418,
+      "scraped_lgas": 31,
+      "scraped_wards": 329,
+      "scraped_polling_units": 4095,
+      "ward_gap": 0,
+      "polling_unit_gap": 258,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "NSIT IBOM / MBAISO 1",
+        "UDUNG UKO / UDUNG UKO V11",
+        "UYO / UYO URBAN 1",
+        "UYO / UYO URBAN 11",
+        "UYO / UYO URBAN 111",
+        "UYO / ETOI 1",
+        "UYO / OKU 11"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -20037,7 +20062,8 @@
           "ward_id": "MBAISO 1",
           "ward_name": "MBAISO 1",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "MBAISO 11",
@@ -26791,7 +26817,8 @@
           "ward_id": "UDUNG UKO V11",
           "ward_name": "UDUNG UKO V11",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "UDUNG UKO V111",
@@ -29775,25 +29802,29 @@
           "ward_id": "UYO URBAN 1",
           "ward_name": "UYO URBAN 1",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "UYO URBAN 11",
           "ward_name": "UYO URBAN 11",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "UYO URBAN 111",
           "ward_name": "UYO URBAN 111",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ETOI 1",
           "ward_name": "ETOI 1",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "ETOI 11",
@@ -31150,7 +31181,8 @@
           "ward_id": "OKU 11",
           "ward_name": "OKU 11",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         }
       ]
     }

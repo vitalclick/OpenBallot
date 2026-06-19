@@ -10,6 +10,14 @@
  *   node scraper.js                     # Scrape all states (resumes from progress)
  *   node scraper.js --state "Lagos"     # Scrape a single state
  *   node scraper.js --reset             # Clear progress and start fresh
+ *   node scraper.js --gap               # Re-scrape ONLY the wards the full
+ *                                       # scrape missed (from reconciliation/
+ *                                       # rescrape-targets.json), merging into
+ *                                       # existing per-state files
+ *   node scraper.js --gap --state Borno # Gap re-scrape for one state
+ *   node scraper.js --reconcile         # Offline: refresh reconciliation
+ *                                       # annotations from the report baseline
+ *                                       # (no network requests)
  *   node scraper.js --detect-only       # Only detect working API base URL
  *   node scraper.js --probe             # One-shot states->LGAs->wards->PUs
  *                                       # diagnostic; writes results/probe.json
@@ -22,6 +30,12 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const config = require("./config");
+
+// Provenance string stamped onto every reconciliation block.
+const REPORT_SOURCE =
+  "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General " +
+  "Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the " +
+  "Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -395,6 +409,32 @@ class INECPollingUnitsScraper {
     return results;
   }
 
+  // ── Normalize raw polling-unit objects into our stored shape ──────────────
+  // pollingView.php returns {id, state, lga, ward, pu, delim, remark} where
+  // `pu` is the human name and `delim` is INEC's hierarchical code
+  // (e.g. "01-01-01-001"). We construct a globally-unique pu_code by
+  // prefixing with the state name because `delim` repeats across states.
+  mapPollingUnits(rawPUs, stateName) {
+    return rawPUs.map((pu) => {
+      const delim = pu.delim || pu.delimitation || pu.abbreviation || "";
+      const constructed = delim ? `${stateName}-${delim}` : "";
+      return {
+        pu_id: pu.id || pu.pu_id || pu.polling_unit_id,
+        pu_code: pu.pu_code || pu.code || pu.polling_unit_code || constructed,
+        pu_name:
+          pu.pu ||
+          pu.name ||
+          pu.pu_name ||
+          pu.polling_unit ||
+          pu.polling_unit_name ||
+          "",
+        delim,
+        registration_area:
+          pu.registration_area || pu.registration_area_name || pu.remark || "",
+      };
+    });
+  }
+
   // ── Progress Management ───────────────────────────────────────────────────
 
   getProgressPath() {
@@ -526,32 +566,7 @@ class INECPollingUnitsScraper {
         ) || `Ward-${wardId}`;
 
         const rawPUs = await this.fetchPollingUnits(stateId, lgaId, wardId);
-
-        // pollingView.php returns
-        //   {id, state, lga, ward, pu, delim, remark}
-        // where `pu` is the human name and `delim` is INEC's
-        // hierarchical code (e.g. "01-01-01-001"). Construct a
-        // globally-unique pu_code by prefixing with the state name
-        // because `delim` repeats across states.
-        const pollingUnits = rawPUs.map((pu) => {
-          const delim = pu.delim || pu.delimitation || pu.abbreviation || "";
-          const constructed = delim ? `${stateName}-${delim}` : "";
-          return {
-            pu_id: pu.id || pu.pu_id || pu.polling_unit_id,
-            pu_code:
-              pu.pu_code || pu.code || pu.polling_unit_code || constructed,
-            pu_name:
-              pu.pu ||
-              pu.name ||
-              pu.pu_name ||
-              pu.polling_unit ||
-              pu.polling_unit_name ||
-              "",
-            delim,
-            registration_area:
-              pu.registration_area || pu.registration_area_name || pu.remark || "",
-          };
-        });
+        const pollingUnits = this.mapPollingUnits(rawPUs, stateName);
 
         return {
           ward_id: wardId,
@@ -694,6 +709,308 @@ class INECPollingUnitsScraper {
       `\nMerged file: all-polling-units.json (${allPollingUnits.length} polling units, ${sizeMB} MB)`
     );
     return allPollingUnits.length;
+  }
+
+  // ── Reconciliation against the INEC 2023 report ───────────────────────────
+
+  loadReportBaseline() {
+    try {
+      return JSON.parse(fs.readFileSync(config.REPORT_BASELINE_FILE, "utf8"));
+    } catch (err) {
+      console.log(`  Could not load report baseline: ${err.message}`);
+      return { states: {} };
+    }
+  }
+
+  loadRescrapeTargets() {
+    try {
+      return JSON.parse(fs.readFileSync(config.RESCRAPE_TARGETS_FILE, "utf8"));
+    } catch (err) {
+      console.log(`  Could not load rescrape targets: ${err.message}`);
+      return { states: [] };
+    }
+  }
+
+  // Recompute a state's summary counts and its reconciliation block from the
+  // current data + the report baseline. Mutates `data` in place. Pure/offline
+  // (no network), so it can run standalone via --reconcile.
+  buildStateReconciliation(stateKey, data, baseline) {
+    let wards = 0;
+    let pus = 0;
+    const empty = [];
+    for (const lga of data.lgas || []) {
+      for (const ward of lga.wards || []) {
+        wards++;
+        const n = (ward.polling_units || []).length;
+        pus += n;
+        if (n === 0) {
+          ward.reconciliation_flag = "no_polling_units_in_scrape";
+          empty.push(`${lga.lga_name} / ${ward.ward_name}`);
+        } else if (ward.reconciliation_flag) {
+          delete ward.reconciliation_flag;
+        }
+      }
+    }
+    data.summary = data.summary || {};
+    data.summary.lgas = (data.lgas || []).length;
+    data.summary.wards = wards;
+    data.summary.polling_units = pus;
+
+    const rep = baseline.states && baseline.states[stateKey];
+    if (rep) {
+      const wardGap = rep.wards - wards;
+      data.summary.reconciliation = {
+        source: REPORT_SOURCE,
+        reconciled_at: new Date().toISOString().slice(0, 10),
+        report_lgas: rep.lgas,
+        report_wards: rep.wards,
+        report_polling_units: rep.polling_units,
+        report_registered_voters_2023: rep.registered_voters_2023,
+        scraped_lgas: data.summary.lgas,
+        scraped_wards: wards,
+        scraped_polling_units: pus,
+        ward_gap: wardGap,
+        polling_unit_gap: rep.polling_units - pus,
+        status: wards === rep.wards && pus === rep.polling_units ? "complete" : "incomplete",
+        empty_wards_in_scrape: empty,
+        wards_absent_from_scrape: Math.max(wardGap, 0),
+        note:
+          "Report provides authoritative COUNTS only; it contains no individual " +
+          "polling-unit records, so missing PU/ward records are flagged, not filled.",
+      };
+    }
+    return { lgas: data.summary.lgas, wards, pollingUnits: pus };
+  }
+
+  // Rebuild every state's reconciliation block and the national summary.json
+  // reconciliation from the report baseline. Offline; safe to run anytime.
+  refreshAllReconciliation(baseline) {
+    const files = fs
+      .readdirSync(config.RESULTS_DIR)
+      .filter(
+        (f) =>
+          f.endsWith(".json") &&
+          f !== "summary.json" &&
+          f !== "all-polling-units.json" &&
+          f !== "probe.json"
+      );
+
+    let totalLGAs = 0;
+    let totalWards = 0;
+    let totalPUs = 0;
+    let emptyWards = 0;
+    let absentWards = 0;
+    let matching = 0;
+    let incomplete = 0;
+    const absentStates = [];
+    const states = [];
+
+    for (const file of files.sort()) {
+      const filepath = path.join(config.RESULTS_DIR, file);
+      const data = JSON.parse(fs.readFileSync(filepath, "utf8"));
+      const stateKey = file.replace(/\.json$/, "");
+      const counts = this.buildStateReconciliation(stateKey, data, baseline);
+      fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
+
+      totalLGAs += counts.lgas;
+      totalWards += counts.wards;
+      totalPUs += counts.pollingUnits;
+      const r = data.summary.reconciliation;
+      if (r) {
+        emptyWards += r.empty_wards_in_scrape.length;
+        absentWards += r.wards_absent_from_scrape;
+        if (r.wards_absent_from_scrape > 0) absentStates.push(stateKey);
+        if (r.status === "complete") matching++;
+        else incomplete++;
+      }
+      states.push({
+        filename: file,
+        lgas: counts.lgas,
+        wards: counts.wards,
+        pollingUnits: counts.pollingUnits,
+      });
+    }
+
+    // Update summary.json, preserving scrape metadata where present.
+    const summaryPath = path.join(config.RESULTS_DIR, "summary.json");
+    let summary = {};
+    try {
+      summary = JSON.parse(fs.readFileSync(summaryPath, "utf8"));
+    } catch {
+      summary = {};
+    }
+    summary.totals = {
+      states: states.length,
+      lgas: totalLGAs,
+      wards: totalWards,
+      polling_units: totalPUs,
+    };
+    summary.states = states;
+    const nat = (baseline._national) || {};
+    summary.reconciliation = {
+      source: REPORT_SOURCE,
+      reconciled_at: new Date().toISOString().slice(0, 10),
+      method:
+        "Report provides authoritative counts only (no individual PU/ward records). " +
+        "Per-state files annotated with report baselines and gap flags; no records fabricated.",
+      report_totals: nat,
+      scraped_totals: summary.totals,
+      gaps: {
+        wards: (nat.wards || 0) - totalWards,
+        polling_units: (nat.polling_units || 0) - totalPUs,
+        polling_units_pct: nat.polling_units
+          ? Number((100 * ((nat.polling_units - totalPUs) / nat.polling_units)).toFixed(2))
+          : null,
+        states_matching_exactly: matching,
+        states_incomplete: incomplete,
+        empty_wards_in_scrape: emptyWards,
+        wards_absent_from_scrape: absentWards,
+        wards_absent_states: absentStates,
+      },
+      details:
+        "See Polling-Units/reconciliation/ (RECONCILIATION-2023.md, " +
+        "per-state-reconciliation.csv, rescrape-targets.json)",
+    };
+    fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2));
+    return summary;
+  }
+
+  // ── Gap Re-Scrape ─────────────────────────────────────────────────────────
+  // Re-fetches ONLY the wards the full scrape missed (zero-PU "empty" wards and
+  // wards entirely absent vs. the report), merging real records into the
+  // existing per-state files without touching records already present.
+
+  async scrapeGaps({ filterState = null } = {}) {
+    this.stats.startTime = Date.now();
+    console.log("INEC Polling Units — GAP RE-SCRAPE");
+    console.log("==================================\n");
+
+    const targets = this.loadRescrapeTargets();
+    const baseline = this.loadReportBaseline();
+    let targetStates = targets.states || [];
+    if (targetStates.length === 0) {
+      console.log("No gap targets found — nothing to re-scrape.");
+      console.log("(Run a full scrape + reconciliation first to generate rescrape-targets.json.)");
+      return;
+    }
+    if (filterState) {
+      const f = filterState.toLowerCase();
+      targetStates = targetStates.filter(
+        (t) => (t.state || "").toLowerCase() === f || (t.file || "").replace(/\.json$/, "") === f
+      );
+      if (targetStates.length === 0) {
+        console.log(`No gap target matches state "${filterState}".`);
+        return;
+      }
+    }
+
+    console.log(
+      `Targets: ${targetStates.length} state(s), ` +
+        `${targetStates.reduce((a, t) => a + (t.empty_wards_count || 0), 0)} empty ward(s), ` +
+        `${targetStates.reduce((a, t) => a + (t.missing_wards || 0), 0)} absent ward(s).\n`
+    );
+
+    await this.detectBaseUrl();
+
+    const changeLog = [];
+    for (const t of targetStates) {
+      const filepath = path.join(config.RESULTS_DIR, t.file);
+      if (!fs.existsSync(filepath)) {
+        console.log(`  Skipping ${t.state}: ${t.file} not found.`);
+        continue;
+      }
+      const data = JSON.parse(fs.readFileSync(filepath, "utf8"));
+      const stateName = data.state_name;
+      const stateId = data.state_id;
+      console.log(`\n${"=".repeat(60)}\nSTATE: ${stateName}\n${"=".repeat(60)}`);
+
+      let filledWards = 0;
+      let addedWards = 0;
+      let gainedPUs = 0;
+
+      // 1) Refill wards that currently have zero polling units.
+      for (const lga of data.lgas) {
+        for (const ward of lga.wards) {
+          if ((ward.polling_units || []).length > 0) continue;
+          const rawPUs = await this.fetchPollingUnits(stateId, lga.lga_id, ward.ward_id);
+          const pus = this.mapPollingUnits(rawPUs, stateName);
+          if (pus.length > 0) {
+            ward.polling_units = pus;
+            ward.polling_unit_count = pus.length;
+            delete ward.reconciliation_flag;
+            filledWards++;
+            gainedPUs += pus.length;
+            console.log(`  Filled ${lga.lga_name} / ${ward.ward_name}: +${pus.length} PUs`);
+          } else {
+            console.log(`  Still empty: ${lga.lga_name} / ${ward.ward_name} (API returned 0)`);
+          }
+        }
+      }
+
+      // 2) Discover wards entirely absent from the scrape (e.g. Borno).
+      if ((t.missing_wards || 0) > 0) {
+        for (const lga of data.lgas) {
+          const existing = new Set(lga.wards.map((w) => String(w.ward_id)));
+          const rawWards = await this.fetchWards(stateId, lga.lga_id);
+          for (const rw of rawWards) {
+            const wardId = this.extractId(
+              rw, "ward", "ward_name", "name", "id", "ward_id",
+              "abbreviation", "code", "value", "_key"
+            );
+            if (wardId === undefined || existing.has(String(wardId))) continue;
+            const wardName =
+              this.extractName(rw, "ward", "name", "ward_name", "label", "text") ||
+              `Ward-${wardId}`;
+            const rawPUs = await this.fetchPollingUnits(stateId, lga.lga_id, wardId);
+            const pus = this.mapPollingUnits(rawPUs, stateName);
+            const wardObj = {
+              ward_id: wardId,
+              ward_name: wardName,
+              polling_units: pus,
+              polling_unit_count: pus.length,
+            };
+            if (pus.length === 0) wardObj.reconciliation_flag = "no_polling_units_in_scrape";
+            lga.wards.push(wardObj);
+            addedWards++;
+            gainedPUs += pus.length;
+            console.log(`  Added absent ward ${lga.lga_name} / ${wardName}: +${pus.length} PUs`);
+          }
+        }
+      }
+
+      const stateKey = t.file.replace(/\.json$/, "");
+      this.buildStateReconciliation(stateKey, data, baseline);
+      fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
+      const status = (data.summary.reconciliation || {}).status || "unknown";
+      changeLog.push({ state: stateName, filledWards, addedWards, gainedPUs, status });
+      console.log(
+        `  ${stateName}: filled ${filledWards} ward(s), added ${addedWards} ward(s), ` +
+          `+${gainedPUs} PUs → status: ${status}`
+      );
+    }
+
+    // Refresh national reconciliation + rebuild the merged export.
+    this.refreshAllReconciliation(baseline);
+    this.mergeResults();
+
+    const duration = Math.round((Date.now() - this.stats.startTime) / 1000);
+    console.log("\n" + "=".repeat(60));
+    console.log("GAP RE-SCRAPE COMPLETE");
+    console.log("=".repeat(60));
+    let totalGained = 0;
+    for (const c of changeLog) {
+      console.log(
+        `  ${c.state}: +${c.gainedPUs} PUs ` +
+          `(${c.filledWards} filled, ${c.addedWards} added) [${c.status}]`
+      );
+      totalGained += c.gainedPUs;
+    }
+    console.log(`  Total polling units recovered: ${totalGained}`);
+    console.log(`  Duration: ${duration}s`);
+    if (this.failures.length > 0) {
+      console.log(`  Failures: ${this.failures.length}`);
+    }
+    return changeLog;
   }
 
   // ── Main Entry Point ──────────────────────────────────────────────────────
@@ -1001,6 +1318,37 @@ async function main() {
   const reset = args.includes("--reset");
   const detectOnly = args.includes("--detect-only");
   const probeOnly = args.includes("--probe");
+  const gapOnly = args.includes("--gap");
+  const reconcileOnly = args.includes("--reconcile");
+
+  if (reconcileOnly) {
+    try {
+      const baseline = scraper.loadReportBaseline();
+      const summary = scraper.refreshAllReconciliation(baseline);
+      const g = summary.reconciliation.gaps;
+      console.log("Reconciliation refreshed from report baseline.");
+      console.log(
+        `  Scraped ${summary.totals.polling_units} / report ${
+          summary.reconciliation.report_totals.polling_units
+        } PUs (gap ${g.polling_units}); ` +
+          `${g.states_matching_exactly} states complete, ${g.states_incomplete} incomplete.`
+      );
+    } catch (err) {
+      console.error(err.message);
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (gapOnly) {
+    try {
+      await scraper.scrapeGaps({ filterState });
+    } catch (err) {
+      console.error(`\nGap re-scrape failed: ${err.message}`);
+      process.exit(1);
+    }
+    return;
+  }
 
   if (detectOnly) {
     try {
@@ -1043,6 +1391,7 @@ module.exports = {
   objectToArray,
   toKebabCase,
   buildQueryString,
+  REPORT_SOURCE,
 };
 
 if (require.main === module) {

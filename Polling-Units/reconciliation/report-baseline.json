@@ -1,0 +1,234 @@
+{
+  "_source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). LGAs/RAs from the Chapter 9 per-state table; PUs & registered voters from Table 3.2; cross-checked vs Table 12.1.",
+  "_national": {
+    "states": 37,
+    "lgas": 774,
+    "wards": 8809,
+    "polling_units": 176846,
+    "registered_voters_2023": 93469008
+  },
+  "states": {
+    "abia": {
+      "lgas": 17,
+      "wards": 184,
+      "polling_units": 4062,
+      "registered_voters_2023": 2120808
+    },
+    "adamawa": {
+      "lgas": 21,
+      "wards": 226,
+      "polling_units": 4104,
+      "registered_voters_2023": 2196566
+    },
+    "akwa-ibom": {
+      "lgas": 31,
+      "wards": 329,
+      "polling_units": 4353,
+      "registered_voters_2023": 2357418
+    },
+    "anambra": {
+      "lgas": 21,
+      "wards": 326,
+      "polling_units": 5720,
+      "registered_voters_2023": 2656437
+    },
+    "bauchi": {
+      "lgas": 20,
+      "wards": 212,
+      "polling_units": 5423,
+      "registered_voters_2023": 2749268
+    },
+    "bayelsa": {
+      "lgas": 8,
+      "wards": 105,
+      "polling_units": 2244,
+      "registered_voters_2023": 1056862
+    },
+    "benue": {
+      "lgas": 23,
+      "wards": 276,
+      "polling_units": 5102,
+      "registered_voters_2023": 2777727
+    },
+    "borno": {
+      "lgas": 27,
+      "wards": 312,
+      "polling_units": 5071,
+      "registered_voters_2023": 2513281
+    },
+    "cross-river": {
+      "lgas": 18,
+      "wards": 193,
+      "polling_units": 3281,
+      "registered_voters_2023": 1766466
+    },
+    "delta": {
+      "lgas": 25,
+      "wards": 270,
+      "polling_units": 5863,
+      "registered_voters_2023": 3221697
+    },
+    "ebonyi": {
+      "lgas": 13,
+      "wards": 171,
+      "polling_units": 2946,
+      "registered_voters_2023": 1597646
+    },
+    "edo": {
+      "lgas": 18,
+      "wards": 192,
+      "polling_units": 4519,
+      "registered_voters_2023": 2501081
+    },
+    "ekiti": {
+      "lgas": 16,
+      "wards": 177,
+      "polling_units": 2445,
+      "registered_voters_2023": 987647
+    },
+    "enugu": {
+      "lgas": 17,
+      "wards": 260,
+      "polling_units": 4145,
+      "registered_voters_2023": 2112793
+    },
+    "gombe": {
+      "lgas": 11,
+      "wards": 114,
+      "polling_units": 2988,
+      "registered_voters_2023": 1575794
+    },
+    "imo": {
+      "lgas": 27,
+      "wards": 305,
+      "polling_units": 4758,
+      "registered_voters_2023": 2419922
+    },
+    "jigawa": {
+      "lgas": 27,
+      "wards": 287,
+      "polling_units": 4522,
+      "registered_voters_2023": 2351298
+    },
+    "kaduna": {
+      "lgas": 23,
+      "wards": 255,
+      "polling_units": 8012,
+      "registered_voters_2023": 4335208
+    },
+    "kano": {
+      "lgas": 44,
+      "wards": 484,
+      "polling_units": 11222,
+      "registered_voters_2023": 5921370
+    },
+    "katsina": {
+      "lgas": 34,
+      "wards": 361,
+      "polling_units": 6652,
+      "registered_voters_2023": 3516719
+    },
+    "kebbi": {
+      "lgas": 21,
+      "wards": 225,
+      "polling_units": 3743,
+      "registered_voters_2023": 2032041
+    },
+    "kogi": {
+      "lgas": 21,
+      "wards": 239,
+      "polling_units": 3508,
+      "registered_voters_2023": 1932654
+    },
+    "kwara": {
+      "lgas": 16,
+      "wards": 193,
+      "polling_units": 2887,
+      "registered_voters_2023": 1695927
+    },
+    "lagos": {
+      "lgas": 20,
+      "wards": 245,
+      "polling_units": 13325,
+      "registered_voters_2023": 7060195
+    },
+    "nasarawa": {
+      "lgas": 13,
+      "wards": 147,
+      "polling_units": 3256,
+      "registered_voters_2023": 1899244
+    },
+    "niger": {
+      "lgas": 25,
+      "wards": 274,
+      "polling_units": 4950,
+      "registered_voters_2023": 2698344
+    },
+    "ogun": {
+      "lgas": 20,
+      "wards": 236,
+      "polling_units": 5042,
+      "registered_voters_2023": 2688305
+    },
+    "ondo": {
+      "lgas": 18,
+      "wards": 203,
+      "polling_units": 3933,
+      "registered_voters_2023": 1991344
+    },
+    "osun": {
+      "lgas": 30,
+      "wards": 332,
+      "polling_units": 3763,
+      "registered_voters_2023": 1954800
+    },
+    "oyo": {
+      "lgas": 33,
+      "wards": 351,
+      "polling_units": 6390,
+      "registered_voters_2023": 3276675
+    },
+    "plateau": {
+      "lgas": 17,
+      "wards": 207,
+      "polling_units": 4989,
+      "registered_voters_2023": 2789528
+    },
+    "rivers": {
+      "lgas": 23,
+      "wards": 319,
+      "polling_units": 6866,
+      "registered_voters_2023": 3537190
+    },
+    "sokoto": {
+      "lgas": 23,
+      "wards": 244,
+      "polling_units": 3991,
+      "registered_voters_2023": 2172056
+    },
+    "taraba": {
+      "lgas": 16,
+      "wards": 168,
+      "polling_units": 3597,
+      "registered_voters_2023": 2022374
+    },
+    "yobe": {
+      "lgas": 17,
+      "wards": 178,
+      "polling_units": 2823,
+      "registered_voters_2023": 1485146
+    },
+    "zamfara": {
+      "lgas": 14,
+      "wards": 147,
+      "polling_units": 3529,
+      "registered_voters_2023": 1926870
+    },
+    "fct": {
+      "lgas": 6,
+      "wards": 62,
+      "polling_units": 2822,
+      "registered_voters_2023": 1570307
+    }
+  }
+}

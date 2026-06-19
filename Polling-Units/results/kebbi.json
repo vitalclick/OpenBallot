@@ -4,7 +4,34 @@
   "summary": {
     "lgas": 21,
     "wards": 225,
-    "polling_units": 3599
+    "polling_units": 3599,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 21,
+      "report_wards": 225,
+      "report_polling_units": 3743,
+      "report_registered_voters_2023": 2032041,
+      "scraped_lgas": 21,
+      "scraped_wards": 225,
+      "scraped_polling_units": 3599,
+      "ward_gap": 0,
+      "polling_unit_gap": 144,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "DANDI / DOLEKAINA",
+        "SHANGA / BINUWA/GEBBE/BUKUNJI",
+        "SHANGA / DUGU TSOHO/DUGU RAHA",
+        "SHANGA / KAWARA/INGU/SARGO",
+        "SHANGA / RAFIN KIRYA/TAFKI TARA",
+        "SHANGA / SAKACE/GOLONGO/HUNDEJI",
+        "SHANGA / SAWASHI",
+        "SHANGA / SHANGA",
+        "SHANGA / TAKWARE"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -10956,7 +10983,8 @@
           "ward_id": "DOLEKAINA",
           "ward_name": "DOLEKAINA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "FANA",
@@ -21061,49 +21089,57 @@
           "ward_id": "BINUWA/GEBBE/BUKUNJI",
           "ward_name": "BINUWA/GEBBE/BUKUNJI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "DUGU TSOHO/DUGU RAHA",
           "ward_name": "DUGU TSOHO/DUGU RAHA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "KAWARA/INGU/SARGO",
           "ward_name": "KAWARA/INGU/SARGO",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "RAFIN KIRYA/TAFKI TARA",
           "ward_name": "RAFIN KIRYA/TAFKI TARA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "SAKACE/GOLONGO/HUNDEJI",
           "ward_name": "SAKACE/GOLONGO/HUNDEJI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "SAWASHI",
           "ward_name": "SAWASHI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "SHANGA",
           "ward_name": "SHANGA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "TAKWARE",
           "ward_name": "TAKWARE",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "YARBESSE",

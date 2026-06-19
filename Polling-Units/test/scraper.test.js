@@ -405,6 +405,261 @@ describe("INECPollingUnitsScraper", () => {
   });
 });
 
+// ─── Reconciliation + Gap Re-Scrape Tests ───────────────────────────────────
+
+describe("buildStateReconciliation", () => {
+  let scraper;
+  const baseline = {
+    _national: { states: 1, lgas: 1, wards: 2, polling_units: 5 },
+    states: {
+      testland: { lgas: 1, wards: 2, polling_units: 5, registered_voters_2023: 100 },
+    },
+  };
+
+  beforeEach(() => {
+    scraper = new INECPollingUnitsScraper();
+  });
+
+  it("computes counts, flags empty wards, and marks status incomplete", () => {
+    const data = {
+      state_name: "Testland",
+      lgas: [
+        {
+          lga_name: "LGA1",
+          lga_id: "LGA1",
+          wards: [
+            { ward_id: "W1", ward_name: "Ward A", polling_units: [{ pu_id: "1" }, { pu_id: "2" }, { pu_id: "3" }] },
+            { ward_id: "W2", ward_name: "Ward B", polling_units: [] },
+          ],
+        },
+      ],
+    };
+
+    const counts = scraper.buildStateReconciliation("testland", data, baseline);
+
+    assert.equal(counts.wards, 2);
+    assert.equal(counts.pollingUnits, 3);
+    assert.equal(data.summary.polling_units, 3);
+    const r = data.summary.reconciliation;
+    assert.equal(r.report_polling_units, 5);
+    assert.equal(r.polling_unit_gap, 2);
+    assert.equal(r.status, "incomplete");
+    assert.deepEqual(r.empty_wards_in_scrape, ["LGA1 / Ward B"]);
+    // empty ward gets flagged in place
+    assert.equal(data.lgas[0].wards[1].reconciliation_flag, "no_polling_units_in_scrape");
+    // populated ward stays unflagged
+    assert.equal(data.lgas[0].wards[0].reconciliation_flag, undefined);
+  });
+
+  it("clears the flag and marks complete once counts match the report", () => {
+    const data = {
+      state_name: "Testland",
+      lgas: [
+        {
+          lga_name: "LGA1",
+          lga_id: "LGA1",
+          wards: [
+            { ward_id: "W1", ward_name: "Ward A", polling_units: [{ pu_id: "1" }, { pu_id: "2" }, { pu_id: "3" }] },
+            {
+              ward_id: "W2",
+              ward_name: "Ward B",
+              reconciliation_flag: "no_polling_units_in_scrape",
+              polling_units: [{ pu_id: "4" }, { pu_id: "5" }],
+            },
+          ],
+        },
+      ],
+    };
+
+    scraper.buildStateReconciliation("testland", data, baseline);
+
+    assert.equal(data.summary.polling_units, 5);
+    assert.equal(data.summary.reconciliation.status, "complete");
+    assert.equal(data.summary.reconciliation.polling_unit_gap, 0);
+    assert.equal(data.lgas[0].wards[1].reconciliation_flag, undefined);
+  });
+
+  it("skips the reconciliation block for states absent from the baseline", () => {
+    const data = {
+      state_name: "Unknownland",
+      lgas: [{ lga_name: "L", lga_id: "L", wards: [{ ward_id: "W", ward_name: "Wd", polling_units: [{ pu_id: "1" }] }] }],
+    };
+    scraper.buildStateReconciliation("unknownland", data, baseline);
+    assert.equal(data.summary.polling_units, 1);
+    assert.equal(data.summary.reconciliation, undefined);
+  });
+});
+
+describe("scrapeGaps", () => {
+  let scraper;
+  let tempResults;
+  let tempRecon;
+  let originalResults;
+  let originalTargets;
+  let originalBaseline;
+
+  const baseline = {
+    _national: { states: 1, lgas: 1, wards: 2, polling_units: 5 },
+    states: {
+      testland: { lgas: 1, wards: 2, polling_units: 5, registered_voters_2023: 100 },
+    },
+  };
+
+  beforeEach(() => {
+    scraper = new INECPollingUnitsScraper();
+    const stamp = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    tempResults = path.join(__dirname, `temp-gap-results-${stamp}`);
+    tempRecon = path.join(__dirname, `temp-gap-recon-${stamp}`);
+    fs.mkdirSync(tempResults, { recursive: true });
+    fs.mkdirSync(tempRecon, { recursive: true });
+
+    originalResults = config.RESULTS_DIR;
+    originalTargets = config.RESCRAPE_TARGETS_FILE;
+    originalBaseline = config.REPORT_BASELINE_FILE;
+    config.RESULTS_DIR = tempResults;
+    config.RESCRAPE_TARGETS_FILE = path.join(tempRecon, "rescrape-targets.json");
+    config.REPORT_BASELINE_FILE = path.join(tempRecon, "report-baseline.json");
+    fs.writeFileSync(config.REPORT_BASELINE_FILE, JSON.stringify(baseline));
+
+    // No network during tests.
+    scraper.detectBaseUrl = async () => {
+      scraper.baseUrl = "https://mock.test";
+      return [];
+    };
+  });
+
+  afterEach(() => {
+    config.RESULTS_DIR = originalResults;
+    config.RESCRAPE_TARGETS_FILE = originalTargets;
+    config.REPORT_BASELINE_FILE = originalBaseline;
+    fs.rmSync(tempResults, { recursive: true, force: true });
+    fs.rmSync(tempRecon, { recursive: true, force: true });
+  });
+
+  it("fills an empty ward and preserves existing records", async () => {
+    fs.writeFileSync(
+      path.join(tempResults, "testland.json"),
+      JSON.stringify({
+        state_id: "Testland",
+        state_name: "Testland",
+        summary: { lgas: 1, wards: 2, polling_units: 3 },
+        lgas: [
+          {
+            lga_id: "LGA1",
+            lga_name: "LGA1",
+            wards: [
+              { ward_id: "W1", ward_name: "Ward A", polling_units: [{ pu_id: "1" }, { pu_id: "2" }, { pu_id: "3" }] },
+              { ward_id: "W2", ward_name: "Ward B", reconciliation_flag: "no_polling_units_in_scrape", polling_units: [] },
+            ],
+          },
+        ],
+      })
+    );
+    fs.writeFileSync(
+      config.RESCRAPE_TARGETS_FILE,
+      JSON.stringify({
+        states: [
+          { state: "Testland", file: "testland.json", missing_wards: 0, empty_wards_count: 1 },
+        ],
+      })
+    );
+
+    // The empty ward (W2) now returns 2 PUs.
+    scraper.fetchPollingUnits = async (stateId, lgaId, wardId) => {
+      if (wardId === "W2") {
+        return [
+          { id: "4", delim: "01-01-02-001", pu: "Unit 4" },
+          { id: "5", delim: "01-01-02-002", pu: "Unit 5" },
+        ];
+      }
+      return [];
+    };
+
+    const log = await scraper.scrapeGaps();
+
+    const saved = JSON.parse(fs.readFileSync(path.join(tempResults, "testland.json"), "utf8"));
+    const wardB = saved.lgas[0].wards[1];
+    assert.equal(wardB.polling_units.length, 2);
+    assert.equal(wardB.polling_units[0].pu_code, "Testland-01-01-02-001");
+    assert.equal(wardB.reconciliation_flag, undefined);
+    // existing Ward A records untouched
+    assert.equal(saved.lgas[0].wards[0].polling_units.length, 3);
+    // counts + status refreshed
+    assert.equal(saved.summary.polling_units, 5);
+    assert.equal(saved.summary.reconciliation.status, "complete");
+    assert.equal(log[0].gainedPUs, 2);
+
+    // merged export rebuilt
+    const merged = JSON.parse(fs.readFileSync(path.join(tempResults, "all-polling-units.json"), "utf8"));
+    assert.equal(merged.length, 5);
+  });
+
+  it("discovers and adds a ward entirely absent from the scrape", async () => {
+    fs.writeFileSync(
+      path.join(tempResults, "testland.json"),
+      JSON.stringify({
+        state_id: "Testland",
+        state_name: "Testland",
+        summary: { lgas: 1, wards: 1, polling_units: 3 },
+        lgas: [
+          {
+            lga_id: "LGA1",
+            lga_name: "LGA1",
+            wards: [
+              { ward_id: "W1", ward_name: "Ward A", polling_units: [{ pu_id: "1" }, { pu_id: "2" }, { pu_id: "3" }] },
+            ],
+          },
+        ],
+      })
+    );
+    fs.writeFileSync(
+      config.RESCRAPE_TARGETS_FILE,
+      JSON.stringify({
+        states: [
+          { state: "Testland", file: "testland.json", missing_wards: 1, empty_wards_count: 0 },
+        ],
+      })
+    );
+
+    // wardView now lists two wards; W2 was previously absent.
+    scraper.fetchWards = async () => [
+      { ward: "W1", ward_name: "Ward A" },
+      { ward: "W2", ward_name: "Ward B" },
+    ];
+    scraper.fetchPollingUnits = async (stateId, lgaId, wardId) => {
+      if (wardId === "W2") return [{ id: "4", delim: "01-01-02-001", pu: "Unit 4" }, { id: "5", delim: "01-01-02-002", pu: "Unit 5" }];
+      return [];
+    };
+
+    const log = await scraper.scrapeGaps();
+
+    const saved = JSON.parse(fs.readFileSync(path.join(tempResults, "testland.json"), "utf8"));
+    assert.equal(saved.lgas[0].wards.length, 2);
+    const added = saved.lgas[0].wards.find((w) => w.ward_id === "W2");
+    assert.ok(added, "absent ward W2 should be added");
+    assert.equal(added.polling_units.length, 2);
+    assert.equal(saved.summary.wards, 2);
+    assert.equal(saved.summary.polling_units, 5);
+    assert.equal(saved.summary.reconciliation.status, "complete");
+    assert.equal(log[0].addedWards, 1);
+  });
+
+  it("filters to a single state when --state is given", async () => {
+    fs.writeFileSync(
+      config.RESCRAPE_TARGETS_FILE,
+      JSON.stringify({ states: [{ state: "Testland", file: "testland.json", missing_wards: 0, empty_wards_count: 1 }] })
+    );
+    let called = false;
+    scraper.fetchPollingUnits = async () => {
+      called = true;
+      return [];
+    };
+    const log = await scraper.scrapeGaps({ filterState: "Nowhere" });
+    assert.equal(log, undefined);
+    assert.equal(called, false);
+  });
+});
+
 // ─── Integration-style Tests (mocked HTTP) ──────────────────────────────────
 
 describe("INECPollingUnitsScraper - fetchWithRetry", () => {

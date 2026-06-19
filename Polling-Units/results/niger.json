@@ -4,7 +4,32 @@
   "summary": {
     "lgas": 25,
     "wards": 274,
-    "polling_units": 4812
+    "polling_units": 4812,
+    "reconciliation": {
+      "source": "documents/2023-GENERAL-ELECTION-REPORT.pdf — INEC, Report of the 2023 General Election (Feb 2024). Counts from Table 3.2 (PUs & registered voters) and the Chapter 9 per-state RA/LGA table; cross-checked against Table 12.1.",
+      "reconciled_at": "2026-06-19",
+      "report_lgas": 25,
+      "report_wards": 274,
+      "report_polling_units": 4950,
+      "report_registered_voters_2023": 2698344,
+      "scraped_lgas": 25,
+      "scraped_wards": 274,
+      "scraped_polling_units": 4812,
+      "ward_gap": 0,
+      "polling_unit_gap": 138,
+      "status": "incomplete",
+      "empty_wards_in_scrape": [
+        "KONTAGORA / AREWA",
+        "KONTAGORA / KUDU",
+        "KONTAGORA / NAGWAMATSE",
+        "LAVUN / BATATI",
+        "LAVUN / JIMA",
+        "LAVUN / KUSOTACHI",
+        "LAVUN / LAGUN"
+      ],
+      "wards_absent_from_scrape": 0,
+      "note": "Report provides authoritative COUNTS only; it contains no individual polling-unit records, so missing PU/ward records are flagged, not filled."
+    }
   },
   "lgas": [
     {
@@ -14215,7 +14240,8 @@
           "ward_id": "AREWA",
           "ward_name": "AREWA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "CENTRAL",
@@ -14571,7 +14597,8 @@
           "ward_id": "KUDU",
           "ward_name": "KUDU",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "MAGAJIYA",
@@ -14969,7 +14996,8 @@
           "ward_id": "NAGWAMATSE",
           "ward_name": "NAGWAMATSE",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "RAFIN GORA",
@@ -17178,7 +17206,8 @@
           "ward_id": "BATATI",
           "ward_name": "BATATI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "DASSUN",
@@ -17779,7 +17808,8 @@
           "ward_id": "JIMA",
           "ward_name": "JIMA",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "KUTIGI",
@@ -17967,13 +17997,15 @@
           "ward_id": "KUSOTACHI",
           "ward_name": "KUSOTACHI",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "LAGUN",
           "ward_name": "LAGUN",
           "polling_units": [],
-          "polling_unit_count": 0
+          "polling_unit_count": 0,
+          "reconciliation_flag": "no_polling_units_in_scrape"
         },
         {
           "ward_id": "MAMBE",
