@@ -45,7 +45,7 @@
 
 **OpenBallot Nigeria** is an open-source, civic technology platform that enables the real-time collection, verification, and public display of Nigerian election results - directly from Form EC8A, the legally binding result sheet signed by the Presiding Officer and all party agents at every polling unit.
 
-It is owned and governed by a consortium of civil society organisations (CSOs), open to all INEC-registered political parties and accredited election observers, and free for any citizen to access.
+It is an independent, non-partisan civic body and registered non-governmental organisation - open to all INEC-registered political parties and accredited election observers, and free for any citizen to access.
 
 OpenBallot does not compete with INEC. It runs **in parallel** - providing an independent, multi-source, document-anchored view of results that can be publicly compared to the official INEC IReV portal the moment INEC uploads its own EC8A scans.
 
@@ -669,27 +669,28 @@ audit_log (
 
 ## Governance
 
-OpenBallot Nigeria is owned and governed by a consortium of civil society organisations. No single organisation controls the platform.
+OpenBallot Nigeria is an **independent, non-partisan civic body and registered non-governmental organisation**. It is established as Incorporated Trustees and is governed by a **Board of Trustees** holding the platform in trust for the public-benefit objects. No political party, government body, funder, or external organisation owns or controls the platform.
 
-### Consortium Responsibilities
+The full governance framework - objects clause, trustee structure, neutrality firewall, and data-protection provisions - is set out in the draft [Constitution & Governance Charter](docs/GOVERNANCE.md).
+
+### Board of Trustees Responsibilities
 
 - Approving political party and observer organisation onboarding
-- Reviewing and resolving human review queue submissions
-- Overseeing discrepancy escalations
+- Overseeing the human review queue and discrepancy escalations
 - Publishing the post-election evidentiary dataset
 - Managing funder relationships and financial reporting
 - Approving changes to the platform's editorial and display policies
 
-### What the Consortium Does NOT Do
+### What OpenBallot Does NOT Do
 
 - Declare election results
 - Adjudicate disputes between parties
 - Characterise any discrepancy as fraud (only as a factual difference requiring investigation)
 - Take positions on election outcomes
 
-### Consortium Membership
+### Advisory Council
 
-We are actively building the founding consortium. Organisations with a mandate in Nigerian election observation, civic data, or media freedom are invited to apply for founding membership. Contact: **consortium@openballot.ng**
+OpenBallot draws on the expertise of the civil-society community through a non-governing **Advisory Council** of institutional partners and independent experts. Council members provide methodological, technical, and civic input but hold no ownership, financial, or decision-making power over the Organisation. Organisations with a mandate in Nigerian election observation, civic data, or media freedom are invited to engage as partners. Contact: **partners@openballot.ng**
 
 ---
 
