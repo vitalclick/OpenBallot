@@ -1,0 +1,141 @@
+{
+  "election_id": "2023-presidential",
+  "source": "Annexure 2 (printed p418) infographic, transcribed",
+  "summary": {
+    "registered_voters": 93469008,
+    "collected_pvcs": 87209007,
+    "accredited_voters": 25286616,
+    "votes_cast": 24965218,
+    "valid_votes": 24025940,
+    "rejected_votes": 939278,
+    "turnout_pct": 27.05
+  },
+  "candidates": [
+    {
+      "party_code": "APC",
+      "candidate_name": "Tinubu Bola Ahmed",
+      "votes": 8794726,
+      "elected": true,
+      "display_order": 1
+    },
+    {
+      "party_code": "PDP",
+      "candidate_name": "Abubakar Atiku",
+      "votes": 6984520,
+      "elected": false,
+      "display_order": 2
+    },
+    {
+      "party_code": "LP",
+      "candidate_name": "Obi Peter Gregory",
+      "votes": 6101533,
+      "elected": false,
+      "display_order": 3
+    },
+    {
+      "party_code": "NNPP",
+      "candidate_name": "Musa Mohammed Rabiu Kwankwaso",
+      "votes": 1496687,
+      "elected": false,
+      "display_order": 4
+    },
+    {
+      "party_code": "ADC",
+      "candidate_name": "Kachikwu Dumebi",
+      "votes": 81919,
+      "elected": false,
+      "display_order": 5
+    },
+    {
+      "party_code": "SDP",
+      "candidate_name": "Adebayo Adewole Ebenezer",
+      "votes": 80267,
+      "elected": false,
+      "display_order": 6
+    },
+    {
+      "party_code": "ZLP",
+      "candidate_name": "Nwanyanwu Daniel Daberechukwu",
+      "votes": 77665,
+      "elected": false,
+      "display_order": 7
+    },
+    {
+      "party_code": "PRP",
+      "candidate_name": "Abiola Latifu Kolawole",
+      "votes": 72144,
+      "elected": false,
+      "display_order": 8
+    },
+    {
+      "party_code": "APGA",
+      "candidate_name": "Umeadi Peter Nnanna Chukwudi",
+      "votes": 61966,
+      "elected": false,
+      "display_order": 9
+    },
+    {
+      "party_code": "A",
+      "candidate_name": "Imumolen Irene Christopher",
+      "votes": 61014,
+      "elected": false,
+      "display_order": 10
+    },
+    {
+      "party_code": "YPP",
+      "candidate_name": "Ado-Ibrahim Abdulmalik",
+      "votes": 60600,
+      "elected": false,
+      "display_order": 11
+    },
+    {
+      "party_code": "ADP",
+      "candidate_name": "Sani Yabagi Yusuf",
+      "votes": 43924,
+      "elected": false,
+      "display_order": 12
+    },
+    {
+      "party_code": "APM",
+      "candidate_name": "Ojei Princess Chichi",
+      "votes": 25961,
+      "elected": false,
+      "display_order": 13
+    },
+    {
+      "party_code": "NRM",
+      "candidate_name": "Osakwe Felix Johnson",
+      "votes": 24869,
+      "elected": false,
+      "display_order": 14
+    },
+    {
+      "party_code": "BP",
+      "candidate_name": "Adenuga Sunday Oluwafemi",
+      "votes": 16156,
+      "elected": false,
+      "display_order": 15
+    },
+    {
+      "party_code": "AAC",
+      "candidate_name": "Sowore Omoyele Stephen",
+      "votes": 14608,
+      "elected": false,
+      "display_order": 16
+    },
+    {
+      "party_code": "AA",
+      "candidate_name": "Almustapha Hamza",
+      "votes": 14542,
+      "elected": false,
+      "display_order": 17
+    },
+    {
+      "party_code": "APP",
+      "candidate_name": "Nnadi Charles Osita",
+      "votes": 12839,
+      "elected": false,
+      "display_order": 18
+    }
+  ]
+}
