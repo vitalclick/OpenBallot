@@ -56,4 +56,49 @@ function parsePuEntry(raw) {
   };
 }
 
-module.exports = { parsePuEntry };
+/**
+ * Flatten a /pus entry into an irev_pu_catalog row. Unlike parsePuEntry this
+ * NEVER drops a PU: it records every polling unit in the election, with
+ * document_url left null when no EC8A has been uploaded yet — so the catalog
+ * doubles as an upload-coverage record. The full raw entry is preserved in
+ * `raw` for forensics.
+ *
+ * @param {object} raw - one element of /elections/{_id}/pus response .data[]
+ * @param {object} [election] - the election object (for label/type context)
+ * @returns {object|null} catalog row, or null if the entry has no pu_code
+ */
+function parseCatalogEntry(raw, election) {
+  if (!raw || typeof raw !== 'object' || !raw.pu_code) return null;
+  const pu = raw.polling_unit || {};
+  const doc = raw.document || {};
+  const lga = pu.lga && typeof pu.lga === 'object' ? pu.lga : {};
+  const ward =
+    raw.ward && typeof raw.ward === 'object'
+      ? raw.ward
+      : pu.ward && typeof pu.ward === 'object'
+        ? pu.ward
+        : {};
+  return {
+    irev_election_id: raw.election_id ?? election?.election_id ?? null,
+    pu_code: raw.pu_code,
+    pu_code_string: pu.pu_code_string || raw.pu_code_string || null,
+    pu_name: raw.name || pu.name || null,
+    polling_unit_id: raw.polling_unit_id ?? pu.polling_unit_id ?? null,
+    election_label: election?.full_name || raw.election?.full_name || null,
+    election_type_id: election?.election_type_id ?? raw.election?.election_type_id ?? null,
+    state_id: pu.state_id ?? raw.state_id ?? election?.state_id ?? null,
+    lga_name: lga.name || null,
+    lga_code: lga.code || null,
+    ward_name: ward.name || null,
+    document_url: doc.url || null,
+    document_size: doc.size ?? null,
+    is_zero_pu: Boolean(raw.is_zero_pu),
+    result_updated_at: raw.result_updated_time
+      ? new Date(raw.result_updated_time).toISOString()
+      : raw.updated_at || null,
+    irev_record_id: raw._id || null,
+    raw,
+  };
+}
+
+module.exports = { parsePuEntry, parseCatalogEntry };

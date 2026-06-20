@@ -6,12 +6,41 @@ into the OpenBallot platform. Walks the polling-unit registry produced by
 published result + EC8A image, mirrors the image to our storage, and writes
 an `ec8a_submissions` row with `source_type='inec_irev'`.
 
-> ⚠️ **Status (May 2026): API target has moved. Pipeline requires
-> redesign before it can run end-to-end.** See "May 2026 discovery notes"
-> below for what changed and what the next operator picks up. The
-> docs above describe the *intended* end-state; the code currently in
-> this directory was written against the original 2023 IReV API which
-> INEC has since retired.
+> ✅ **Status (June 2026): election-first pipeline rebuilt and validated
+> end-to-end in catalog-only mode.** The May-2026 redesign (see notes
+> below) is implemented: `lib/irev_client.js` traverses the live
+> `dolphin-app-sleqh.ondigitalocean.app` API, and `node scrape.js
+> --catalog-only` was run live against election 5005 (Senatorial, Ondo
+> South), persisting real per-PU records + EC8A image URLs into
+> `irev_pu_catalog` (migration 0016). Two standing limits remain,
+> both INEC-side and unchanged in June 2026:
+>
+> 1. **2023 Presidential is not available** via the current API
+>    (0 presidential rows in `/elections`; the presidential ObjectId
+>    returns `data:[]`). Backfill waits for INEC to re-publish it.
+> 2. **EC8A image bytes are host-allowlisted** (`inc-s3-cache.incportals.com`
+>    returns 403 to outside hosts), so full image archival needs the CDN
+>    host added to egress. `--catalog-only` captures metadata + image URLs
+>    without the bytes and is the supported mode until then.
+
+## Catalog-only mode (the validated path)
+
+`node scrape.js --catalog-only` records, per polling unit, a row in
+`irev_pu_catalog` (migration 0016): IReV election id, `pu_code`, geo
+lineage, the EC8A `document_url` (null until uploaded), upload time, and
+the full raw API entry. No image is downloaded and there is no FK to our
+`polling_units` registry, so it works for any election (including 2026
+by-elections whose PUs predate our 2023 registry). A later image+OCR pass
+promotes catalog rows into `ec8a_submissions` + `verified_results`.
+
+```bash
+# Validate against a live election (no DB writes):
+node scrape.js --election-id 5005 --catalog-only --dry-run --smoke
+# Persist a catalog to the DB:
+DATABASE_URL=postgresql://... node scrape.js --election-id 5005 --catalog-only
+# Upload coverage per election (pus / documents uploaded):
+node scrape.js --election-id 5005 --stats
+```
 
 ## What it produces
 
