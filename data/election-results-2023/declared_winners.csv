@@ -1,0 +1,1491 @@
+race,election_id,seq,constituency_code,constituency_name,state_code,state_name,n_lgas,n_ras,n_pus,party_code,candidate_name
+governorship,2023-governorship,1,GOV/AB,Abia Governor,AB,Abia,17,184,4062,LP,
+governorship,2023-governorship,2,GOV/AD,Adamawa Governor,AD,Adamawa,21,226,4104,PDP,
+governorship,2023-governorship,3,GOV/AK,Akwa Ibom Governor,AK,Akwa Ibom,31,329,4353,PDP,
+governorship,2023-governorship,4,GOV/BA,Bauchi Governor,BA,Bauchi,20,212,5423,PDP,
+governorship,2023-governorship,5,GOV/BN,Benue Governor,BE,Benue,23,276,5102,APC,
+governorship,2023-governorship,6,GOV/BO,Borno Governor,BO,Borno,27,312,5071,APC,
+governorship,2023-governorship,7,GOV/CR,Cross River Governor,CR,Cross River,18,193,3281,APC,
+governorship,2023-governorship,8,GOV/DT,Delta Governor,DE,Delta,25,270,5863,PDP,
+governorship,2023-governorship,9,GOV/EB,Ebonyi Governor,EB,Ebonyi,13,171,2946,APC,
+governorship,2023-governorship,10,GOV/EN,Enugu Governor,EN,Enugu,17,260,4145,PDP,
+governorship,2023-governorship,11,GOV/GM,Gombe Governor,GO,Gombe,11,114,2988,APC,
+governorship,2023-governorship,12,GOV/JG,Jigawa Governor,JI,Jigawa,27,287,4522,APC,
+governorship,2023-governorship,13,GOV/KD,Kaduna Governor,KD,Kaduna,23,255,8012,APC,
+governorship,2023-governorship,14,GOV/KN,Kano Governor,KN,Kano,44,484,11222,NNPP,
+governorship,2023-governorship,15,GOV/KT,Katsina Governor,KT,Katsina,34,361,6652,APC,
+governorship,2023-governorship,16,GOV/KB,Kebbi Governor,KE,Kebbi,20,225,3743,APC,
+governorship,2023-governorship,17,GOV/KW,Kwara Governor,KW,Kwara,16,193,2887,APC,
+governorship,2023-governorship,18,GOV/LA,Lagos Governor,LA,Lagos,20,245,13325,APC,
+governorship,2023-governorship,19,GOV/NW,Nasarawa Governor,NA,Nasarawa,13,147,3256,APC,
+governorship,2023-governorship,20,GOV/NG,Niger Governor,NI,Niger,25,274,4950,APC,
+governorship,2023-governorship,21,GOV/OG,Ogun Governor,OG,Ogun,20,236,5042,APC,
+governorship,2023-governorship,22,GOV/OY,Oyo Governor,OY,Oyo,33,351,6390,PDP,
+governorship,2023-governorship,23,GOV/PL,Plateau Governor,PL,Plateau,17,207,4989,APC,
+governorship,2023-governorship,24,GOV/RV,Rivers Governor,RI,Rivers,23,319,6866,PDP,
+governorship,2023-governorship,25,GOV/SO,Sokoto Governor,SO,Sokoto,23,244,3991,APC,
+governorship,2023-governorship,26,GOV/TR,Taraba Governor,TA,Taraba,16,168,3597,PDP,
+governorship,2023-governorship,27,GOV/YB,Yobe Governor,YO,Yobe,17,178,2823,APC,
+governorship,2023-governorship,28,GOV/ZF,Zamfara Governor,ZA,Zamfara,14,147,3529,PDP,
+senate,2023-senate,1,SD/001/AB,North,AB,Abia,5,57,981,APC,
+senate,2023-senate,2,SD/002/AB,Central,AB,Abia,6,62,1374,LP,
+senate,2023-senate,3,SD/003/AB,South,AB,Abia,6,65,1707,APGA,
+senate,2023-senate,4,SD/004/AD,North,AD,Adamawa,5,57,924,APC,
+senate,2023-senate,5,SD/005/AD,South,AD,Adamawa,9,93,1493,PDP,
+senate,2023-senate,6,SD/006/AD,Central,AD,Adamawa,7,76,1687,PDP,
+senate,2023-senate,7,SD/007/AK,North East,AK,Akwa Ibom,9,94,1571,PDP,
+senate,2023-senate,8,SD/008/AK,North West,AK,Akwa Ibom,10,108,1507,APC,
+senate,2023-senate,9,SD/009/AK,South,AK,Akwa Ibom,12,127,1275,PDP,
+senate,2023-senate,10,SD/010/AN,North,AN,Anambra,7,99,1820,LP,
+senate,2023-senate,11,SD/011/AN,Central,AN,Anambra,7,117,1966,LP,
+senate,2023-senate,12,SD/012/AN,South,AN,Anambra,7,110,1934,YPP,
+senate,2023-senate,13,SD/013/BA,South,BA,Bauchi,7,75,2292,APC,
+senate,2023-senate,14,SD/014/BA,Central,BA,Bauchi,6,63,1455,PDP,
+senate,2023-senate,15,SD/015/BA,North,BA,Bauchi,7,74,1676,PDP,
+senate,2023-senate,16,SD/016/BY,East,BY,Bayelsa,3,36,701,PDP,
+senate,2023-senate,17,SD/017/BY,Central,BY,Bayelsa,3,43,1041,PDP,
+senate,2023-senate,18,SD/018/BY,West,BY,Bayelsa,2,26,502,PDP,
+senate,2023-senate,19,SD/019/BN,North East,BE,Benue,7,84,1844,APC,
+senate,2023-senate,20,SD/020/BN,North West,BE,Benue,7,90,1885,APC,
+senate,2023-senate,21,SD/021/BN,South,BE,Benue,9,102,1373,PDP,
+senate,2023-senate,22,SD/022/BO,North,BO,Borno,10,115,1076,APC,
+senate,2023-senate,23,SD/023/BO,Central,BO,Borno,8,96,2295,APC,
+senate,2023-senate,24,SD/024/BO,South,BO,Borno,9,101,1700,APC,
+senate,2023-senate,25,SD/025/CR,North,CR,Cross River,5,51,874,PDP,
+senate,2023-senate,26,SD/026/CR,Central,CR,Cross River,6,66,1050,APC,
+senate,2023-senate,27,SD/027/CR,South,CR,Cross River,7,76,1357,APC,
+senate,2023-senate,28,SD/028/DT,Central,DE,Delta,8,85,2180,APC,
+senate,2023-senate,29,SD/029/DT,North,DE,Delta,9,98,1763,PDP,
+senate,2023-senate,30,SD/030/DT,South,DE,Delta,8,87,1920,APC,
+senate,2023-senate,31,SD/031/EB,North,EB,Ebonyi,4,56,1129,APC,
+senate,2023-senate,32,SD/032/EB,Central,EB,Ebonyi,4,58,947,APC,
+senate,2023-senate,33,SD/033/EB,South,EB,Ebonyi,5,57,870,APC,
+senate,2023-senate,34,SD/034/ED,Central,ED,Edo,5,51,744,APC,
+senate,2023-senate,35,SD/035/ED,North,ED,Edo,6,64,1173,APC,
+senate,2023-senate,36,SD/036/ED,South,ED,Edo,7,77,2602,LP,
+senate,2023-senate,37,SD/037/EK,North,EK,Ekiti,5,56,731,APC,
+senate,2023-senate,38,SD/038/EK,Central,EK,Ekiti,5,57,966,APC,
+senate,2023-senate,39,SD/039/EK,South,EK,Ekiti,6,64,748,APC,
+senate,2023-senate,40,SD/040/EN,East,EN,Enugu,6,77,1630,LP,
+senate,2023-senate,41,SD/041/EN,West,EN,Enugu,5,81,1027,PDP,
+senate,2023-senate,42,SD/042/EN,North,EN,Enugu,6,102,1488,LP,
+senate,2023-senate,43,SD/043/GM,Central,GO,Gombe,2,22,869,APC,
+senate,2023-senate,44,SD/044/GM,South,GO,Gombe,4,40,825,PDP,
+senate,2023-senate,45,SD/045/GM,North,GO,Gombe,5,52,1294,PDP,
+senate,2023-senate,46,SD/046/IM,East,IM,Imo,9,104,2005,LP,
+senate,2023-senate,47,SD/047/IM,West,IM,Imo,12,137,1907,APC,
+senate,2023-senate,48,SD/048/IM,North,IM,Imo,6,64,846,APC,
+senate,2023-senate,49,SD/049/JG,South West,JI,Jigawa,7,75,1537,PDP,
+senate,2023-senate,50,SD/050/JG,North East,JI,Jigawa,8,85,1239,APC,
+senate,2023-senate,51,SD/051/JG,North West,JI,Jigawa,12,127,1746,APC,
+senate,2023-senate,52,SD/052/KD,North,KD,Kaduna,8,87,2699,PDP,
+senate,2023-senate,53,SD/053/KD,Central,KD,Kaduna,7,81,3356,PDP,
+senate,2023-senate,54,SD/054/KD,South,KD,Kaduna,8,87,1957,PDP,
+senate,2023-senate,55,SD/055/KN,Central,KN,Kano,15,172,5691,NNPP,
+senate,2023-senate,56,SD/056/KN,North,KN,Kano,13,141,2364,APC,
+senate,2023-senate,57,SD/057/KN,South,KN,Kano,16,171,3167,NNPP,
+senate,2023-senate,58,SD/058/KT,North,KT,Katsina,12,128,1984,APC,
+senate,2023-senate,59,SD/059/KT,South,KT,Katsina,11,117,2409,APC,
+senate,2023-senate,60,SD/060/KT,Central,KT,Katsina,11,116,2259,APC,
+senate,2023-senate,61,SD/061/KB,North,KE,Kebbi,6,65,1224,PDP,
+senate,2023-senate,62,SD/062/KB,Central,KE,Kebbi,8,89,1473,PDP,
+senate,2023-senate,63,SD/063/KB,South,KE,Kebbi,7,71,1046,PDP,
+senate,2023-senate,64,SD/064/KG,Central,KO,Kogi,5,57,902,APC,
+senate,2023-senate,65,SD/065/KG,East,KO,Kogi,9,97,1714,APC,
+senate,2023-senate,66,SD/066/KG,West,KO,Kogi,7,85,892,APC,
+senate,2023-senate,67,SD/067/KW,North,KW,Kwara,5,58,776,APC,
+senate,2023-senate,68,SD/068/KW,Central,KW,Kwara,4,52,1204,APC,
+senate,2023-senate,69,SD/069/KW,South,KW,Kwara,7,83,907,APC,
+senate,2023-senate,70,SD/070/LA,Central,LA,Lagos,5,62,2738,APC,
+senate,2023-senate,71,SD/071/LA,East,LA,Lagos,5,71,2798,APC,
+senate,2023-senate,72,SD/072/LA,West,LA,Lagos,10,112,7789,APC,
+senate,2023-senate,73,SD/073/NW,North,NA,Nasarawa,3,35,583,SDP,
+senate,2023-senate,74,SD/074/NW,West,NA,Nasarawa,5,59,1432,SDP,
+senate,2023-senate,75,SD/075/NW,South,NA,Nasarawa,5,53,1241,PDP,
+senate,2023-senate,76,SD/076/NG,East,NI,Niger,9,99,2053,APC,
+senate,2023-senate,77,SD/077/NG,North,NI,Niger,81,87,1436,APC,
+senate,2023-senate,78,SD/078/NG,South,NI,Niger,8,88,1461,PDP,
+senate,2023-senate,79,SD/079/OG,Central,OG,Ogun,6,74,1930,APC,
+senate,2023-senate,80,SD/080/OG,East,OG,Ogun,9,103,1555,APC,
+senate,2023-senate,81,SD/081/OG,West,OG,Ogun,5,59,1557,APC,
+senate,2023-senate,82,SD/082/OD,North,ON,Ondo,6,72,1024,APC,
+senate,2023-senate,83,SD/083/OD,Central,ON,Ondo,6,65,1555,APC,
+senate,2023-senate,84,SD/084/OD,South,ON,Ondo,6,66,1354,APC,
+senate,2023-senate,85,SD/085/OS,Central,OS,Osun,10,116,1332,PDP,
+senate,2023-senate,86,SD/086/OS,East,OS,Osun,10,106,1286,PDP,
+senate,2023-senate,87,SD/087/OS,West,OS,Osun,10,110,1145,PDP,
+senate,2023-senate,88,SD/088/OY,Central,OY,Oyo,11,118,1981,APC,
+senate,2023-senate,89,SD/089/OY,North,OY,Oyo,13,134,1864,APC,
+senate,2023-senate,90,SD/090/OY,South,OY,Oyo,9,99,2545,APC,
+senate,2023-senate,91,SD/091/PL,South,PL,Plateau,6,68,1348,PDP,
+senate,2023-senate,92,SD/092/PL,Central,PL,Plateau,5,66,1375,APC,
+senate,2023-senate,93,SD/093/PL,North,PL,Plateau,6,73,2266,PDP,
+senate,2023-senate,94,SD/094/RV,East,RI,Rivers,8,117,3504,PDP,
+senate,2023-senate,95,SD/095/RV,South East,RI,Rivers,7,88,1629,PDP,
+senate,2023-senate,96,SD/096/RV,West,RI,Rivers,8,114,1733,PDP,
+senate,2023-senate,97,SD/097/SO,East,SO,Sokoto,8,87,1443,APC,
+senate,2023-senate,98,SD/098/SO,North,SO,Sokoto,8,84,1457,APC,
+senate,2023-senate,99,SD/099/SO,South,SO,Sokoto,7,73,1091,PDP,
+senate,2023-senate,100,SD/100/TR,South,TA,Taraba,5,52,1121,APC,
+senate,2023-senate,101,SD/101/TR,Central,TA,Taraba,5,54,1233,PDP,
+senate,2023-senate,102,SD/102/TR,North,TA,Taraba,6,62,1243,PDP,
+senate,2023-senate,103,SD/103/YB,East,YO,Yobe,7,74,992,APC,
+senate,2023-senate,104,SD/104/YB,North,YO,Yobe,6,60,892,APC,
+senate,2023-senate,105,SD/105/YB,South,YO,Yobe,4,44,939,APC,
+senate,2023-senate,106,SD/106/ZF,North,ZA,Zamfara,4,42,871,APC,
+senate,2023-senate,107,SD/107/ZF,Central,ZA,Zamfara,4,43,1437,PDP,
+senate,2023-senate,108,SD/108/ZF,West,ZA,Zamfara,6,62,1221,APC,
+senate,2023-senate,109,SD/109/FCT,FCT,FC,FCT,6,62,2822,LP,
+reps,2023-reps,1,FC/001/AB,Aba North /Aba South,AB,Abia,2,24,1021,LP,
+reps,2023-reps,2,FC/002/AB,Arochukwu /Ohafia,AB,Abia,2,22,465,LP,
+reps,2023-reps,3,FC/003/AB,Bende,AB,Abia,1,13,214,APC,
+reps,2023-reps,4,FC/004/AB,Ikwuano /Umuahia North /Umuahia South,AB,Abia,2,20,379,LP,
+reps,2023-reps,5,FC/005/AB,Isiala Ngwa North / South,AB,Abia,2,22,302,LP,
+reps,2023-reps,6,FC/006/AB,Isuikwuato / Umuneochi,AB,Abia,3,31,773,LP,
+reps,2023-reps,7,FC/007/AB,Obingwa /Osisioma / Ugwunagbo,AB,Abia,3,32,694,LP,
+reps,2023-reps,8,FC/008/AB,Ukwa East /Ukwa West,AB,Abia,2,20,214,PDP,
+reps,2023-reps,9,FC/009/AD,Demsa /Lamurde / Numan,AD,Adamawa,3,30,499,PDP,
+reps,2023-reps,10,FC/010/AD,Fufore /Song,AD,Adamawa,2,22,481,APC,
+reps,2023-reps,11,FC/011/AD,Ganye /Jada /Mayo Belwa /Toungo,AD,Adamawa,4,43,720,PDP,
+reps,2023-reps,12,FC/012/AD,Yola North /Yola South /Girei,AD,Adamawa,2,22,405,PDP,
+reps,2023-reps,13,FC/013/AD,Gombi /Hong,AD,Adamawa,2,20,274,PDP,
+reps,2023-reps,14,FC/014/AD,Guyuk /Shelleng,AD,Adamawa,2,26,383,PDP,
+reps,2023-reps,15,FC/015/AD,Madagali /Michika,AD,Adamawa,3,31,541,PDP,
+reps,2023-reps,16,FC/016/AD,Maiha /Mubi North / Mubi South,AD,Adamawa,3,32,801,PDP,
+reps,2023-reps,17,FC/017/AK,(10)   17   Abak /Etim Ekpo /Ika,AK,Akwa Ibom,3,31,376,APC,
+reps,2023-reps,18,FC/018/AK,Eket /Esit Eket /Ibeno /Onna,AK,Akwa Ibom,4,43,511,PDP,
+reps,2023-reps,19,FC/019/AK,Ikot Ekpene /Essien Udim /Obot Akara,AK,Akwa Ibom,3,31,377,APC,
+reps,2023-reps,20,FC/020/AK,Etinan /Nsit Ibom /Nsit Ubium,AK,Akwa Ibom,2,21,281,PDP,
+reps,2023-reps,21,FC/021/AK,Uyo /Uruan Insit Atai / Asutan /Ibesikpo,AK,Akwa Ibom,3,34,313,PDP,
+reps,2023-reps,22,FC/022/AK,Itu /Ibiono Ibom,AK,Akwa Ibom,3,32,495,PDP,
+reps,2023-reps,23,FC/023/AK,Ikono /Ini,AK,Akwa Ibom,2,21,339,YPP,
+reps,2023-reps,24,FC/024/AK,Ikot Abasi /Mkpat Enin /Eastern Obolo,AK,Akwa Ibom,5,50,451,PDP,
+reps,2023-reps,25,FC/025/AK,Mbo /Okobo /Oron / Udung Uko /Urue,AK,Akwa Ibom,2,24,355,PDP,
+reps,2023-reps,26,FC/026/AK,Ukanafun /Oruk Anam /,AK,Akwa Ibom,4,42,855,PDP,
+reps,2023-reps,27,FC/027/AN,Aguata,AN,Anambra,2,25,405,APGA,
+reps,2023-reps,28,FC/028/AN,(11)     28   Anambra East / Anambra West,AN,Anambra,2,32,634,LP,
+reps,2023-reps,29,FC/029/AN,Awka North /Awka South,AN,Anambra,1,16,383,LP,
+reps,2023-reps,30,FC/030/AN,Idemili North /Idemili South,AN,Anambra,1,20,342,LP,
+reps,2023-reps,31,FC/031/AN,Ihiala,AN,Anambra,2,26,398,APGA,
+reps,2023-reps,32,FC/032/AN,Njikoka /Dunukofia / Anaocha,AN,Anambra,2,34,540,LP,
+reps,2023-reps,33,FC/033/AN,Nnewi North /Nnewi South /Ekwusigo,AN,Anambra,3,51,716,APGA,
+reps,2023-reps,34,FC/034/AN,Ogbaru,AN,Anambra,2,32,710,LP,
+reps,2023-reps,35,FC/035/AN,Onitsha North / Onitsha South,AN,Anambra,1,12,323,LP,
+reps,2023-reps,36,FC/036/AN,Orumba North / Orumba South,AN,Anambra,3,42,808,YPP,
+reps,2023-reps,37,FC/037/AN,Oyi /Ayamelum,AN,Anambra,2,36,461,APGA,
+reps,2023-reps,38,FC/038/BA,(12)   38   Alkaleri /Kirfi,BA,Bauchi,2,21,454,APC,
+reps,2023-reps,39,FC/039/BA,Bauchi,BA,Bauchi,1,12,894,PDP,
+reps,2023-reps,40,FC/040/BA,Bogoro /Dass / Tafawa Balewa,BA,Bauchi,3,31,521,APC,
+reps,2023-reps,41,FC/041/BA,Darazo /Ganjuwa,BA,Bauchi,1,11,423,PDP,
+reps,2023-reps,42,FC/042/BA,Gamawa,BA,Bauchi,2,21,513,APC,
+reps,2023-reps,43,FC/043/BA,Shira /Giade,BA,Bauchi,2,22,523,PDP,
+reps,2023-reps,44,FC/044/BA,Jama'are Itas -Gadau,BA,Bauchi,2,20,419,APC,
+reps,2023-reps,45,FC/045/BA,Katagum,BA,Bauchi,1,11,261,PDP,
+reps,2023-reps,46,FC/046/BA,Misau /Dambam,BA,Bauchi,1,11,289,PDP,
+reps,2023-reps,47,FC/047/BA,Ningi /Warji,BA,Bauchi,2,20,368,PDP,
+reps,2023-reps,48,FC/048/BA,Toro,BA,Bauchi,2,21,394,APC,
+reps,2023-reps,49,FC/049/BA,Zaki,BA,Bauchi,1,11,364,PDP,
+reps,2023-reps,50,FC/050/BY,(5)   50   Brass /Nembe,BY,Bayelsa,2,23,400,PDP,
+reps,2023-reps,51,FC/051/BY,Ekeremor /Sagbama,BY,Bayelsa,1,13,301,PDP,
+reps,2023-reps,52,FC/052/BY,Yenagoa /Kolokuma Opokuma,BY,Bayelsa,2,26,502,PDP,
+reps,2023-reps,53,FC/053/BY,Ogbia,BY,Bayelsa,1,17,466,PDP,
+reps,2023-reps,54,FC/054/BY,Southern Jaw,BY,Bayelsa,2,26,575,PDP,
+reps,2023-reps,55,FC/055/BN,(11)    55   Ado /Ogbadigbo / Okpokwu,BE,Benue,3,35,446,APC,
+reps,2023-reps,56,FC/056/BN,Apa /Agatu,BE,Benue,2,21,236,PDP,
+reps,2023-reps,57,FC/057/BN,Buruku,BE,Benue,1,13,240,APC,
+reps,2023-reps,58,FC/058/BN,Gboko /Tarka,BE,Benue,2,27,571,APC,
+reps,2023-reps,59,FC/059/BN,Guma /Makurdi,BE,Benue,2,21,762,APC,
+reps,2023-reps,60,FC/060/BN,Gwer East /Gwer West,BE,Benue,2,29,312,APC,
+reps,2023-reps,61,FC/061/BN,Katsina Ala /Ukum / Logo,BE,Benue,3,35,752,APC,
+reps,2023-reps,62,FC/062/BN,Konshisha /Vandeikya,BE,Benue,2,23,426,APC,
+reps,2023-reps,63,FC/063/BN,Kwande /Ushongo,BE,Benue,2,26,552,APC,
+reps,2023-reps,64,FC/064/BN,Oju /Obi,BE,Benue,2,23,324,APC,
+reps,2023-reps,65,FC/065/BN,Otukpo /Ohimini,BE,Benue,2,23,367,APC,
+reps,2023-reps,66,FC/066/BO,(10)        66   Kukawa /Mobbar / Abadam /Guzamala,BO,Borno,2,25,475,APC,
+reps,2023-reps,67,FC/067/BO,Askira -Uba /Hawul,BO,Borno,3,36,559,PDP,
+reps,2023-reps,68,FC/068/BO,Bama /Ngala /Kala-Balge,BO,Borno,4,42,614,APC,
+reps,2023-reps,69,FC/069/BO,Biu /Kwaya Kusar / Shani /Bayo,BO,Borno,3,33,464,APC,
+reps,2023-reps,70,FC/070/BO,Damboa /Gwoza/ Chibok,BO,Borno,3,34,611,APC,
+reps,2023-reps,71,FC/071/BO,Dikwa /Mafa /Konduga,BO,Borno,3,38,329,APC,
+reps,2023-reps,72,FC/072/BO,Jere,BO,Borno,3,37,338,APC,
+reps,2023-reps,73,FC/073/BO,Kaga /Gubio / Magumeri,BO,Borno,4,40,409,APC,
+reps,2023-reps,74,FC/074/BO,Maiduguri Metropolitan,BO,Borno,1,12,386,APC,
+reps,2023-reps,75,FC/075/BO,Monguno /Nganzai / Marte,BO,Borno,1,15,886,APC,
+reps,2023-reps,76,FC/076/CR,(8)   76   Yakurr /Abi,CR,Cross River,2,23,315,APC,
+reps,2023-reps,77,FC/077/CR,Akamkpa /Biase,CR,Cross River,2,21,347,APC,
+reps,2023-reps,78,FC/078/CR,Calabar South / Akpabuyo /Bakassi,CR,Cross River,2,22,426,APC,
+reps,2023-reps,79,FC/079/CR,Obanliku /Obudu / Bekwara,CR,Cross River,3,32,516,PDP,
+reps,2023-reps,80,FC/080/CR,Ikom /Boki,CR,Cross River,2,23,494,APC,
+reps,2023-reps,81,FC/081/CR,Calabar Municipal / Odukpani,CR,Cross River,3,30,470,LP,
+reps,2023-reps,82,FC/082/CR,Obubra /Etung,CR,Cross River,2,21,309,APC,
+reps,2023-reps,83,FC/083/CR,Ogoja /Yala,CR,Cross River,2,21,404,PDP,
+reps,2023-reps,84,FC/084/DT,(10)   84    Aniocha North / Aniocha South /,DE,Delta,4,42,827,LP,
+reps,2023-reps,85,FC/085/DT,Bomadi /Patani,DE,Delta,2,20,291,PDP,
+reps,2023-reps,86,FC/086/DT,Burutu,DE,Delta,2,22,440,PDP,
+reps,2023-reps,87,FC/087/DT,Ethiope East /Ethiope West,DE,Delta,2,26,407,PDP,
+reps,2023-reps,88,FC/088/DT,Ika North East /Ika South,DE,Delta,2,24,521,PDP,
+reps,2023-reps,89,FC/089/DT,Isoko North /Isoko South,DE,Delta,3,30,529,PDP,
+reps,2023-reps,90,FC/090/DT,Ndokwa East /Ndokwa West /Ukwuani,DE,Delta,3,31,831,PDP,
+reps,2023-reps,91,FC/091/DT,Okpe /Sapele /Uvwie,DE,Delta,1,11,233,LP,
+reps,2023-reps,92,FC/092/DT,Ughelli North / Ughelli South /Udu,DE,Delta,3,32,909,APC,
+reps,2023-reps,93,FC/093/DT,Warri North /Warri South /Warri South West,DE,Delta,3,32,875,PDP,
+reps,2023-reps,94,FC/094/EB,(6)   94    Abakaliki /Izzi,EB,Ebonyi,2,28,533,APC,
+reps,2023-reps,95,FC/095/EB,Afikpo North /Afikpo South,EB,Ebonyi,2,28,596,PDP,
+reps,2023-reps,96,FC/096/EB,/Ohaukwu,EB,Ebonyi,2,27,450,APC,
+reps,2023-reps,97,FC/097/EB,Ezza North /Ishielu,EB,Ebonyi,2,31,497,APGA,
+reps,2023-reps,98,FC/098/EB,Ezza South /Ikwo,EB,Ebonyi,3,34,511,APC,
+reps,2023-reps,99,FC/099/EB,Ivo /Ohaozara /Onicha,EB,Ebonyi,2,23,359,LP,
+reps,2023-reps,100,FC/100/ED,(9)      100   Akoko Edo,ED,Edo,1,10,241,APC,
+reps,2023-reps,101,FC/101/ED,Egor /Ikpoba Okha,ED,Edo,3,30,412,LP,
+reps,2023-reps,102,FC/102/ED,Esan Central /Esan West /Igueben,ED,Edo,2,21,332,PDP,
+reps,2023-reps,103,FC/103/ED,Esan North East / Esan South East,ED,Edo,3,32,592,APC,
+reps,2023-reps,104,FC/104/ED,Etsako Central / Etsako East /Etsako West,ED,Edo,2,20,1077,APC,
+reps,2023-reps,105,FC/105/ED,Oredo,ED,Edo,1,12,619,LP,
+reps,2023-reps,106,FC/106/ED,Orhionmwon / Uhunmwode,ED,Edo,2,22,419,APC,
+reps,2023-reps,107,FC/107/ED,Ovia North East /Ovia South West,ED,Edo,2,23,487,APC,
+reps,2023-reps,108,FC/108/ED,Owan East /Owan West,ED,Edo,2,22,340,APC,
+reps,2023-reps,109,FC/109/EK,Ado Ekiti /Irepodun Ifelodun,EK,Ekiti,2,24,518,APC,
+reps,2023-reps,110,FC/110/EK,Ijero /Ekiti West / Efon,EK,Ekiti,3,32,427,APC,
+reps,2023-reps,111,FC/111/EK,South West / Ikere /Ise Orun,EK,Ekiti,3,32,321,APC,
+reps,2023-reps,112,FC/112/EK,Gbonyin /Ekiti East / Emure,EK,Ekiti,3,32,351,APC,
+reps,2023-reps,113,FC/113/EK,Ido /Osi /Moba / Ilejemeje,EK,Ekiti,3,33,448,APC,
+reps,2023-reps,114,FC/114/EK,Ikole /Oye,EK,Ekiti,2,24,380,APC,
+reps,2023-reps,115,FC/115/EN,(8)   115   Aninri /Awgu /Oji River,EN,Enugu,3,41,568,LP,
+reps,2023-reps,116,FC/116/EN,East /Isi -Uzo,EN,Enugu,2,23,545,LP,
+reps,2023-reps,117,FC/117/EN,North /Enugu South,EN,Enugu,2,26,714,LP,
+reps,2023-reps,118,FC/118/EN,Ezeagu /Udi,EN,Enugu,2,40,459,LP,
+reps,2023-reps,119,FC/119/EN,Igbo -Etiti /Uzo -Uwani,EN,Enugu,2,36,347,LP,
+reps,2023-reps,120,FC/120/EN,Igbo -Eze North / Udenu,EN,Enugu,2,30,531,LP,
+reps,2023-reps,121,FC/121/EN,Nkanu East /Nkanu West,EN,Enugu,2,28,371,PDP,
+reps,2023-reps,122,FC/122/EN,Nsukka /Igbo -Eze South,EN,Enugu,2,36,610,LP,
+reps,2023-reps,123,FC/123/GM,(6)   123   Akko,GO,Gombe,1,11,468,APC,
+reps,2023-reps,124,FC/124/GM,Balanga /Billiri,GO,Gombe,1,20,456,PDP,
+reps,2023-reps,125,FC/125/GM,Dukku /Nafada,GO,Gombe,2,21,391,PDP,
+reps,2023-reps,126,FC/126/GM,/Kwami / Funakaye,GO,Gombe,3,31,903,PDP,
+reps,2023-reps,127,FC/127/GM,Kaltungo /Shongom,GO,Gombe,2,20,369,PDP,
+reps,2023-reps,128,FC/128/GM,Yamaltu /Deba,GO,Gombe,2,11,401,PDP,
+reps,2023-reps,129,FC/129/IM,(10)      129   Abo -Mbaise /Ngor Okpala,IM,Imo,3,31,399,LP,
+reps,2023-reps,130,FC/130/IM,Ahiazu Mbaise / Ezinihitte,IM,Imo,3,33,447,PDP,
+reps,2023-reps,131,FC/131/IM,Ehime Mbano /Ihite Uboma /Obowo,IM,Imo,2,27,348,PDP,
+reps,2023-reps,132,FC/132/IM,Ideato North /Ideato South,IM,Imo,4,43,501,PDP,
+reps,2023-reps,133,FC/133/IM,Ikeduru /Mbaitoli,IM,Imo,3,33,541,APC,
+reps,2023-reps,134,FC/134/IM,Isiala Mbano /Okigwe / Onuimo,IM,Imo,3,34,517,APC,
+reps,2023-reps,135,FC/135/IM,Isu /Njaba /Nkwere / Nwangele,IM,Imo,2,23,405,PDP,
+reps,2023-reps,136,FC/136/IM,Oguta /Ohaji -Egbema / Oru West,IM,Imo,2,24,360,APC,
+reps,2023-reps,137,FC/137/IM,Oru East /Orsu /Orlu,IM,Imo,2,24,514,APC,
+reps,2023-reps,138,FC/138/IM,Owerri Municipal / Owerri North /Owerri West,IM,Imo,3,33,726,LP,
+reps,2023-reps,139,FC/139/JG,(11)   139   Babura /Garki,JI,Jigawa,2,22,386,APC,
+reps,2023-reps,140,FC/140/JG,Birnin Kudu /Buji,JI,Jigawa,2,21,439,PDP,
+reps,2023-reps,141,FC/141/JG,Birniwa /Guri /Kiri Kasama,JI,Jigawa,3,31,410,APC,
+reps,2023-reps,142,FC/142/JG,Dutse /Kiyawa,JI,Jigawa,2,22,455,PDP,
+reps,2023-reps,143,FC/143/JG,Gumel /Maigatari /Sule Tankarkar /Gagarawa,JI,Jigawa,1,11,298,APC,
+reps,2023-reps,144,FC/144/JG,Gwaram,JI,Jigawa,4,42,520,NNPP,
+reps,2023-reps,145,FC/145/JG,Kazaure /Roni /Gwiwa /Yankwashi,JI,Jigawa,3,32,514,APC,
+reps,2023-reps,146,FC/146/JG,Hadejia /Kafin Hausa /Auyo,JI,Jigawa,2,21,345,APC,
+reps,2023-reps,147,FC/147/JG,Jahun /Miga,JI,Jigawa,2,22,315,APC,
+reps,2023-reps,148,FC/148/JG,Mallam Madori / Kaugama,JI,Jigawa,4,43,443,APC,
+reps,2023-reps,149,FC/149/JG,Ringim /Taura,JI,Jigawa,2,20,397,APC,
+reps,2023-reps,150,FC/150/KD,(16)   150   Birnin Gwari /Giwa,KD,Kaduna,1,12,704,APC,
+reps,2023-reps,151,FC/151/KD,Chikun /Kajuru,KD,Kaduna,1,13,584,LP,
+reps,2023-reps,152,FC/152/KD,Igabi,KD,Kaduna,1,11,298,PDP,
+reps,2023-reps,153,FC/153/KD,Ikara /Kubau,KD,Kaduna,1,12,600,PDP,
+reps,2023-reps,154,FC/154/KD,Jaba /Zangon Kataf,KD,Kaduna,2,21,561,PDP,
+reps,2023-reps,155,FC/155/KD,Jema'a /Sanga,KD,Kaduna,2,20,401,PDP,
+reps,2023-reps,156,FC/156/KD,Kachia /Kagarko,KD,Kaduna,1,11,457,PDP,
+reps,2023-reps,157,FC/157/KD,North,KD,Kaduna,2,22,539,APC,
+reps,2023-reps,158,FC/158/KD,South,KD,Kaduna,2,22,731,PDP,
+reps,2023-reps,159,FC/159/KD,Kaura,KD,Kaduna,2,23,520,LP,
+reps,2023-reps,160,FC/160/KD,Kauru,KD,Kaduna,2,22,525,PDP,
+reps,2023-reps,161,FC/161/KD,Lere,KD,Kaduna,1,11,398,APC,
+reps,2023-reps,162,FC/162/KD,Makarfi /Kudan,KD,Kaduna,1,13,796,PDP,
+reps,2023-reps,163,FC/163/KD,Sabon Gari,KD,Kaduna,1,10,186,PDP,
+reps,2023-reps,164,FC/164/KD,Soba,KD,Kaduna,1,11,243,PDP,
+reps,2023-reps,165,FC/165/KD,Zaria,KD,Kaduna,2,21,469,APC,
+reps,2023-reps,166,FC/166/KN,(24)     166   Alabsu /Gaya /Ajingi,KN,Kano,3,30,566,NNPP,
+reps,2023-reps,167,FC/167/KN,Bebeji /Kiru,KN,Kano,2,20,337,NNPP,
+reps,2023-reps,168,FC/168/KN,Bichi,KN,Kano,2,29,407,APC,
+reps,2023-reps,169,FC/169/KN,Dala,KN,Kano,1,11,277,NNPP,
+reps,2023-reps,170,FC/170/KN,Dambatta /Makoda,KN,Kano,3,30,497,APC,
+reps,2023-reps,171,FC/171/KN,Dawakin Tofa /Tofa / Rimin Gado,KN,Kano,1,12,668,NNPP,
+reps,2023-reps,172,FC/172/KN,Dawakin -Kudu / Warawa,KN,Kano,1,10,450,NNPP,
+reps,2023-reps,173,FC/173/KN,Doguwa /Tudun Wada,KN,Kano,2,21,382,APC,
+reps,2023-reps,174,FC/174/KN,Fagge,KN,Kano,2,30,446,NNPP,
+reps,2023-reps,175,FC/175/KN,Gezawa /Gabasawa,KN,Kano,3,38,507,NNPP,
+reps,2023-reps,176,FC/176/KN,Gwale,KN,Kano,2,21,430,NNPP,
+reps,2023-reps,177,FC/177/KN,Gwarzo /Kabo,KN,Kano,2,22,393,APC,
+reps,2023-reps,178,FC/178/KN,Municipal,KN,Kano,2,20,398,NNPP,
+reps,2023-reps,179,FC/179/KN,Karaye /Rogo,KN,Kano,1,13,630,NNPP,
+reps,2023-reps,180,FC/180/KN,Kumbotso,KN,Kano,1,10,425,NNPP,
+reps,2023-reps,181,FC/181/KN,Kura /Madobi /Garun Mallam,KN,Kano,2,20,389,NNPP,
+reps,2023-reps,182,FC/182/KN,Minjibir /Ungogo,KN,Kano,1,11,410,NNPP,
+reps,2023-reps,183,FC/183/KN,Nassarawa,KN,Kano,3,32,539,NNPP,
+reps,2023-reps,184,FC/184/KN,Rano /Bunkure /Kibiya,KN,Kano,1,11,817,NNPP,
+reps,2023-reps,185,FC/185/KN,Shanono /Bagwai,KN,Kano,1,10,521,APC,
+reps,2023-reps,186,FC/186/KN,Sumaila /Takai,KN,Kano,2,21,472,NNPP,
+reps,2023-reps,187,FC/187/KN,Tarauni,KN,Kano,2,22,556,NNPP,
+reps,2023-reps,188,FC/188/KN,Tsanyawa /Kunchi,KN,Kano,2,20,299,APC,
+reps,2023-reps,189,FC/189/KN,Wudil /Garko,KN,Kano,2,20,406,NNPP,
+reps,2023-reps,190,FC/190/KT,(15)   190   Bakori /Danja,KT,Katsina,2,21,434,PDP,
+reps,2023-reps,191,FC/191/KT,Batagarawa /Charanchi /Rimi,KT,Katsina,3,30,505,APC,
+reps,2023-reps,192,FC/192/KT,Batsari /Safana / Danmusa,KT,Katsina,3,32,552,PDP,
+reps,2023-reps,193,FC/193/KT,Bindawa /Mani,KT,Katsina,2,22,376,APC,
+reps,2023-reps,194,FC/194/KT,Daura /Sandamu / Mai'adua,KT,Katsina,3,32,516,APC,
+reps,2023-reps,195,FC/195/KT,Dutsin -Ma /Kurfi,KT,Katsina,2,21,349,APC,
+reps,2023-reps,196,FC/196/KT,Faskari /Kankara / Sabuwa,KT,Katsina,3,31,612,PDP,
+reps,2023-reps,197,FC/197/KT,Funtua /Dandume,KT,Katsina,2,22,475,APC,
+reps,2023-reps,198,FC/198/KT,Ingawa /Kankia / Kusada,KT,Katsina,3,31,441,APC,
+reps,2023-reps,199,FC/199/KT,Jibia /Kaita,KT,Katsina,2,21,352,APC,
+reps,2023-reps,200,FC/200/KT,Katsina,KT,Katsina,2,22,595,PDP,
+reps,2023-reps,201,FC/201/KT,Malumfashi /Kafur,KT,Katsina,1,12,501,APC,
+reps,2023-reps,202,FC/202/KT,Mashi /Dutsi,KT,Katsina,2,21,304,PDP,
+reps,2023-reps,203,FC/203/KT,Matazu /Musawa,KT,Katsina,2,21,293,APC,
+reps,2023-reps,204,FC/204/KT,Zango /Baure,KT,Katsina,2,22,347,APC,
+reps,2023-reps,205,FC/205/KB,(8)   205   Aleiro /Gwandu /Jega,KE,Kebbi,2,22,404,PDP,
+reps,2023-reps,206,FC/206/KB,Arewa /Dandi,KE,Kebbi,2,21,387,APC,
+reps,2023-reps,207,FC/207/KB,Argungu /Augie,KE,Kebbi,2,22,433,PDP,
+reps,2023-reps,208,FC/208/KB,Bagudo /Suru,KE,Kebbi,3,35,630,APC,
+reps,2023-reps,209,FC/209/KB,Bunza /Birnin Kebbi / Kalgo,KE,Kebbi,3,31,480,PDP,
+reps,2023-reps,210,FC/210/KB,Fakai /Sakaba / Wasagu Danko /Zuru,KE,Kebbi,2,23,363,APC,
+reps,2023-reps,211,FC/211/KB,Koko Besse /Maiyama,KE,Kebbi,4,41,636,PDP,
+reps,2023-reps,212,FC/212/KB,Ngaski /Shanga /Yauri,KE,Kebbi,3,30,410,APC,
+reps,2023-reps,213,FC/213/KG,(9)    213   Adavi /Okehi,KO,Kogi,2,22,405,APC,
+reps,2023-reps,214,FC/214/KG,Ajaokuta,KO,Kogi,3,34,614,APC,
+reps,2023-reps,215,FC/215/KG,Okene /Ogori -Magongo,KO,Kogi,2,22,482,APC,
+reps,2023-reps,216,FC/216/KG,Ankpa /Omala / Olamaboro,KO,Kogi,4,41,618,APC,
+reps,2023-reps,217,FC/217/KG,Bassa /Dekina,KO,Kogi,2,30,277,APC,
+reps,2023-reps,218,FC/218/KG,Idah /Igalamela Odulu /Ibaji /Ofu,KO,Kogi,1,14,146,APC,
+reps,2023-reps,219,FC/219/KG,Ijumu /Kabba Bunu,KO,Kogi,2,21,378,ADC,
+reps,2023-reps,220,FC/220/KG,Lokoja /Kogi Koton Karfe,KO,Kogi,2,21,351,APC,
+reps,2023-reps,221,FC/221/KG,Yagba East /Yagbawest /Mopa Muro,KO,Kogi,3,34,237,ADC,
+reps,2023-reps,222,FC/222/KW,Baruten /Kaiama,KW,Kwara,2,21,354,APC,
+reps,2023-reps,223,FC/223/KW,Edu /Patigi /Moro,KW,Kwara,3,37,422,APC,
+reps,2023-reps,224,FC/224/KW,Ekiti /Isin /Irepodun / Oke -Ero,KW,Kwara,4,42,390,APC,
+reps,2023-reps,225,FC/225/KW,Ifelodun /Offa /Oyun,KW,Kwara,2,23,595,APC,
+reps,2023-reps,226,FC/226/KW,Ilorin East /Ilorin South,KW,Kwara,2,29,609,APC,
+reps,2023-reps,227,FC/227/KW,Ilorin West /Asa,KW,Kwara,3,41,517,APC,
+reps,2023-reps,228,FC/228/LA,(24)   228   Eti -Osa,LA,Lagos,1,11,696,LP,
+reps,2023-reps,229,FC/229/LA,Apapa,LA,Lagos,1,11,761,APC,
+reps,2023-reps,230,FC/230/LA,Islandi,LA,Lagos,1,11,1545,APC,
+reps,2023-reps,231,FC/231/LA,Island II,LA,Lagos,,,412,APC,
+reps,2023-reps,232,FC/232/LA,Mainland,LA,Lagos,1,19,374,APC,
+reps,2023-reps,233,FC/233/LA,Surulere I,LA,Lagos,1,11,227,APC,
+reps,2023-reps,234,FC/234/LA,Surulere II,LA,Lagos,,,725,APC,
+reps,2023-reps,235,FC/235/LA,Epe,LA,Lagos,1,10,374,APC,
+reps,2023-reps,236,FC/236/LA,Ibeju Lekki,LA,Lagos,1,10,667,APC,
+reps,2023-reps,237,FC/237/LA,Ikorodu,LA,Lagos,1,19,682,APC,
+reps,2023-reps,238,FC/238/LA,Shomolu,LA,Lagos,1,10,207,APC,
+reps,2023-reps,239,FC/239/LA,Kosofe,LA,Lagos,1,9,182,APC,
+reps,2023-reps,240,FC/240/LA,Agege,LA,Lagos,1,11,493,APC,
+reps,2023-reps,241,FC/241/LA,Ifako -Ijaiye,LA,Lagos,1,8,303,APC,
+reps,2023-reps,242,FC/242/LA,Alimosho,LA,Lagos,1,6,562,APC,
+reps,2023-reps,243,FC/243/LA,Badagry,LA,Lagos,1,11,582,APC,
+reps,2023-reps,244,FC/244/LA,Ikeja,LA,Lagos,1,11,637,APC,
+reps,2023-reps,245,FC/245/LA,Mushini,LA,Lagos,1,11,734,APC,
+reps,2023-reps,246,FC/246/LA,Mushin II,LA,Lagos,,,365,APC,
+reps,2023-reps,247,FC/247/LA,Ojo,LA,Lagos,1,6,525,LP,
+reps,2023-reps,248,FC/248/LA,Amuwo -Odofin,LA,Lagos,1,12,616,LP,
+reps,2023-reps,249,FC/249/LA,Ajeromi /Ifelodun,LA,Lagos,1,10,899,APC,
+reps,2023-reps,250,FC/250/LA,Oshodi /Isolo I,LA,Lagos,1,6,258,LP,
+reps,2023-reps,251,FC/251/LA,Oshodi /Isolo II,LA,Lagos,,,499,LP,
+reps,2023-reps,252,FC/252/NW,(5)   252   Akwanga /Nassarawa Eggon /Wamba,NA,Nasarawa,3,35,583,APC,
+reps,2023-reps,253,FC/253/NW,Awe /Doma /Keana,NA,Nasarawa,3,30,493,APC,
+reps,2023-reps,254,FC/254/NW,Keffi /Karu /Kokona,NA,Nasarawa,3,32,925,SDP,
+reps,2023-reps,255,FC/255/NW,Lafia /Obi,NA,Nasarawa,2,23,748,SDP,
+reps,2023-reps,256,FC/256/NW,Nassarawa /Toto,NA,Nasarawa,2,27,507,APC,
+reps,2023-reps,257,FC/257/NG,(10)   257   Agaie /Lapai,NI,Niger,2,21,357,APC,
+reps,2023-reps,258,FC/258/NG,Agwara /Borgu,NI,Niger,2,20,278,APC,
+reps,2023-reps,259,FC/259/NG,Bida /Gbako /Katcha,NI,Niger,3,34,575,APC,
+reps,2023-reps,260,FC/260/NG,Booso /Paikoro,NI,Niger,2,21,481,APC,
+reps,2023-reps,261,FC/261/NG,Chanchaga,NI,Niger,1,11,379,PDP,
+reps,2023-reps,262,FC/262/NG,Gurara /Suleja /Tafa,NI,Niger,3,30,598,PDP,
+reps,2023-reps,263,FC/263/NG,Kontagora /Wushishi / Mariga /Mashegu,NI,Niger,3,33,529,APC,
+reps,2023-reps,264,FC/264/NG,Lavun /Mokwa /Edati,NI,Niger,2,22,367,PDP,
+reps,2023-reps,265,FC/265/NG,Magama /Rijau,NI,Niger,4,45,791,APC,
+reps,2023-reps,266,FC/266/NG,Shiroro /Rafi /Munya,NI,Niger,3,37,595,APC,
+reps,2023-reps,267,FC/267/OG,(9)     267   Abeokuta North Obafemi Owode /Odeda,OG,Ogun,3,38,849,APC,
+reps,2023-reps,268,FC/268/OG,Abeokuta South,OG,Ogun,1,15,445,APC,
+reps,2023-reps,269,FC/269/OG,Ado -Odo Ota,OG,Ogun,1,16,655,APC,
+reps,2023-reps,270,FC/270/OG,Egbado North /Imeko Afon,OG,Ogun,2,21,383,APC,
+reps,2023-reps,271,FC/271/OG,Egbado South /Ipokia,OG,Ogun,2,22,519,APC,
+reps,2023-reps,272,FC/272/OG,Ifo \Ewekoro,OG,Ogun,2,21,636,APC,
+reps,2023-reps,273,FC/273/OG,Ijebu North /Ijebu East /Ogun Waterside,OG,Ogun,3,32,548,APC,
+reps,2023-reps,274,FC/274/OG,Ijebu Ode /Odogbolu /Ijebu North East,OG,Ogun,3,36,450,APC,
+reps,2023-reps,275,FC/275/OG,Ikenne /Shagamu /Remo North,OG,Ogun,3,35,557,APC,
+reps,2023-reps,276,FC/276/OD,(9)     276   Akoko North East / Akoko North West,ON,Ondo,2,23,329,APC,
+reps,2023-reps,277,FC/277/OD,Akoko South East / Akoko South West,ON,Ondo,2,26,279,APC,
+reps,2023-reps,278,FC/278/OD,Akure North /Akure South,ON,Ondo,2,23,753,APC,
+reps,2023-reps,279,FC/279/OD,Ese -Odo /Ilaje,ON,Ondo,2,20,335,APC,
+reps,2023-reps,280,FC/280/OD,Idanre /Ifedore,ON,Ondo,2,21,495,PDP,
+reps,2023-reps,281,FC/281/OD,Ileoluji /Okeigbo /Odigbo,ON,Ondo,2,23,424,APC,
+reps,2023-reps,282,FC/282/OD,Irele /Okitipupa,ON,Ondo,2,22,435,APC,
+reps,2023-reps,283,FC/283/OD,East /Ondo West,ON,Ondo,2,22,467,APC,
+reps,2023-reps,284,FC/284/OD,Owo /Ose,ON,Ondo,2,23,416,APC,
+reps,2023-reps,285,FC/285/OS,(9)   285   Atakumosa East /Atakumosa West / Ilesa East /,OS,Osun,4,47,693,PDP,
+reps,2023-reps,286,FC/286/OS,Ayedaade /Irewole / Isokan,OS,Osun,3,38,378,PDP,
+reps,2023-reps,287,FC/287/OS,Ayedire /Iwo /Ola Oluwa,OS,Osun,3,31,261,PDP,
+reps,2023-reps,288,FC/288/OS,Boluwaduro /Ifedayo /Ila,OS,Osun,4,42,406,PDP,
+reps,2023-reps,289,FC/289/OS,Ede North /Ede South /Egbedore /Ejigbo,OS,Osun,2,22,223,PDP,
+reps,2023-reps,290,FC/290/OS,Ife Central /Ife North /Ife South /Ife East,OS,Osun,4,42,657,PDP,
+reps,2023-reps,291,FC/291/OS,Irepodun /Orolu /Olorunda /Osogbo,OS,Osun,3,35,299,PDP,
+reps,2023-reps,292,FC/292/OS,Obokun /Oriade,OS,Osun,4,33,383,PDP,
+reps,2023-reps,293,FC/293/OS,Odo -Otin /Ifelodun / Boripe,OS,Osun,3,42,463,PDP,
+reps,2023-reps,294,FC/294/OY,(14)   294   Afijio /Oyo East /Oyo West /Atiba,OY,Oyo,4,40,551,APC,
+reps,2023-reps,295,FC/295/OY,Akinyele /Lagelu,OY,Oyo,2,26,503,APC,
+reps,2023-reps,296,FC/296/OY,Egbeda /Ona -Ara,OY,Oyo,2,22,444,APC,
+reps,2023-reps,297,FC/297/OY,Ibadan North,OY,Oyo,2,20,288,APC,
+reps,2023-reps,298,FC/298/OY,Ibadan North East / Ibadan South East,OY,Oyo,2,20,344,PDP,
+reps,2023-reps,299,FC/299/OY,Ibadan South West / Ibadan North West,OY,Oyo,3,32,485,PDP,
+reps,2023-reps,300,FC/300/OY,Ibarapa Central / Ibarapa North,OY,Oyo,3,30,262,PDP,
+reps,2023-reps,301,FC/301/OY,Ibarapa East /Ido,OY,Oyo,4,42,578,APC,
+reps,2023-reps,302,FC/302/OY,Irepo /Orelope / Olorunsogo,OY,Oyo,3,30,539,APC,
+reps,2023-reps,303,FC/303/OY,Iseyin /Itesiwaju /Kajola /Iwajowa,OY,Oyo,2,20,254,PDP,
+reps,2023-reps,304,FC/304/OY,Ogbomoso North / Ogbomosho South / Orire,OY,Oyo,1,10,229,APC,
+reps,2023-reps,305,FC/305/OY,Ogo -Oluwa /Surulere,OY,Oyo,2,24,688,PDP,
+reps,2023-reps,306,FC/306/OY,Oluyole,OY,Oyo,2,23,713,APC,
+reps,2023-reps,307,FC/307/OY,Saki East /Saki West / Atisbo,OY,Oyo,1,12,512,APC,
+reps,2023-reps,308,FC/308/PL,(8)   308   Barkin Ladi /Riyom,PL,Plateau,2,30,1209,PDP,
+reps,2023-reps,309,FC/309/PL,Bokkos /Mangu,PL,Plateau,2,22,675,APC,
+reps,2023-reps,310,FC/310/PL,Jos North /Bassa,PL,Plateau,2,21,382,PDP,
+reps,2023-reps,311,FC/311/PL,Jos South /Jos East,PL,Plateau,2,30,645,PDP,
+reps,2023-reps,312,FC/312/PL,Kanke /Pankshin /Kanam,PL,Plateau,3,36,730,APC,
+reps,2023-reps,313,FC/313/PL,Langtang North / Langtang South,PL,Plateau,1,12,277,PDP,
+reps,2023-reps,314,FC/314/PL,Mikang /Qua -Anpan /Shedam,PL,Plateau,2,24,352,PDP,
+reps,2023-reps,315,FC/315/PL,Wase,PL,Plateau,3,32,719,APC,
+reps,2023-reps,316,FC/316/RV,(13)   316   Abua Odual /Ahoada East,RI,Rivers,2,26,390,PDP,
+reps,2023-reps,317,FC/317/RV,Ahoada West /Ogba Egbema Ndoni,RI,Rivers,2,29,506,PDP,
+reps,2023-reps,318,FC/318/RV,Akuku Toru /Asari Toru,RI,Rivers,2,29,342,PDP,
+reps,2023-reps,319,FC/319/RV,Andoni /Opobo Nkoro,RI,Rivers,2,30,495,PDP,
+reps,2023-reps,320,FC/320/RV,Bonny /Degema,RI,Rivers,2,24,301,PDP,
+reps,2023-reps,321,FC/321/RV,Eleme /Oyigbo /Tai,RI,Rivers,2,22,419,PDP,
+reps,2023-reps,322,FC/322/RV,Emohua /Ikwerre,RI,Rivers,3,30,591,PDP,
+reps,2023-reps,323,FC/323/RV,Etche /Omuma,RI,Rivers,2,36,619,PDP,
+reps,2023-reps,324,FC/324/RV,Gokana /Khana,RI,Rivers,2,27,593,PDP,
+reps,2023-reps,325,FC/325/RV,Obio Akpor,RI,Rivers,2,29,438,PDP,
+reps,2023-reps,326,FC/326/RV,Okrika /Ogu Bolo,RI,Rivers,1,17,1211,APC,
+reps,2023-reps,327,FC/327/RV,Port Harcourt I,RI,Rivers,1,10,584,LP,
+reps,2023-reps,328,FC/328/RV,Port Harcourt II,RI,Rivers,,,377,PDP,
+reps,2023-reps,329,FC/329/SO,(11)   329   Binji /Silame,SO,Sokoto,2,21,378,APC,
+reps,2023-reps,330,FC/330/SO,Bodinga /Dange Shuni /Tureta,SO,Sokoto,2,22,411,APC,
+reps,2023-reps,331,FC/331/SO,Goronyo /Gada,SO,Sokoto,2,22,258,PDP,
+reps,2023-reps,332,FC/332/SO,Tangaza /Gudu,SO,Sokoto,2,22,396,APC,
+reps,2023-reps,333,FC/333/SO,Illela /Gwadabawa,SO,Sokoto,2,20,229,APC,
+reps,2023-reps,334,FC/334/SO,Isa /Sabon Birnin,SO,Sokoto,2,20,186,APC,
+reps,2023-reps,335,FC/335/SO,Kebbe /Tambuwal,SO,Sokoto,2,22,412,PDP,
+reps,2023-reps,336,FC/336/SO,Kware /Wamakko,SO,Sokoto,2,22,630,APC,
+reps,2023-reps,337,FC/337/SO,Wurno Rabah,SO,Sokoto,3,32,457,APC,
+reps,2023-reps,338,FC/338/SO,Yabo /Shagari,SO,Sokoto,2,20,262,PDP,
+reps,2023-reps,339,FC/339/SO,North / Sokoto South,SO,Sokoto,2,21,372,APC,
+reps,2023-reps,340,FC/340/TR,(6)    340   Karim Lamido Lau /Ardo-Kola,TA,Taraba,2,23,596,PDP,
+reps,2023-reps,341,FC/341/TR,Bali /Gassol,TA,Taraba,3,32,602,PDP,
+reps,2023-reps,342,FC/342/TR,Takum /Donga /Ussa,TA,Taraba,3,31,637,APC,
+reps,2023-reps,343,FC/343/TR,Sardauna /Kurmi /Gashaka,TA,Taraba,2,20,519,APC,
+reps,2023-reps,344,FC/344/TR,Ibi /Wukari,TA,Taraba,3,31,658,APC,
+reps,2023-reps,345,FC/345/TR,Jalingo /Yorro /Zing,TA,Taraba,3,31,585,PDP,
+reps,2023-reps,346,FC/346/YB,(6)      346   Bade /Jakusko,YO,Yobe,2,20,371,PDP,
+reps,2023-reps,347,FC/347/YB,Bursari /Geidam / Yunusari,YO,Yobe,3,31,416,APC,
+reps,2023-reps,348,FC/348/YB,Damaturu /Gujba / Gulani /Tarmuwa,YO,Yobe,4,43,576,APC,
+reps,2023-reps,349,FC/349/YB,Fika /Fune,YO,Yobe,2,23,442,PDP,
+reps,2023-reps,350,FC/350/YB,Machina /Nguru / Yusufari /Karasuwa,YO,Yobe,4,40,521,APC,
+reps,2023-reps,351,FC/351/YB,Nangere /Potiskum,YO,Yobe,2,21,497,APC,
+reps,2023-reps,352,FC/352/ZF,(7)   352   Anka /Talata Mafara,ZA,Zamfara,2,21,448,APC,
+reps,2023-reps,353,FC/353/ZF,Bakura /Maradun,ZA,Zamfara,2,21,423,APC,
+reps,2023-reps,354,FC/354/ZF,Bungudu /Maru,ZA,Zamfara,2,22,865,APC,
+reps,2023-reps,355,FC/355/ZF,Gummi /Bukkuyum,ZA,Zamfara,2,21,572,PDP,
+reps,2023-reps,356,FC/356/ZF,Gusau /Tsafe,ZA,Zamfara,2,21,423,PDP,
+reps,2023-reps,357,FC/357/ZF,Kaura -Namoda /Birnin Magaji,ZA,Zamfara,2,20,384,APC,
+reps,2023-reps,358,FC/358/ZF,Shinkafi /Zurmi,ZA,Zamfara,2,21,414,PDP,
+reps,2023-reps,359,FC/359/FCT,(2)       359   Abaji/Gwagwalada/Kwali/Kuje,FC,FCT,4,40,1220,LP,
+reps,2023-reps,360,FC/360/FCT,Municipal/Bwari,FC,FCT,2,22,1602,LP,
+stha,2023-stha,1,SC/01/AB,Aba North,AB,Abia,,,,LP,Nwagwu Destiny Akarka
+stha,2023-stha,2,SC/02/AB,Aba South,AB,Abia,,,,LP,Emeruwa Emmanuel Ihuoma
+stha,2023-stha,3,SC/03/AB,Aba Central,AB,Abia,,,,LP,Ucheonye S. Akachukwu
+stha,2023-stha,4,SC/04/AB,Arochukwu,AB,Abia,,,,LP,Okoro Uchenna Kalu
+stha,2023-stha,5,SC/05/AB,Bende North,AB,Abia,,,,PDP,Ibekwe Chimdi Nnamdi
+stha,2023-stha,6,SC/06/AB,Bende South,AB,Abia,,,,PDP,Ndubuisi Emmanuel Chinedu
+stha,2023-stha,7,SC/07/AB,Ikwuano,AB,Abia,,,,LP,Isienyi Boniface Ndionyenma
+stha,2023-stha,8,SC/08/AB,Isiala Ngwa North,AB,Abia,,,,PDP,Iheonunekwu U. Collins
+stha,2023-stha,9,SC/09/AB,Isiala Ngwa South,AB,Abia,,,,PDP,Dennis Rowland Chinwendu
+stha,2023-stha,10,SC/10/AB,Isuikwuato,AB,Abia,,,,PDP,Nweke-Johnson Lucky Udoka
+stha,2023-stha,11,SC/11/AB,Obingwa East,AB,Abia,,,,PDP,Akpulonu Chijioke Solomon
+stha,2023-stha,12,SC/12/AB,Obingwa West,AB,Abia,,,,PDP,Erondu Uchenna Erondu Jnr.
+stha,2023-stha,13,SC/13/AB,Ohafia North,AB,Abia,,,,PDP,Obasi Egwuronu Ochuru
+stha,2023-stha,14,SC/14/AB,Ohafia South,AB,Abia,,,,LP,Nwoke Kalu Mba
+stha,2023-stha,15,SC/15/AB,Osisioma North,AB,Abia,,,,YPP,Nwogu Iheanacho
+stha,2023-stha,16,SC/16/AB,Osisioma South,AB,Abia,,,,YPP,Ahuama Fyne Onyekachi
+stha,2023-stha,17,SC/18/AB,Ugwunaagbo,AB,Abia,,,,PDP,Uruakpa Chijioke
+stha,2023-stha,18,SC/19/AB,Ukwa East,AB,Abia,,,,PDP,Obianyi Lewis Chinemerem
+stha,2023-stha,19,SC/20/AB,Ukwa West,AB,Abia,,,,PDP,Adiele Godwin Anyamagiobi
+stha,2023-stha,20,SC/21/AB,Umuahia East,AB,Abia,,,,LP,Okezie Augustine
+stha,2023-stha,21,SC/22/AB,Umuahia North,AB,Abia,,,,LP,Akaliro K. Anderson
+stha,2023-stha,22,SC/23/AB,Umuahia Central,AB,Abia,,,,LP,Anthony Chinasa Abiola
+stha,2023-stha,23,SC/24/AB,Umuahia South,AB,Abia,,,,,Obioma Emeka
+stha,2023-stha,24,SC/17/AB,Umunneochi,AB,Abia,,,,LP,Ume Mathias Nwankwo
+stha,2023-stha,25,SC/25/AD,Yola South,AD,Adamawa,,,,APC,Minjinyawa Kabiru
+stha,2023-stha,26,SC/26/AD,Yola North,AD,Adamawa,,,,APC,Umar Suleiman Alkali
+stha,2023-stha,27,SC/27/AD,Mubi North,AD,Adamawa,,,,APC,Paul Samuel
+stha,2023-stha,28,SC/28/AD,Mubi South,AD,Adamawa,,,,APC,Sahabo Yohanna Jauro
+stha,2023-stha,29,SC/29/AD,Demsa,AD,Adamawa,,,,PDP,Mamuno Raymond Kate
+stha,2023-stha,30,SC/30/AD,Numan,AD,Adamawa,,,,PDP,Mackondo P. Mikelson
+stha,2023-stha,31,SC/31/AD,Lamurde,AD,Adamawa,,,,PDP,Bauna Pawikai Myandasa
+stha,2023-stha,32,SC/32/AD,Song,AD,Adamawa,,,,PDP,Kefas Emmanuel
+stha,2023-stha,33,SC/33/AD,Girei,AD,Adamawa,,,,PDP,Abubakar Abdullahi
+stha,2023-stha,34,SC/34/AD,Ganye,AD,Adamawa,,,,APC,Musa Abdulmalik Jauro
+stha,2023-stha,35,SC/35/AD,Toungo,AD,Adamawa,,,,PDP,Calvin Kefas
+stha,2023-stha,36,SC/36/AD,Koma/Leko (Jada I),AD,Adamawa,,,,PDP,Geofrey Bulus
+stha,2023-stha,37,SC/37/AD,Jada/Mbulo (Jada Ii),AD,Adamawa,,,,PDP,Buba Mohammed Jidjiwa
+stha,2023-stha,38,SC/38/AD,Fufore/Gurin (Fufore I),AD,Adamawa,,,,APC,Umar Bobbo Ismaila
+stha,2023-stha,39,SC/39/AD,Verre (Fufore Ii),AD,Adamawa,,,,PDP,Hammajabu Japhet
+stha,2023-stha,40,SC/40/AD,Uba/Gaya (Hong I),AD,Adamawa,,,,PDP,Adum Hyellapaburi John
+stha,2023-stha,41,SC/41/AD,Hong (Hong Ii),AD,Adamawa,,,,PDP,Wesley Bathiya
+stha,2023-stha,42,SC/42/AD,Nassarawo/Binyeri (Mayo,AD,Adamawa,,,,APC,Njidda B. Mohammed
+stha,2023-stha,43,SC/43/AD,Mayo-Belwa (Mayo Belwa Ii),AD,Adamawa,,,,APC,Musa Ibrahim
+stha,2023-stha,44,SC/44/AD,Gombi,AD,Adamawa,,,,PDP,Kefas Japhet
+stha,2023-stha,45,SC/45/AD,Shelleng,AD,Adamawa,,,,PDP,Bulus Kantomon Napthali
+stha,2023-stha,46,SC/46/AD,Madagali,AD,Adamawa,,,,PDP,Jilantikiri Haruna
+stha,2023-stha,47,SC/47/AD,Maiha,AD,Adamawa,,,,PDP,Jingi Belel Ahmed
+stha,2023-stha,48,SC/48/AD,Michika,AD,Adamawa,,,,PDP,Yerima Moses
+stha,2023-stha,49,SC/49/AD,Guyuk,AD,Adamawa,,,,APC,Peter Sunday
+stha,2023-stha,50,SC/50/AK,Abak,AK,Akwa Ibom,,,,PDP,Otong Udeme James
+stha,2023-stha,51,SC/51/AK,Eket,AK,Akwa Ibom,,,,PDP,Akata Nsidibe Inyang
+stha,2023-stha,52,SC/52/AK,Essien Udim,AK,Akwa Ibom,,,,PDP,Akpabio Ukpong Udo
+stha,2023-stha,53,SC/53/AK,Esit Eket/Ibeno,AK,Akwa Ibom,,,,PDP,Udo Udobia Friday
+stha,2023-stha,54,SC/54/AK,Etim Ekpo/Ika,AK,Akwa Ibom,,,,PDP,Idung Mfon Frank
+stha,2023-stha,55,SC/55/AK,Etinan,AK,Akwa Ibom,,,,PDP,Ekpo-Ufot Uduak –Obong Abel
+stha,2023-stha,56,SC/56/AK,Ibesikpo Asutan,AK,Akwa Ibom,,,,PDP,Attah Ubong Essien
+stha,2023-stha,57,SC/57/AK,Ibiono Ibom,AK,Akwa Ibom,,,,YPP,Essien Moses Edet
+stha,2023-stha,58,SC/58/AK,Ikono,AK,Akwa Ibom,,,,YPP,Udo Asuquo Nana
+stha,2023-stha,59,SC/59/AK,Ikot Abasi/ Eastern Obolo,AK,Akwa Ibom,,,,PDP,Ukpatu Uselina Isotuk
+stha,2023-stha,60,SC/60/AK,Ikot Ekpene/Obot Akara,AK,Akwa Ibom,,,,PDP,Uto Jerry Anson Uduak
+stha,2023-stha,61,SC/61/AK,Ini,AK,Akwa Ibom,,,,PDP,Udoide Lawrence Ofonmbuk
+stha,2023-stha,62,SC/62/AK,Itu,AK,Akwa Ibom,,,,PDP,Edidem Kufreabasi
+stha,2023-stha,63,SC/63/AK,Mbo,AK,Akwa Ibom,,,,PDP,Johnson Effiong Etim
+stha,2023-stha,64,SC/64/AK,Mkpat Enin,AK,Akwa Ibom,,,,PDP,Imoh-Itah Uwem Peter
+stha,2023-stha,65,SC/65/AK,Nsit Atai,AK,Akwa Ibom,,,,PDP,Attah Prince-Aniefiok Okon
+stha,2023-stha,66,SC/66/AK,Nsit Ibom,AK,Akwa Ibom,,,,PDP,Akpan Eric Effiong
+stha,2023-stha,67,SC/67/AK,Nsit Ubium,AK,Akwa Ibom,,,,PDP,Bob Otobong Effiong
+stha,2023-stha,68,SC/68/AK,Okobo,AK,Akwa Ibom,,,,PDP,Bassey Bassey Pius
+stha,2023-stha,69,SC/69/AK,Onna,AK,Akwa Ibom,,,,PDP,Jonny Sunday Udofot
+stha,2023-stha,70,SC/70/AK,Oron/Udung Uko,AK,Akwa Ibom,,,,PDP,Onofiok Kenim Victor
+stha,2023-stha,71,SC/71/AK,Oruk Anam,AK,Akwa Ibom,,,,PDP,Idiong Samson Bernard
+stha,2023-stha,72,SC/72/AK,Ukanafun,AK,Akwa Ibom,,,,PDP,Udom Emem Etokabasi
+stha,2023-stha,73,SC/73/AK,Uruan,AK,Akwa Ibom,,,,PDP,Etim Itorobong Francis
+stha,2023-stha,74,SC/74/AK,Urue Offong/Oruko,AK,Akwa Ibom,,,,PDP,Selong Precious Akamba
+stha,2023-stha,75,SC/75/AK,Uyo,AK,Akwa Ibom,,,,PDP,Asuquo U. Dianabasi
+stha,2023-stha,76,SC/76/AN,Aguata I,AN,Anambra,,,,APGA,Okpalaeke Emmanuel Anayo
+stha,2023-stha,77,SC/77/AN,Aguata Ii,AN,Anambra,,,,APGA,Muobike Anthony Ifedili
+stha,2023-stha,78,SC/78/AN,East,AN,Anambra,,,,APGA,Nweke Obi Callistus
+stha,2023-stha,79,SC/79/AN,West,AN,Anambra,,,,APGA,Udoba Patrick Obalum
+stha,2023-stha,80,SC/80/AN,Anaocha I,AN,Anambra,,,,LP,Ogbuefi Felicitas
+stha,2023-stha,81,SC/81/AN,Anaocha Ii,AN,Anambra,,,,APGA,Okechukwu Ejike Aloy
+stha,2023-stha,82,SC/82/AN,Awka North,AN,Anambra,,,,APGA,Ikwunne Chimezie John Mark
+stha,2023-stha,83,SC/83/AN,Awka South I,AN,Anambra,,,,LP,Mbachu Nigeria Henry
+stha,2023-stha,84,SC/84/AN,Awka South Ii,AN,Anambra,,,,APGA,Okoye Chukwuma Pius
+stha,2023-stha,85,SC/85/AN,Idemili South,AN,Anambra,,,,APGA,Igwe Chukwuebuka Nnadozie
+stha,2023-stha,86,SC/86/AN,Idemili North,AN,Anambra,,,,LP,Udemezue K. A. Tochukwu
+stha,2023-stha,87,SC/87/AN,Ihiala I,AN,Anambra,,,,APGA,Ngobili Jude Chimezie
+stha,2023-stha,88,SC/88/AN,Ihiala Ii,AN,Anambra,,,,APGA,Iloh Chukwuebuka Golden L.
+stha,2023-stha,89,SC/89/AN,Njikoka I,AN,Anambra,,,,APGA,Ibemeka Chidiebele Nnamdi
+stha,2023-stha,90,SC/90/AN,Njikoka Ii,AN,Anambra,,,,APGA,Akpua Jude Ejikeme
+stha,2023-stha,91,SC/91/AN,Nnewi North,AN,Anambra,,,,YPP,Ike Augustine Onyekachukwu
+stha,2023-stha,92,SC/92/AN,Nnewi South I,AN,Anambra,,,,YPP,Atuchukwu Nonso C.
+stha,2023-stha,93,SC/93/AN,Nnewi South Ii,AN,Anambra,,,,YPP,Akaegbobi J. Nwabugwu
+stha,2023-stha,94,SC/94/AN,Ekwusigo,AN,Anambra,,,,APGA,Ofodeme Ikenna Sylvester
+stha,2023-stha,95,SC/95/AN,Ogbaru I,AN,Anambra,,,,PDP,Igwe C. Noble - Obumneme
+stha,2023-stha,96,SC/96/AN,Ogbaru Ii,AN,Anambra,,,,PDP,Udeze S. Nkemakolam
+stha,2023-stha,97,SC/97/AN,Ayamelum,AN,Anambra,,,,PDP,Udemezue Bernard Abuchi
+stha,2023-stha,98,SC/98/AN,Dunukofia,AN,Anambra,,,,APGA,Azotani Francis Chuks
+stha,2023-stha,99,SC/99/AN,Onitsha North I,AN,Anambra,,,,PDP,Egbuna Douglas Nwachukwu
+stha,2023-stha,100,SC/100/AN,Onitsha North Ii,AN,Anambra,,,,LP,Okafor Patrick Emmanuel C.
+stha,2023-stha,101,SC/101/AN,Onitsha South I,AN,Anambra,,,,LP,Ezenwa Fredrick Chigozie
+stha,2023-stha,102,SC/102/AN,Onitsha South Ii,AN,Anambra,,,,LP,Umennajiego Jude Ifeanyi
+stha,2023-stha,103,SC/103/AN,Orumba North,AN,Anambra,,,,LP,Obu Paul Chukwuka
+stha,2023-stha,104,SC/104/AN,Orumba South,AN,Anambra,,,,APGA,Nwafor Emmanuel Obinna
+stha,2023-stha,105,SC/105/AN,Oyi,AN,Anambra,,,,APGA,Ojike Innocent
+stha,2023-stha,106,SC/106/BA,Pali (Alkaleri I),BA,Bauchi,,,,APC,Garba Aminu
+stha,2023-stha,107,SC/107/BA,Duguri/Gwana (Alkaleri Ii),BA,Bauchi,,,,PDP,Abdullahi Dan Bala
+stha,2023-stha,108,SC/108/BA,Kirfi,BA,Bauchi,,,,PDP,Umar Habibu
+stha,2023-stha,109,SC/109/BA,(Bauchi I),BA,Bauchi,,,,PDP,Umaru Dahiru Jamilu
+stha,2023-stha,110,SC/110/BA,Zungur/Galambi (Bauchi Ii),BA,Bauchi,,,,PDP,Yusuf Saidu Ahmed
+stha,2023-stha,111,SC/111/BA,Dass,BA,Bauchi,,,,PDP,Abdullahi Ahmed
+stha,2023-stha,112,SC/112/BA,Lere/Bula (Tafawa/Balewa),BA,Bauchi,,,,APC,Mu’azu Abdulrasheed Adamu
+stha,2023-stha,113,SC/113/BA,Bogoro,BA,Bauchi,,,,PDP,Wakili Musa Nakwada
+stha,2023-stha,114,SC/114/BA,Jama’a/Toro (Toro Ii),BA,Bauchi,,,,PDP,Saidu Hamza
+stha,2023-stha,115,SC/115/BA,Warji,BA,Bauchi,,,,PDP,Lawal Garba
+stha,2023-stha,116,SC/116/BA,Lame (Toro I),BA,Bauchi,,,,APC,Abdu Bala Rishi
+stha,2023-stha,117,SC/117/BA,Ningi (Ningi I),BA,Bauchi,,,,PDP,Yakubu Sulaiman Abubakar
+stha,2023-stha,118,SC/118/BA,Burra (Ningi Ii),BA,Bauchi,,,,PDP,Tanko Ibrahim Burra
+stha,2023-stha,119,SC/119/BA,Chiroma (Misau I),BA,Bauchi,,,,APC,"Yahaya Ahmed, Maikudi"
+stha,2023-stha,120,SC/120/BA,Hardawa (Misau Ii),BA,Bauchi,,,,PDP,Babayo Mohammed Akuyam
+stha,2023-stha,121,SC/121/BA,Dambam/Dagauda/ Jalam,BA,Bauchi,,,,PDP,Muhammmed Ahmed Garba
+stha,2023-stha,122,SC/122/BA,Darazo (Darazo I),BA,Bauchi,,,,APC,"Suleiman Saidu, Darazo"
+stha,2023-stha,123,SC/123/BA,Sade (Darazo Ii),BA,Bauchi,,,,APC,Dauda Lawal
+stha,2023-stha,124,SC/124/BA,Ganjuwa East,BA,Bauchi,,,,PDP,Ladan Mohammed
+stha,2023-stha,125,SC/125/BA,Ganjuwa West,BA,Bauchi,,,,PDP,Adamu Garba Kawu
+stha,2023-stha,126,SC/126/BA,Katagum (Katagum I),BA,Bauchi,,,,PDP,Bello Muhammad Maiwa
+stha,2023-stha,127,SC/127/BA,Sakwa (Zaki I),BA,Bauchi,,,,PDP,Wanzam Mohammed
+stha,2023-stha,128,SC/128/BA,Jama’are,BA,Bauchi,,,,NNPP,Mubarak Haruna
+stha,2023-stha,129,SC/129/BA,Itas/Gadau,BA,Bauchi,,,,PDP,Abdullahi Yusuf Itas
+stha,2023-stha,130,SC/130/BA,Shira I (Disina),BA,Bauchi,,,,PDP,Hodi Sale Jibir
+stha,2023-stha,131,SC/131/BA,Shira Ii (Shira),BA,Bauchi,,,,PDP,Hassan Auwal
+stha,2023-stha,132,SC/132/BA,Giade,BA,Bauchi,,,,PDP,Adamu Salihu Abubakar
+stha,2023-stha,133,SC/133/BA,Azare (Zaki Ii),BA,Bauchi,,,,APC,Saleh Zakariyya
+stha,2023-stha,134,SC/134/BA,Madara/Chinade (Katagum II),BA,Bauchi,,,,PDP,Ala Nasiru Ahmed
+stha,2023-stha,135,SC/135/BA,Udubo (Gamawa I),BA,Bauchi,,,,APC,"Lele Ahmed, Mohammed"
+stha,2023-stha,136,SC/136/BA,Gamawa (Gamawa II),BA,Bauchi,,,,PDP,Sarkin Jadori Bello
+stha,2023-stha,137,SC/137/BY,Brass I,BY,Bayelsa,,,,PDP,Charles Daniel
+stha,2023-stha,138,SC/138/BY,Brass II,BY,Bayelsa,,,,APC,Omubo Ayona Timinyo
+stha,2023-stha,139,SC/139/BY,Brass III,BY,Bayelsa,,,,PDP,Ingobere Abraham
+stha,2023-stha,140,SC/140/BY,Nembe I,BY,Bayelsa,,,,APGA,George-Braah Oteigbanyo
+stha,2023-stha,141,SC/141/BY,Nembe II,BY,Bayelsa,,,,APC,Edward Irigha Brigidi
+stha,2023-stha,142,SC/142/BY,Nembe III,BY,Bayelsa,,,,APC,Douglas Sampson
+stha,2023-stha,143,SC/143/BY,Ogbia I,BY,Bayelsa,,,,PDP,Ibegu Arikpawabai Richard
+stha,2023-stha,144,SC/144/BY,Ogbia II,BY,Bayelsa,,,,APC,Obein Godknows
+stha,2023-stha,145,SC/145/BY,Ogbia III,BY,Bayelsa,,,,PDP,Ogbara Gabriel Michael
+stha,2023-stha,146,SC/146/BY,Kolokuma/ Opokuma I,BY,Bayelsa,,,,PDP,Werinipre Pamoh
+stha,2023-stha,147,SC/147/BY,Kolokuma/ Opokuma II,BY,Bayelsa,,,,PDP,Fafi Wisdom
+stha,2023-stha,148,SC/148/BY,Yenagoa I,BY,Bayelsa,,,,PDP,Egba Ayibanegiyefa
+stha,2023-stha,149,SC/149/BY,Yenagoa II,BY,Bayelsa,,,,APGA,Amakoromo Waikumo
+stha,2023-stha,150,SC/150/BY,Yenagoa III,BY,Bayelsa,,,,PDP,Elemeforo Teddy Tonbara
+stha,2023-stha,151,SC/151/BY,Ekeremor I,BY,Bayelsa,,,,PDP,Porri Tare
+stha,2023-stha,152,SC/152/BY,Ekeremor II,BY,Bayelsa,,,,PDP,Mitin Living Ebibaekebena
+stha,2023-stha,153,SC/153/BY,Ekeremor III,BY,Bayelsa,,,,PDP,Ogbere M. Pere-Otukefie
+stha,2023-stha,154,SC/154/BY,Sagbama I,BY,Bayelsa,,,,PDP,Oyinke G. Nanatumieyeseigha
+stha,2023-stha,155,SC/155/BY,Sagbama Ii,BY,Bayelsa,,,,PDP,Kenebai Bernard Sunday
+stha,2023-stha,156,SC/156/BY,Sagbama III,BY,Bayelsa,,,,PDP,Cockeve Brown E. Rosemary
+stha,2023-stha,157,SC/157/BY,Southern Ijaw I,BY,Bayelsa,,,,PDP,Ayah Bonny Felix Eniekiokori
+stha,2023-stha,158,SC/158/BY,Southern Ijaw II,BY,Bayelsa,,,,PDP,Mondsy-Bubou Edwin Obolo
+stha,2023-stha,159,SC/159/BY,Southern Ijaw III,BY,Bayelsa,,,,PDP,Marlon Moses
+stha,2023-stha,160,SC/160/BY,Southern Ijaw IV,BY,Bayelsa,,,,APC,Ben Selekaye Victor
+stha,2023-stha,161,SC/161/BN,Ado,BE,Benue,,,,APC,Danladi Lami
+stha,2023-stha,162,SC/162/BN,Agbatu,BE,Benue,,,,PDP,Edoh Godwin Abuh
+stha,2023-stha,163,SC/163/BN,Apa,BE,Benue,,,,PDP,Umoru Abu James
+stha,2023-stha,164,SC/164/BN,Buruku,BE,Benue,,,,APC,Jabi Abraham Zahemen
+stha,2023-stha,165,SC/165/BN,Gboko I (East),BE,Benue,,,,APC,Orpin Bekie Torkwase
+stha,2023-stha,166,SC/166/BN,Gboko West,BE,Benue,,,,APC,Dajoh Hyacinth Aodona
+stha,2023-stha,167,SC/167/BN,Guma (Guma I),BE,Benue,,,,APC,Ortese Marccellinus Yanmar
+stha,2023-stha,168,SC/168/BN,Agasha (Guma II),BE,Benue,,,,PDP,Ortyom William Mkange
+stha,2023-stha,169,SC/169/BN,Gwer East,BE,Benue,,,,APC,Audu Elias Terumbur
+stha,2023-stha,170,SC/170/BN,Gwer West,BE,Benue,,,,PDP,Gyikla Solomon Terlumun
+stha,2023-stha,171,SC/171/BN,Katsina Ala East,BE,Benue,,,,APC,Agbudyen Jonathan Akule
+stha,2023-stha,172,SC/172/BN,Katsina-Ala West,BE,Benue,,,,APC,Ipusu Peter Bemdoo
+stha,2023-stha,173,SC/173/BN,Konshisha I (Gaav),BE,Benue,,,,LP,Dyako Cephas Tarvershima
+stha,2023-stha,174,SC/174/BN,Kwande East,BE,Benue,,,,APC,Matu Anyor Samuel
+stha,2023-stha,175,SC/175/BN,Kwande West,BE,Benue,,,,APC,Dugeri Thomas Terzungwe
+stha,2023-stha,176,SC/176/BN,Logo,BE,Benue,,,,PDP,Jiji Samuel Shimapever
+stha,2023-stha,177,SC/177/BN,Makurdi I (North),BE,Benue,,,,APC,Emberga Alfred Aondoaver
+stha,2023-stha,178,SC/178/BN,Makurdi South,BE,Benue,,,,APC,Akya Terkume
+stha,2023-stha,179,SC/179/BN,Obi,BE,Benue,,,,PDP,Egbodo Moses
+stha,2023-stha,180,SC/180/BN,Ogbadibo,BE,Benue,,,,APC,Agada Ismail Samuel
+stha,2023-stha,181,SC/181/BN,Ohimini,BE,Benue,,,,PDP,Ochekliye Agbo Isaac
+stha,2023-stha,182,SC/182/BN,Oju I,BE,Benue,,,,PDP,Onah Blessed Emmanuel
+stha,2023-stha,183,SC/183/BN,Oju II,BE,Benue,,,,APC,Ikong Ijebe Cyril
+stha,2023-stha,184,SC/184/BN,Okpokwu,BE,Benue,,,,PDP,Agiom Attah Anthony
+stha,2023-stha,185,SC/185/BN,Otukpo/Akpa,BE,Benue,,,,APC,Angbo Kennedy Agbogo
+stha,2023-stha,186,SC/186/BN,Adoka/Ugboju,BE,Benue,,,,PDP,Audu Michael
+stha,2023-stha,187,SC/187/BN,Tarka,BE,Benue,,,,APC,Manger Mcclinton Manger
+stha,2023-stha,188,SC/188/BN,Ukum I (Ngenev),BE,Benue,,,,APC,Nyiyongo Ezra Mcsylawn
+stha,2023-stha,189,SC/189/BN,Mata (Ushongo I),BE,Benue,,,,APC,Gabo Simon
+stha,2023-stha,190,SC/190/BN,Mbagwa (Ushongo II),BE,Benue,,,,APC,Tiseer Saater Godfrey
+stha,2023-stha,191,SC/191/BN,Vandeikya I,BE,Benue,,,,APC,Matthew Damkor
+stha,2023-stha,192,SC/192/BN,Vandeikya II,BE,Benue,,,,APC,Shimawua Emmanuel Terna
+stha,2023-stha,193,SC/193/BO,Abadam,BO,Borno,,,,APC,Bong Alhaji Jamna
+stha,2023-stha,194,SC/194/BO,Askira,BO,Borno,,,,APC,Abdullahi Musa Askira
+stha,2023-stha,195,SC/195/BO,Bama I (Bama),BO,Borno,,,,APC,Bukar Baba
+stha,2023-stha,196,SC/196/BO,Bayo,BO,Borno,,,,APC,Maina Abare Maigari
+stha,2023-stha,197,SC/197/BO,Biu,BO,Borno,,,,APC,Gambo Kimba Yakubu
+stha,2023-stha,198,SC/198/BO,Chibok,BO,Borno,,,,APC,Clark Nuhu
+stha,2023-stha,199,SC/199/BO,Damaboa,BO,Borno,,,,APC,Wakil Mallami
+stha,2023-stha,200,SC/200/BO,Dikwa,BO,Borno,,,,APC,Zakariya Mohammed
+stha,2023-stha,201,SC/201/BO,Gubio,BO,Borno,,,,APC,Moruma Gubo
+stha,2023-stha,202,SC/202/BO,Bama II (Gulumba),BO,Borno,,,,APC,Mallam Baba Baba Shehu
+stha,2023-stha,203,SC/203/BO,Guzamala,BO,Borno,,,,APC,Lawan Abdulkarim
+stha,2023-stha,204,SC/204/BO,Gwoza,BO,Borno,,,,APC,Buba Abdullahi Abatcha
+stha,2023-stha,205,SC/205/BO,Hawul,BO,Borno,,,,APC,Ibrahim Mohammed
+stha,2023-stha,206,SC/206/BO,Jere,BO,Borno,,,,APC,Abba Kolo Abba Kyari
+stha,2023-stha,207,SC/207/BO,Kaga,BO,Borno,,,,APC,Alibe Mustapha
+stha,2023-stha,208,SC/208/BO,Kala Balge,BO,Borno,,,,APC,Mohammed Dige
+stha,2023-stha,209,SC/209/BO,Konduga,BO,Borno,,,,APC,Modu Bukar
+stha,2023-stha,210,SC/210/BO,Kukawa,BO,Borno,,,,APC,Lawan Karta Maina Ma’aji
+stha,2023-stha,211,SC/211/BO,Kwaya Kusar,BO,Borno,,,,APC,Babale Abubakar Ibrahim
+stha,2023-stha,212,SC/212/BO,Mafa,BO,Borno,,,,APC,Modu Baba Ali
+stha,2023-stha,213,SC/213/BO,Magumeri,BO,Borno,,,,APC,Mustapha Audu
+stha,2023-stha,214,SC/214/BO,Maiduguri M.C.,BO,Borno,,,,APC,Kotoko Alhaji Ali
+stha,2023-stha,215,SC/215/BO,Marte,BO,Borno,,,,APC,Gambomi Mohammed Marte
+stha,2023-stha,216,SC/216/BO,Mobbar,BO,Borno,,,,APC,Moruma Usman Lawan
+stha,2023-stha,217,SC/217/BO,Monguno,BO,Borno,,,,APC,Garbu Maina
+stha,2023-stha,218,SC/218/BO,Ngala,BO,Borno,,,,APC,Abatcha Alhaji Bukar
+stha,2023-stha,219,SC/219/BO,Nganzai,BO,Borno,,,,APC,Ali Gajiram Mohammed
+stha,2023-stha,220,SC/220/BO,Shani,BO,Borno,,,,APC,Inuwa Ibrahim Musa
+stha,2023-stha,221,SC/221/CR,Abi,CR,Cross River,,,,APC,Enyiofem Davies Etta
+stha,2023-stha,222,SC/222/CR,Akamkpa I,CR,Cross River,,,,APC,Owuna Okon Nyong
+stha,2023-stha,223,SC/223/CR,Akamkpa II,CR,Cross River,,,,APC,Etim Linus Bassey
+stha,2023-stha,224,SC/224/CR,Akpabuyo,CR,Cross River,,,,APC,Bassey Bassey Effiong
+stha,2023-stha,225,SC/225/CR,Bakassi,CR,Cross River,,,,APC,Edet Bassey Eyo
+stha,2023-stha,226,SC/226/CR,Biase,CR,Cross River,,,,APC,Ogban Francis Onette
+stha,2023-stha,227,SC/227/CR,Boki I,CR,Cross River,,,,APC,Obi Philip Bette
+stha,2023-stha,228,SC/228/CR,Boki II,CR,Cross River,,,,APC,Bisong Hilary Ekpang
+stha,2023-stha,229,SC/229/CR,Bekwarra,CR,Cross River,,,,PDP,Omang Charles Omang
+stha,2023-stha,230,SC/230/CR,Calabar Municipal,CR,Cross River,,,,APC,Nsemo Okon Bassey Stanley
+stha,2023-stha,231,SC/231/CR,Calabar South I,CR,Cross River,,,,APC,Jimmy Effiong Ekarika
+stha,2023-stha,232,SC/232/CR,Calabar South II,CR,Cross River,,,,APC,Nsa Victor Ekpeyong
+stha,2023-stha,233,SC/233/CR,Etung,CR,Cross River,,,,APC,Isong Kingsley Ntui
+stha,2023-stha,234,SC/234/CR,Ikom I,CR,Cross River,,,,PDP,Abang Samuel Neji
+stha,2023-stha,235,SC/235/CR,Ikom Ii,CR,Cross River,,,,APC,Ayambem Elvert Ekom
+stha,2023-stha,236,SC/236/CR,Obanleku,CR,Cross River,,,,PDP,Ashakia Pius Ashas
+stha,2023-stha,237,SC/237/CR,Obubra I,CR,Cross River,,,,APC,Agbor Ovat
+stha,2023-stha,238,SC/238/CR,Obubra II,CR,Cross River,,,,APC,Egbe Egbe Abeng
+stha,2023-stha,239,SC/239/CR,Obudu,CR,Cross River,,,,APC,Agabi Sylvester Rihwo
+stha,2023-stha,240,SC/240/CR,Odukpani,CR,Cross River,,,,APC,Asuquo F. Ekepeyong Bassey
+stha,2023-stha,241,SC/241/CR,Ogoja,CR,Cross River,,,,PDP,Ayim Rita Agbo
+stha,2023-stha,242,SC/242/CR,Yakurr I,CR,Cross River,,,,APC,Omini Cyril James
+stha,2023-stha,243,SC/243/CR,Yakurr II,CR,Cross River,,,,APC,Akpama Mercy Mbang
+stha,2023-stha,244,SC/244/CR,Yala I,CR,Cross River,,,,LP,Odey Brian Wonah
+stha,2023-stha,245,SC/245/CR,Yala II,CR,Cross River,,,,PDP,Achadu Ogiji Idaga Martins
+stha,2023-stha,246,SC/246/DT,Aniocha North,DE,Delta,,,,PDP,Nwaobi Emeka Emmanuel
+stha,2023-stha,247,SC/247/DT,Aniocha South,DE,Delta,,,,PDP,Awuzia Isaac Ozor
+stha,2023-stha,248,SC/248/DT,Bomadi,DE,Delta,,,,PDP,Preyor Oboro
+stha,2023-stha,249,SC/249/DT,Burutu,DE,Delta,,,,PDP,Oloye Pereotu
+stha,2023-stha,250,SC/250/DT,Burutu North,DE,Delta,,,,APC,Ebitonmo Anthony Alapala
+stha,2023-stha,251,SC/252/DT,Ethiope East,DE,Delta,,,,PDP,Akpowowo Arthur
+stha,2023-stha,252,SC/252/DT,Ethiope West,DE,Delta,,,,APC,Achoja Blessing
+stha,2023-stha,253,SC/253/DT,Ika North East,DE,Delta,,,,PDP,Okowa-Daramola Marilyn Dumkechukwu
+stha,2023-stha,254,SC/254/DT,Ika South,DE,Delta,,,,PDP,Okoh Festus Chukwuyem
+stha,2023-stha,255,SC/255/DT,Isoko North,DE,Delta,,,,PDP,Odior Bernard
+stha,2023-stha,256,SC/256/DT,Isoko South I,DE,Delta,,,,PDP,Obowomano Bimo Owhede
+stha,2023-stha,257,SC/257/DT,Isoko South II,DE,Delta,,,,PDP,Onwo Ferguson
+stha,2023-stha,258,SC/258/DT,Ndokwa East,DE,Delta,,,,PDP,Osamuta Emeka Prince
+stha,2023-stha,259,SC/259/DT,Ndokwa West,DE,Delta,,,,PDP,Emetulu C. Chukwuemeka
+stha,2023-stha,260,SC/260/DT,Okpe,DE,Delta,,,,PDP,Augoye James Ojaduvba
+stha,2023-stha,261,SC/261/DT,Oshimili North,DE,Delta,,,,PDP,Esemwah F. Ngozichukwuka
+stha,2023-stha,262,SC/262/DT,Oshimili South,DE,Delta,,,,PDP,Anyafulu Ifechukwu Bridget
+stha,2023-stha,263,SC/263/DT,Patani,DE,Delta,,,,PDP,Sinebi Amatare Emmanuel
+stha,2023-stha,264,SC/264/DT,Sapele,DE,Delta,,,,PDP,Umukoro Awolowo Perkins
+stha,2023-stha,265,SC/265/DT,Udu,DE,Delta,,,,APC,Egbetamah Ovie Collins
+stha,2023-stha,266,SC/266/DT,Ughelli North I,DE,Delta,,,,APC,Omonade M. Onojighofia
+stha,2023-stha,267,SC/267/DT,Ughelli North II,DE,Delta,,,,APC,Ohwofa Obokpare Spencer
+stha,2023-stha,268,SC/268/DT,Ughelli South,DE,Delta,,,,PDP,Utuama Festus
+stha,2023-stha,269,SC/269/DT,Ukwuani,DE,Delta,,,,PDP,Dafe Chukwudi
+stha,2023-stha,270,SC/270/DT,Uvwie,DE,Delta,,,,APC,Emakpor Edafe
+stha,2023-stha,271,SC/271/DT,Warri North,DE,Delta,,,,PDP,Martins Oluwasanumi Alfred
+stha,2023-stha,272,SC/272/DT,Warri South I,DE,Delta,,,,PDP,Uroye Augustine
+stha,2023-stha,273,SC/273/DT,Warri South II,DE,Delta,,,,APC,Obire Benson
+stha,2023-stha,274,SC/274/DT,Warri South-West,DE,Delta,,,,PDP,Guwor Emomotimi Dennis
+stha,2023-stha,275,SC/275/EB,Abakaliki North,EB,Ebonyi,,,,PDP,Nwoke Victor Chidi
+stha,2023-stha,276,SC/276/EB,Abakaliki South,EB,Ebonyi,,,,APC,Ununu Joseph Ogodo
+stha,2023-stha,277,SC/277/EB,Afikpo North East,EB,Ebonyi,,,,APC,Ezeali Ukie Oluchi
+stha,2023-stha,278,SC/278/EB,Afikpo North West,EB,Ebonyi,,,,APC,Ikoro Kingsley Ogbonna
+stha,2023-stha,279,SC/279/EB,Afikpo South East,EB,Ebonyi,,,,APC,Igwe Stephen Orji
+stha,2023-stha,280,SC/280/EB,Afikpo South West,EB,Ebonyi,,,,APC,Onuma Okoro Nkemka
+stha,2023-stha,281,SC/281/EB,North East,EB,Ebonyi,,,,APC,Nwogbara Chinyere Juliet
+stha,2023-stha,282,SC/282/EB,North West,EB,Ebonyi,,,,APC,Nwodo Aloysius Nwodo
+stha,2023-stha,283,SC/283/EB,Ezza North East,EB,Ebonyi,,,,APGA,Okeh Kelvin Okechukwu
+stha,2023-stha,284,SC/284/EB,Ezza North West,EB,Ebonyi,,,,PDP,Nomeh Chikaodili Innocent
+stha,2023-stha,285,SC/285/EB,Ezza South,EB,Ebonyi,,,,APC,Ogbuewu Friday
+stha,2023-stha,286,SC/286/EB,Ikwo North,EB,Ebonyi,,,,APC,Nwakpu Ifeanyi
+stha,2023-stha,287,SC/287/EB,Ikwo South,EB,Ebonyi,,,,APC,Odunwa Moses Ije
+stha,2023-stha,288,SC/288/EB,Ishielu North,EB,Ebonyi,,,,APC,Eze Henry Sunday
+stha,2023-stha,289,SC/289/EB,Ishielu South,EB,Ebonyi,,,,APC,Chukwu Arinze Lukas
+stha,2023-stha,290,SC/290/EB,Ivo,EB,Ebonyi,,,,APC,Ogbadu Ogbunne Onyebuchi
+stha,2023-stha,291,SC/291/EB,Izzi East,EB,Ebonyi,,,,APC,Mbam Goodluck Obinna
+stha,2023-stha,292,SC/292/EB,Izzi West,EB,Ebonyi,,,,APC,Abiri Godwin Abiri
+stha,2023-stha,293,SC/293/EB,Ohaozara East,EB,Ebonyi,,,,APC,Nwankwor Chikezie Igu
+stha,2023-stha,294,SC/294/EB,Ohaozara West,EB,Ebonyi,,,,APC,Onu Ukpai
+stha,2023-stha,295,SC/295/EB,Onicha East,EB,Ebonyi,,,,LP,Ogba Celestine Ifeanyi
+stha,2023-stha,296,SC/296/EB,Onicha West,EB,Ebonyi,,,,PDP,Onu Charles Nkwoemezeie
+stha,2023-stha,297,SC/297/EB,Ohaukwu North,EB,Ebonyi,,,,APC,Agwu Esther Chidiebere
+stha,2023-stha,298,SC/298/EB,Ohaukwu South,EB,Ebonyi,,,,APC,Onah Chinedu Ogba
+stha,2023-stha,299,SC/299/ED,Akoko Edo I,ED,Edo,,,,PDP,Idaiye Yekini Oisayemoje
+stha,2023-stha,300,SC/300/ED,Akoko Edo II,ED,Edo,,,,PDP,Okogbe Ojemeh Donald
+stha,2023-stha,301,SC/301/ED,Esan Central,ED,Edo,,,,PDP,Eigbiremonlen Fada Sunday
+stha,2023-stha,302,SC/302/ED,Esan West,ED,Edo,,,,APC,Ibhamawu J. Aigbokhan
+stha,2023-stha,303,SC/303/ED,Esan North East I,ED,Edo,,,,APC,Eddey Emankhu Isibor
+stha,2023-stha,304,SC/304/ED,Esan North East II,ED,Edo,,,,PDP,Edeko Maria Omozele
+stha,2023-stha,305,SC/305/ED,Esan South East,ED,Edo,,,,PDP,Ojezele Osezua Sunday
+stha,2023-stha,306,SC/306/ED,Etsako Central,ED,Edo,,,,APC,Oshmah Ahmed
+stha,2023-stha,307,SC/307/ED,Etsako East,ED,Edo,,,,APC,Ugabi Kingsley Ogheneklogie
+stha,2023-stha,308,SC/308/ED,Etsako West I,ED,Edo,,,,APC,Lecky Hussein Mustapha
+stha,2023-stha,309,SC/309/ED,Etsako West II,ED,Edo,,,,APC,Akokhia Abdulganiyu
+stha,2023-stha,310,SC/310/ED,Egor,ED,Edo,,,,PDP,Osawaru Natasha Irobosa
+stha,2023-stha,311,SC/311/ED,Ikpoba - Okha,ED,Edo,,,,PDP,Osonsere Nicholas Friday
+stha,2023-stha,312,SC/312/ED,Igueben,ED,Edo,,,,PDP,Inegbeboh Ojie Eugene
+stha,2023-stha,313,SC/313/ED,Oredo East,ED,Edo,,,,PDP,Omosigho Uyi Frank
+stha,2023-stha,314,SC/314/ED,Oredo West,ED,Edo,,,,LP,Edosa Richard Osaro
+stha,2023-stha,315,SC/315/ED,Orhionmwon I,ED,Edo,,,,APC,Atu Osamwonyi Evbaguehita
+stha,2023-stha,316,SC/316/ED,Orhionmwon II,ED,Edo,,,,PDP,Iyamu Aitenguoba Bright
+stha,2023-stha,317,SC/317/ED,Ovia North East I,ED,Edo,,,,PDP,Aiguobarueghian C. Iguodala
+stha,2023-stha,318,SC/318/ED,Ovia North East II,ED,Edo,,,,PDP,Uzamere O. Andrew Edobor
+stha,2023-stha,319,SC/319/ED,Ovia South West,ED,Edo,,,,PDP,Enabulele Destiny Oghuyerio
+stha,2023-stha,320,SC/320/ED,Owan East,ED,Edo,,,,APC,Okaka Eric Allison
+stha,2023-stha,321,SC/321/ED,Owan West,ED,Edo,,,,PDP,Egbebaku Blessing Sheriff
+stha,2023-stha,322,SC/322/ED,Uhunmwode,ED,Edo,,,,PDP,Osamwoyi Kaycee
+stha,2023-stha,323,SC/323/EK,Ado I,EK,Ekiti,,,,APC,Adegbite Ayodeji Adeyinka
+stha,2023-stha,324,SC/324/EK,Ado Ii,EK,Ekiti,,,,APC,Olagbaju Bolaji
+stha,2023-stha,325,SC/325/EK,Gbonyin,EK,Ekiti,,,,APC,Okuyiga Eyitayo Adeteju
+stha,2023-stha,326,SC/326/EK,Efon,EK,Ekiti,,,,APC,Olowookere Besede Yinka
+stha,2023-stha,327,SC/327/EK,East I,EK,Ekiti,,,,SDP,Ogunsakin Olaoye Oladele
+stha,2023-stha,328,SC/328/EK,East II,EK,Ekiti,,,,APC,Akanle Lateef Oluwole
+stha,2023-stha,329,SC/329/EK,West I,EK,Ekiti,,,,APC,Agunbiade Kareem
+stha,2023-stha,330,SC/330/EK,West II,EK,Ekiti,,,,APC,Bode-Adeoye O. Johnson
+stha,2023-stha,331,SC/331/EK,South West I,EK,Ekiti,,,,APC,Adaramodu Kehinde Anthony
+stha,2023-stha,332,SC/332/EK,South West II,EK,Ekiti,,,,APC,Ige Tolulope Michael
+stha,2023-stha,333,SC/333/EK,Emure,EK,Ekiti,,,,APC,Ogunlade M. B. Funmilola
+stha,2023-stha,334,SC/334/EK,Ido/Osi I,EK,Ekiti,,,,APC,Fawekun Abiodun Babatunde
+stha,2023-stha,335,SC/335/EK,Ido/Osi II,EK,Ekiti,,,,APC,Ayorinde E. Oluwayomi
+stha,2023-stha,336,SC/336/EK,Ijero,EK,Ekiti,,,,APC,Ojo Martins Ademola
+stha,2023-stha,337,SC/337/EK,Ikere I,EK,Ekiti,,,,APC,Oke Babatunde
+stha,2023-stha,338,SC/338/EK,Ikere II,EK,Ekiti,,,,APC,Idowu Lawrence Babatunde
+stha,2023-stha,339,SC/339/EK,Ikole I,EK,Ekiti,,,,APC,Fatunla Babafemi Sunday
+stha,2023-stha,340,SC/340/EK,Ikole II,EK,Ekiti,,,,APC,Arigbasoye Adeoye Stephen
+stha,2023-stha,341,SC/341/EK,Ilejemeje,EK,Ekiti,,,,APC,Okiemen Fakunle I. Lydia
+stha,2023-stha,342,SC/342/EK,Irepodun/Ifelodun I,EK,Ekiti,,,,APC,Akindele Femi Olanrewaju
+stha,2023-stha,343,SC/343/EK,Irepodun/Ifelodun II,EK,Ekiti,,,,APC,Jamiu Hakeem Ayodeji
+stha,2023-stha,344,SC/344/EK,Ise/Orun,EK,Ekiti,,,,APC,Omotayo Babatunde E..
+stha,2023-stha,345,SC/345/EK,Moba I,EK,Ekiti,,,,APC,Solanke Christiana Abimbola
+stha,2023-stha,346,SC/346/EK,Moba II,EK,Ekiti,,,,APC,Awoniyi Jacob Adeyemi
+stha,2023-stha,347,SC/347/EK,Oye I,EK,Ekiti,,,,APC,Longe Temitope Ademola
+stha,2023-stha,348,SC/348/EK,Oye II,EK,Ekiti,,,,APC,Odebunmi Idowu Sunday
+stha,2023-stha,349,SC/349/EN,Aniniri,EN,Enugu,,,,PDP,Ede Magnus Nnaemeka
+stha,2023-stha,350,SC/350/EN,Awgu North,EN,Enugu,,,,PDP,Eneh Jane Chinwe
+stha,2023-stha,351,SC/351/EN,Awgu South,EN,Enugu,,,,PDP,Nwankwo Anthony Chukwudi
+stha,2023-stha,352,SC/352/EN,East I,EN,Enugu,,,,LP,Okoh Osita Hyginus
+stha,2023-stha,353,SC/353/EN,East II,EN,Enugu,,,,LP,Ugwu Raymond Okechukwu
+stha,2023-stha,354,SC/354/EN,North,EN,Enugu,,,,LP,Ani Johnson Samuel
+stha,2023-stha,355,SC/355/EN,South I,EN,Enugu,,,,LP,Ngene Bright Emeka
+stha,2023-stha,356,SC/356/EN,South II,EN,Enugu,,,,LP,Ugwu Obiajulu Princess
+stha,2023-stha,357,SC/357/EN,Ezeagu,EN,Enugu,,,,LP,Udefuna Chukwudi
+stha,2023-stha,358,SC/358/EN,Igbo-Etiti East,EN,Enugu,,,,PDP,Ezeani Ezenta Ugo
+stha,2023-stha,359,SC/359/EN,Igbo-Etiti West,EN,Enugu,,,,LP,Amuka Williams
+stha,2023-stha,360,SC/360/EN,Igbo-Eze North I,EN,Enugu,,,,LP,Eze Ejike Jude
+stha,2023-stha,361,SC/361/EN,Igbo-Eze North II,EN,Enugu,,,,PDP,Obe Clifford Nnaemeka
+stha,2023-stha,362,SC/362/EN,Igbo-Eze South,EN,Enugu,,,,LP,Ogara Harrison Chinwe
+stha,2023-stha,363,SC/363/EN,Isi-Uzo,EN,Enugu,,,,LP,Eze Gabriel Lebechi
+stha,2023-stha,364,SC/364/EN,Nkanu East,EN,Enugu,,,,PDP,Mba Anthony Okecukwu
+stha,2023-stha,365,SC/365/EN,Nkanu West,EN,Enugu,,,,PDP,Aniagu Iloabuchi Desmond
+stha,2023-stha,366,SC/366/EN,Nsukka East,EN,Enugu,,,,LP,Ezugwu Onyekachi
+stha,2023-stha,367,SC/367/EN,Nsukka West,EN,Enugu,,,,LP,Onyechi Malachi Okey
+stha,2023-stha,368,SC/368/EN,Oji River,EN,Enugu,,,,LP,Eze Ignatius Osita
+stha,2023-stha,369,SC/369/EN,Udenu,EN,Enugu,,,,LP,Ijere Obinna Anthony
+stha,2023-stha,370,SC/370/EN,Udi North,EN,Enugu,,,,PDP,Ugwu Callistus Uche
+stha,2023-stha,371,SC/371/EN,Udi South,EN,Enugu,,,,PDP,Aneke Hycinth Okechukwu
+stha,2023-stha,372,SC/372/EN,Uzo Uwani,EN,Enugu,,,,PDP,Ekwueme C. I. Martins
+stha,2023-stha,373,SC/373/GM,Akko West,GO,Gombe,,,,APC,Abdullahi Abubakar
+stha,2023-stha,374,SC/374/GM,Akko Central,GO,Gombe,,,,APC,Mohammed Abubakar
+stha,2023-stha,375,SC/375/GM,Akko North,GO,Gombe,,,,APC,Mohammed A. Musa
+stha,2023-stha,376,SC/076/GM,Balanga North,GO,Gombe,,,,APC,Buba Musa
+stha,2023-stha,377,SC/377/GM,Balanga South,GO,Gombe,,,,APC,Maigemi Lamido Isaac
+stha,2023-stha,378,SC/378/GM,Billiri East,GO,Gombe,,,,PDP,Daniel Yakubu
+stha,2023-stha,379,SC/379/GM,Billiri West,GO,Gombe,,,,PDP,Malon Nimrod Yari
+stha,2023-stha,380,SC/380/GM,Dukku North,GO,Gombe,,,,APC,Abdulkarim Nasiru
+stha,2023-stha,381,SC/381/GM,Dukku South,GO,Gombe,,,,APC,Umar Adamu A.
+stha,2023-stha,382,SC/382/GM,Funakaye North,GO,Gombe,,,,APC,Sadam Bello Sale
+stha,2023-stha,383,SC/383/GM,Funakaye South,GO,Gombe,,,,APC,Abubakar Dayi Muhammed
+stha,2023-stha,384,SC/384/GM,North,GO,Gombe,,,,APC,Manu Aliyu Baba
+stha,2023-stha,385,SC/385/GM,South,GO,Gombe,,,,APC,Mustapha Usman Hassan
+stha,2023-stha,386,SC/386/GM,Kaltungo West,GO,Gombe,,,,PDP,Fushion Gabriel Galadima
+stha,2023-stha,387,SC/387/GM,Kaltungo East,GO,Gombe,,,,APC,Ladan Yerima Gaule
+stha,2023-stha,388,SC/388/GM,Nafada North,GO,Gombe,,,,APC,Tahir Muhammed
+stha,2023-stha,389,SC/389/GM,Nafada South,GO,Gombe,,,,APC,Musa Adamu Ahmed
+stha,2023-stha,390,SC/390/GM,Shongom,GO,Gombe,,,,PDP,Ayala Zubairu Pilate
+stha,2023-stha,391,SC/391/GM,Pero Chonge,GO,Gombe,,,,APC,Golkos Gaius Gaji
+stha,2023-stha,392,SC/392/GM,Deba,GO,Gombe,,,,APC,Suleiman Mohammed Kabir
+stha,2023-stha,393,SC/393/GM,Yamaltu East,GO,Gombe,,,,APC,Adamu Sale Pata
+stha,2023-stha,394,SC/394/GM,Yamaltu West,GO,Gombe,,,,APC,Manaja Musa Zambuk
+stha,2023-stha,395,SC/395/GM,Kwami East,GO,Gombe,,,,APC,Haruna Shuaibu Adamu
+stha,2023-stha,396,SC/396/GM,Kwami West,GO,Gombe,,,,APC,Siddi Buba
+stha,2023-stha,397,SC/397/IM,Aboh Mbaise,IM,Imo,,,,APC,Obinna Edward Iheukwumere
+stha,2023-stha,398,SC/398/IM,Ahiazu Mbaise,IM,Imo,,,,APC,Otuibe Samuel Nkem
+stha,2023-stha,399,SC/399/IM,Ehime Mbano,IM,Imo,,,,APC,Ozoemelam Bernard Ndubisi
+stha,2023-stha,400,SC/400/IM,Ezinihitte,IM,Imo,,,,APC,Agbasonu Henry Chinemerem
+stha,2023-stha,401,SC/401/IM,Ideato North,IM,Imo,,,,APC,Udeze Enerst Okechukwu
+stha,2023-stha,402,SC/402/IM,Ideato South,IM,Imo,,,,A,Azodo Vitalis Ndubuisi
+stha,2023-stha,403,SC/403/IM,Ihite/Uboma,IM,Imo,,,,APC,Olemgbe Chike
+stha,2023-stha,404,SC/404/IM,Ikeduru,IM,Imo,,,,APC,Iheohe Johnleoba
+stha,2023-stha,405,SC/405/IM,Isiala Mbano,IM,Imo,,,,APC,Osuji Samuel Ikechukwu
+stha,2023-stha,406,SC/406/IM,Isu,IM,Imo,,,,PDP,Osakwe Abiazie Modestus
+stha,2023-stha,407,SC/407/IM,Mbaitoli,IM,Imo,,,,APC,Ikpamezie I. Ikechukwu
+stha,2023-stha,408,SC/408/IM,Ngor Okpala,IM,Imo,,,,APC,Egu Obinna Ambrose
+stha,2023-stha,409,SC/409/IM,Njaba,IM,Imo,,,,APC,Ebonine Benneth O. Worship
+stha,2023-stha,410,SC/410/IM,Nwangele,IM,Imo,,,,APC,Iwuanyanwu Amarachii Chyna
+stha,2023-stha,411,SC/411/IM,Nkwerre,IM,Imo,,,,APC,Ojukwu Thaddeus Chisom
+stha,2023-stha,412,SC/412/IM,Obowo,IM,Imo,,,,APC,Ibeh Kennedy Chidozie
+stha,2023-stha,413,SC/413/IM,Oguta,IM,Imo,,,,APC,Nwosu Gilbert Chiedozie
+stha,2023-stha,414,SC/414/IM,Ohaji/Egbema,IM,Imo,,,,APC,Osuoha Uzoma Francis
+stha,2023-stha,415,SC/415/IM,Okigwe,IM,Imo,,,,APC,Ogbunikpa Chidi Samuel
+stha,2023-stha,416,SC/416/IM,Onuimo,IM,Imo,,,,APC,Esile James Uba
+stha,2023-stha,417,SC/417/IM,Orlu,IM,Imo,,,,APC,Ihezuo Ikenna Martin
+stha,2023-stha,418,SC/418/IM,Orsu,IM,Imo,,,,APC,Agabige Francis Uche
+stha,2023-stha,419,SC/419/IM,Oru East,IM,Imo,,,,APC,Nwaneri Chigozie Reginald
+stha,2023-stha,420,SC/420/IM,Oru West,IM,Imo,,,,APC,Ezerioha Dominic Ugochukwu
+stha,2023-stha,421,SC/421/IM,Owerri Municipal,IM,Imo,,,,APC,Obodo Ugochukwu Augustine
+stha,2023-stha,422,SC/422/IM,Owerri North,IM,Imo,,,,APC,Ofurum Kelechi Onumajuru
+stha,2023-stha,423,SC/423/IM,Owerri West,IM,Imo,,,,APC,Onyemachi Kanayo
+stha,2023-stha,424,SC/424/JG,Auyo,JI,Jigawa,,,,APC,Sani Ishaq
+stha,2023-stha,425,SC/425/JG,Babura,JI,Jigawa,,,,APC,Abdulrahman Masud Naruwa
+stha,2023-stha,426,SC/426/JG,Kanya,JI,Jigawa,,,,APC,Ibrahim Hasim Kanya
+stha,2023-stha,427,SC/427/JG,Birnin Kudu,JI,Jigawa,,,,PDP,Ibrahi Kabir
+stha,2023-stha,428,SC/428/JG,Birniwa,JI,Jigawa,,,,APC,Keriya Hassan
+stha,2023-stha,429,SC/429/JG,Buji,JI,Jigawa,,,,APC,Alhaji Baba Sule
+stha,2023-stha,430,SC/430/JG,Dutse,JI,Jigawa,,,,APC,Ishaq Tasiu
+stha,2023-stha,431,SC/431/JG,Gagarawa,JI,Jigawa,,,,APC,Yau Ibrahim
+stha,2023-stha,432,SC/432/JG,Garki,JI,Jigawa,,,,APC,Ila Abdu Muku
+stha,2023-stha,433,SC/433/JG,Gumel,JI,Jigawa,,,,APC,Abubakar Sani Isyaku
+stha,2023-stha,434,SC/434/JG,Guri,JI,Jigawa,,,,APC,Tura Usman Abdullahi
+stha,2023-stha,435,SC/435/JG,Gwaram,JI,Jigawa,,,,APC,Yakubu Ado Zandam
+stha,2023-stha,436,SC/436/JG,Fagam,JI,Jigawa,,,,PDP,Zakari Yahaya
+stha,2023-stha,437,SC/437/JG,Gwiwa,JI,Jigawa,,,,APC,Zakari Aminu
+stha,2023-stha,438,SC/438/JG,Hadeijia,JI,Jigawa,,,,APC,Muhammad Abubakar Sadiq
+stha,2023-stha,439,SC/439/JG,Jahun,JI,Jigawa,,,,APC,Garba Alhaji Idris
+stha,2023-stha,440,SC/440/JG,Kafin Hausa,JI,Jigawa,,,,APC,Adamu Muhammad
+stha,2023-stha,441,SC/441/JG,Balangu,JI,Jigawa,,,,APC,Yusuf Ahmed
+stha,2023-stha,442,SC/442/JG,Kiri-Kasamma,JI,Jigawa,,,,APC,Ahmad Aliyu Aliyu
+stha,2023-stha,443,SC/443/JG,Kaugama,JI,Jigawa,,,,APC,Sale Sani
+stha,2023-stha,444,SC/444/JG,Kazaure,JI,Jigawa,,,,APC,Idris Mohammed Inuwa
+stha,2023-stha,445,SC/445/JG,Kiyawa,JI,Jigawa,,,,APC,Mohammed Yahaya
+stha,2023-stha,446,SC/446/JG,Maigatari,JI,Jigawa,,,,APC,Habu Mohammed
+stha,2023-stha,447,SC/447/JG,Mallam Madori,JI,Jigawa,,,,APC,Ibrahim Hamza Adamu
+stha,2023-stha,448,SC/448/JG,Miga,JI,Jigawa,,,,APC,Aliyu Dangyatin Haruna
+stha,2023-stha,449,SC/449/JG,Ringim,JI,Jigawa,,,,APC,Sule Aminu
+stha,2023-stha,450,SC/450/JG,Roni,JI,Jigawa,,,,APC,Muhammad Lawan Dansure
+stha,2023-stha,451,SC/451/JG,Sule-Tankarkar,JI,Jigawa,,,,APC,Abubakar Saidu Mohammed
+stha,2023-stha,452,SC/452/JG,Taura,JI,Jigawa,,,,APC,Shehu Dayyabu
+stha,2023-stha,453,SC/453/JG,Yankwashi,JI,Jigawa,,,,APC,Muhammed Adozoto
+stha,2023-stha,454,SC/454/KD,Magajin Gari,KD,Kaduna,,,,PDP,Shehu Abubakar
+stha,2023-stha,455,SC/455/KD,Kakangi,KD,Kaduna,,,,APC,Musa Yahaya
+stha,2023-stha,456,SC/456/KD,Kajuru,KD,Kaduna,,,,PDP,Usman Danlami Stingo
+stha,2023-stha,457,SC/457/KD,Chikun I,KD,Kaduna,,,,PDP,Garba Madami
+stha,2023-stha,458,SC/458/KD,Giwa East,KD,Kaduna,,,,APC,Adamu Mohammed Shika
+stha,2023-stha,459,SC/459/KD,Giwa West,KD,Kaduna,,,,APC,Auwal Umar
+stha,2023-stha,460,SC/460/KD,Igabi East,KD,Kaduna,,,,APC,Bala Salisu Dandada
+stha,2023-stha,461,SC/461/KD,Igabi West,KD,Kaduna,,,,APC,Zailani Yusuf Ibrahim
+stha,2023-stha,462,SC/462/KD,Ikara,KD,Kaduna,,,,PDP,Mohammed Alhassan
+stha,2023-stha,463,SC/463/KD,Kubau,KD,Kaduna,,,,APC,Yinusa Shehu
+stha,2023-stha,464,SC/464/KD,Jema’a,KD,Kaduna,,,,PDP,Kalat Ali
+stha,2023-stha,465,SC/465/KD,Sanga,KD,Kaduna,,,,APC,Haliru Gambo Dangana
+stha,2023-stha,466,SC/466/KD,Kachia,KD,Kaduna,,,,APC,Agite Peter
+stha,2023-stha,467,SC/467/KD,Kagarko,KD,Kaduna,,,,APC,Magaji Henry Danjuma
+stha,2023-stha,468,SC/468/KD,Kawo,KD,Kaduna,,,,APC,Sunusi Nazir Abubakar
+stha,2023-stha,469,SC/469/KD,Doka/Gabasawa,KD,Kaduna,,,,APC,Lawal Aminu Anty
+stha,2023-stha,470,SC/470/KD,Tudun Wada,KD,Kaduna,,,,APC,Usman Nasiru
+stha,2023-stha,471,SC/471/KD,Makera,KD,Kaduna,,,,APC,Dahiru Yusuf Liman
+stha,2023-stha,472,SC/472/KD,Unguwar Sanusi,KD,Kaduna,,,,APC,Yahaya Auwulu Muhammad
+stha,2023-stha,473,SC/473/KD,Chawai/Kauru,KD,Kaduna,,,,APC,Haruna Barnabas
+stha,2023-stha,474,SC/474/KD,Lere West,KD,Kaduna,,,,APC,Gatari Idris Bashir
+stha,2023-stha,475,SC/475/KD,Saminaka (Lere East),KD,Kaduna,,,,APC,Suleiman Tanimu Munira
+stha,2023-stha,476,SC/476/KD,Kudan,KD,Kaduna,,,,APC,Abbas Faisal
+stha,2023-stha,477,SC/477/KD,Makarfi,KD,Kaduna,,,,PDP,Ibrahim Ishaku
+stha,2023-stha,478,SC/478/KD,Sabon Gari,KD,Kaduna,,,,APC,Idris Mohammed Nasir
+stha,2023-stha,479,SC/479/KD,Basawa,KD,Kaduna,,,,APC,Jamilu Abubakar Albani
+stha,2023-stha,480,SC/480/KD,Maigana,KD,Kaduna,,,,PDP,Mohammed Bello Abdullahi
+stha,2023-stha,481,SC/481/KD,Soba,KD,Kaduna,,,,PDP,Magaji Suleiman
+stha,2023-stha,482,SC/482/KD,Zangon Kataf,KD,Kaduna,,,,PDP,Kambai Samuel Kozah
+stha,2023-stha,483,SC/483/KD,Zonkwa,KD,Kaduna,,,,PDP,Kantiok Emmanuel Bako
+stha,2023-stha,484,SC/484/KD,Zaria Kewaye,KD,Kaduna,,,,APC,Ahmed Mohammed
+stha,2023-stha,485,SC/485/KD,Zaria City,KD,Kaduna,,,,APC,Ismaila Mahmud Lawal
+stha,2023-stha,486,SC/486/KD,Jaba,KD,Kaduna,,,,PDP,Marah Henry Zachariah
+stha,2023-stha,487,SC/487/KD,Kaura,KD,Kaduna,,,,PDP,Mugu Yusufu
+stha,2023-stha,488,SC/488/KN,Albasu,KN,Kano,,,,NNPP,Haruna Musa Tahir
+stha,2023-stha,489,SC/489/KN,Shanono/Bagwai,KN,Kano,,,,APC,Ibrahim Halilu Kundila
+stha,2023-stha,490,SC/490/KN,Bebeji,KN,Kano,,,,NNPP,Mohamed Aliyu
+stha,2023-stha,491,SC/491/KN,Bichi,KN,Kano,,,,APC,Shehu Lawan
+stha,2023-stha,492,SC/492/KN,Bunkure,KN,Kano,,,,NNPP,Gambo Hafizu
+stha,2023-stha,493,SC/493/KN,Dala,KN,Kano,,,,NNPP,Hussaini Lawan
+stha,2023-stha,494,SC/494/KN,Gwale,KN,Kano,,,,NNPP,Uamr Abdulmajid Isa
+stha,2023-stha,495,SC/495/KN,Dambatta,KN,Kano,,,,APC,Musa Murtala Kore
+stha,2023-stha,496,SC/496/KN,Makoda,KN,Kano,,,,APC,Ahmad Mohammad Tomas
+stha,2023-stha,497,SC/497/KN,Dawakin Kudu,KN,Kano,,,,NNPP,Rabiu Shuaibu
+stha,2023-stha,498,SC/498/KN,Dawakin Tofa,KN,Kano,,,,APC,Ahmad Marke Sale
+stha,2023-stha,499,SC/499/KN,Doguwa,KN,Kano,,,,APC,Mohammed Salisu Ibrahim
+stha,2023-stha,500,SC/500/KN,Gabasawa,KN,Kano,,,,NNPP,Nuhu Zakariya Abdullahi
+stha,2023-stha,501,SC/501/KN,Gaya,KN,Kano,,,,APC,Danladi Isah Abubakar
+stha,2023-stha,502,SC/502/KN,Ajingi,KN,Kano,,,,NNPP,Lawan Tini Ajingi
+stha,2023-stha,503,SC/503/KN,Gezawa,KN,Kano,,,,APC,Yahaya Abdullahi
+stha,2023-stha,504,SC/504/KN,Gwarzo,KN,Kano,,,,APC,Haruna Kayyu Yunusa
+stha,2023-stha,505,SC/505/KN,Kabo,KN,Kano,,,,APC,Labaran Ayuba Alassan
+stha,2023-stha,506,SC/506/KN,Municipal,KN,Kano,,,,NNPP,Yusuf Aliyu Daneji
+stha,2023-stha,507,SC/507/KN,Tarauni,KN,Kano,,,,NNPP,Sule Kabiru Dahiru
+stha,2023-stha,508,SC/508/KN,Karaye,KN,Kano,,,,NNPP,Ibrahim Ahmed
+stha,2023-stha,509,SC/509/KN,Rogo,KN,Kano,,,,NNPP,Ismail Jibril Falgore
+stha,2023-stha,510,SC/510/KN,Kiru,KN,Kano,,,,NNPP,Tasiu Usman Abubakar
+stha,2023-stha,511,SC/511/KN,Kumbotso,KN,Kano,,,,NNPP,Ibrahim Mudassir
+stha,2023-stha,512,SC/512/KN,Kura/Gurun Mallam,KN,Kano,,,,APC,Alhassan Zakariyya Ishaq
+stha,2023-stha,513,SC/513/KN,Madobi,KN,Kano,,,,NNPP,Muktar Sulaiman Ishaq
+stha,2023-stha,514,SC/514/KN,Munjibir,KN,Kano,,,,NNPP,Abdulhamid Abdul Minjibir
+stha,2023-stha,515,SC/515/KN,Nassarawa,KN,Kano,,,,NNPP,Yusuf Bello Aliyu
+stha,2023-stha,516,SC/516/KN,Fagge,KN,Kano,,,,APC,Mohammed Tukur
+stha,2023-stha,517,SC/517/KN,Rano,KN,Kano,,,,NNPP,Muhammad Ibrahim
+stha,2023-stha,518,SC/518/KN,Kibiya,KN,Kano,,,,NNPP,Shehu Garba Fammar
+stha,2023-stha,519,SC/519/KN,Rimi Gado/Tofa,KN,Kano,,,,NNPP,Bello Muhammad Butu Butu
+stha,2023-stha,520,SC/520/KN,Sumaila,KN,Kano,,,,NNPP,Massu Zubairu Hamza
+stha,2023-stha,521,SC/521/KN,Takai,KN,Kano,,,,APC,Ali Kachako Musa
+stha,2023-stha,522,SC/522/KN,Tsanyawa/Kunchi,KN,Kano,,,,APC,Ya’u Garba Gwarmai
+stha,2023-stha,523,SC/523/KN,Tudun Wada,KN,Kano,,,,APC,Lawan Sule
+stha,2023-stha,524,SC/524/KN,Ungogo,KN,Kano,,,,NNPP,Saadu Aminu Ungogo
+stha,2023-stha,525,SC/525/KN,Warawa,KN,Kano,,,,APC,Abdul Labaran Madari
+stha,2023-stha,526,SC/526/KN,Wudil,KN,Kano,,,,NNPP,Abdullahi Ali Wudil Manager
+stha,2023-stha,527,SC/527/KN,Garko,KN,Kano,,,,NNPP,Kadage Mohammad
+stha,2023-stha,528,SC/528/KT,Bakori,KT,Katsina,,,,APC,Abdulrahman Ahmed
+stha,2023-stha,529,SC/529/KT,Batagarawa,KT,Katsina,,,,APC,Shagumba Tukur Iliyasu
+stha,2023-stha,530,SC/530/KT,Batsari,KT,Katsina,,,,APC,Tukur Mustapha
+stha,2023-stha,531,SC/531/KT,Baure,KT,Katsina,,,,APC,Umar Surajo
+stha,2023-stha,532,SC/532/KT,Bindawa,KT,Katsina,,,,APC,Ali Umar Bindawa
+stha,2023-stha,533,SC/533/KT,Charanchi,KT,Katsina,,,,APC,Isah Lawal Kuraye
+stha,2023-stha,534,SC/534/KT,Dandume,KT,Katsina,,,,APC,Nuhu Yahaya Mahuta
+stha,2023-stha,535,SC/535/KT,Danja,KT,Katsina,,,,APC,Abubakar Dabai Shamsudeen
+stha,2023-stha,536,SC/536/KT,Danmusa,KT,Katsina,,,,APC,Garba Aminu A.
+stha,2023-stha,537,SC/537/KT,Daura,KT,Katsina,,,,APC,Yahaya Nasir
+stha,2023-stha,538,SC/538/KT,Dutsi,KT,Katsina,,,,APC,Samaila Abduljalal
+stha,2023-stha,539,SC/539/KT,Dutsin-Ma,KT,Katsina,,,,APC,Abubakar Muhammad Hamisu
+stha,2023-stha,540,SC/540/KT,Faskari,KT,Katsina,,,,APC,Muazu Samaila Bawa
+stha,2023-stha,541,SC/541/KT,Funtua,KT,Katsina,,,,APC,Mohammed Abubakar Total
+stha,2023-stha,542,SC/542/KT,Ingawa,KT,Katsina,,,,APC,Suleman Abubakar Tunas
+stha,2023-stha,543,SC/543/KT,Jibia,KT,Katsina,,,,APC,Yusuf Mustapha
+stha,2023-stha,544,SC/544/KT,Kafur,KT,Katsina,,,,APC,Wakili Shuaibu
+stha,2023-stha,545,SC/546/KT,Kaita,KT,Katsina,,,,APC,Abdu Sirajo
+stha,2023-stha,546,SC/547/KT,Kankara,KT,Katsina,,,,PDP,Abdu Ibrahim Lawal
+stha,2023-stha,547,SC/545/KT,Kankia,KT,Katsina,,,,APC,Hmaza Salisu Rimaye
+stha,2023-stha,548,SC/548/KT,Katsina,KT,Katsina,,,,APC,Abubakar Albaba Aliyu
+stha,2023-stha,549,SC/549/KT,Kurfi,KT,Katsina,,,,APC,Zaharadeen Usman Sani
+stha,2023-stha,550,SC/550/KT,Kusada,KT,Katsina,,,,APC,Garba Ghali
+stha,2023-stha,551,SC/552/KT,Mai’adua,KT,Katsina,,,,APC,Rabe Mustapha Musa
+stha,2023-stha,552,SC/551/KT,Malumfashi East,KT,Katsina,,,,APC,Ibrahim Aminu
+stha,2023-stha,553,SC/553/KT,Mani,KT,Katsina,,,,APC,Zayyana Shuaibu Bujawa
+stha,2023-stha,554,SC/554/KT,Mashi,KT,Katsina,,,,APC,Sani Bello Mustapha
+stha,2023-stha,555,SC/555/KT,Matazu,KT,Katsina,,,,APC,Dikko Ibrahim Umar
+stha,2023-stha,556,SC/556/KT,Musawa,KT,Katsina,,,,APC,Yaro H. Lawal
+stha,2023-stha,557,SC/557/KT,Rimi,KT,Katsina,,,,APC,Kurabau Abdulrahman Saleh
+stha,2023-stha,558,SC/558/KT,Sabuwa,KT,Katsina,,,,APC,Danjuma Ibrahim
+stha,2023-stha,559,SC/559/KT,Safana,KT,Katsina,,,,APC,Haruna Runka Abduljalal
+stha,2023-stha,560,SC/560/KT,Sandamu,KT,Katsina,,,,APC,Magaji Ruma Sale
+stha,2023-stha,561,SC/561/KT,Zango,KT,Katsina,,,,APC,Musa Maigari Tasiu
+stha,2023-stha,562,SC/562/KB,Aleiro,KE,Kebbi,,,,PDP,Buhari Muhammad Aliero
+stha,2023-stha,563,SC/563/KB,Arewa,KE,Kebbi,,,,APC,Rabiu Garba Kamba
+stha,2023-stha,564,SC/564/KB,Argungu,KE,Kebbi,,,,PDP,Na’amore Umar Mohammed
+stha,2023-stha,565,SC/565/KB,Augie,KE,Kebbi,,,,APC,Garba Muhammad Sani
+stha,2023-stha,566,SC/566/KB,Bagudo East,KE,Kebbi,,,,APC,Samaila Mohammed
+stha,2023-stha,567,SC/567/KB,Bagudo West,KE,Kebbi,,,,APC,Abubakar Lolo Mohammmed
+stha,2023-stha,568,SC/568/KB,Birnin Kebbi North,KE,Kebbi,,,,APC,Umar Hassan
+stha,2023-stha,569,SC/569/KB,Birnin Kebbi South,KE,Kebbi,,,,APC,Gulumbe Abubakar Aminu
+stha,2023-stha,570,SC/570/KB,Bunza,KE,Kebbi,,,,PDP,Abubakar Yusuf Tilli
+stha,2023-stha,571,SC/571/KB,Dandi,KE,Kebbi,,,,APC,Abubakar Sulaiman Fana
+stha,2023-stha,572,SC/572/KB,Fakai,KE,Kebbi,,,,APC,Haruna Lawal Gele
+stha,2023-stha,573,SC/573/KB,Gwandu,KE,Kebbi,,,,APC,Atiku Bello Kurya
+stha,2023-stha,574,SC/574/KB,Jega,KE,Kebbi,,,,APC,Aliyu Faruku
+stha,2023-stha,575,SC/575/KB,Kalgo,KE,Kebbi,,,,APC,Sahabi Rilwanu
+stha,2023-stha,576,SC/576/KB,Koko/Besse,KE,Kebbi,,,,APC,Abubakar Imam Besse
+stha,2023-stha,577,SC/577/KB,Maiyama,KE,Kebbi,,,,APC,Umaru Salah Sambawa
+stha,2023-stha,578,SC/578/KB,Ngaski,KE,Kebbi,,,,APC,Muhammad Adamu B/Yauri
+stha,2023-stha,579,SC/579/KB,Sakaba,KE,Kebbi,,,,APC,Dangoje Salihu M.
+stha,2023-stha,580,SC/580/KB,Shanga,KE,Kebbi,,,,APC,Tukur Mohammed
+stha,2023-stha,581,SC/581/KB,Suru,KE,Kebbi,,,,APC,Abubakar Faruku
+stha,2023-stha,582,SC/582/KB,Wasagu/Danko East,KE,Kebbi,,,,APC,Garba Muhammad Bena
+stha,2023-stha,583,SC/583/KB,Wasagu/Danko West,KE,Kebbi,,,,APC,Danjuma Abdullahi
+stha,2023-stha,584,SC/584/KB,Yauri,KE,Kebbi,,,,PDP,Usman Hashimu
+stha,2023-stha,585,SC/585/KB,Zuru,KE,Kebbi,,,,APC,Usman Mohammed
+stha,2023-stha,586,SC/586/KG,Adavi,KO,Kogi,,,,APC,Asemba Baba Haruna
+stha,2023-stha,587,SC/587/KG,Ajaokuta,KO,Kogi,,,,APC,Abu Onoru-Oiza Jibrin
+stha,2023-stha,588,SC/588/KG,Ankpa I,KO,Kogi,,,,APC,Akus Lawal
+stha,2023-stha,589,SC/589/KG,Ankpa II,KO,Kogi,,,,APC,Ibrahim Abbas
+stha,2023-stha,590,SC/590/KG,Bassa,KO,Kogi,,,,PDP,Daku Sunday
+stha,2023-stha,591,SC/591/KG,Dekina/Biraidu,KO,Kogi,,,,APC,Ochidi Usman Shehu
+stha,2023-stha,592,SC/592/KG,Okura,KO,Kogi,,,,APC,Paul Enema
+stha,2023-stha,593,SC/593/KG,Ibaji,KO,Kogi,,,,APC,Comfort Ojoma Nwuchiola
+stha,2023-stha,594,SC/594/KG,Idah,KO,Kogi,,,,APC,Usman Halidu Adejoh
+stha,2023-stha,595,SC/595/KG,Igalamela-Odolu,KO,Kogi,,,,APC,Enefola Major
+stha,2023-stha,596,SC/596/KG,Ijumu,KO,Kogi,,,,APC,Ishaya Omotayo Adeleye
+stha,2023-stha,597,SC/597/KG,Kabba/Bunu,KO,Kogi,,,,APC,Bello Oluwaseyi Victor
+stha,2023-stha,598,SC/598/KG,(K.K),KO,Kogi,,,,APC,Idrees Aliyu
+stha,2023-stha,599,SC/599/KG,Lokoja I,KO,Kogi,,,,APC,Bin-Ebaiya Shehu Tijjani
+stha,2023-stha,600,SC/600/KG,Lokoja II,KO,Kogi,,,,APC,Aliyu Umar Yusuf
+stha,2023-stha,601,SC/601/KG,Mopamuro,KO,Kogi,,,,APC,Jacob Sam Olawumi
+stha,2023-stha,602,SC/602/KG,Ofu,KO,Kogi,,,,APC,Amodu Seidu Shehu
+stha,2023-stha,603,SC/603/KG,Ogori/Magongo,KO,Kogi,,,,APC,Ogunmola Bode Gemini
+stha,2023-stha,604,SC/604/KG,Okehi,KO,Kogi,,,,APC,Otokiti Alhassan Zakariya
+stha,2023-stha,605,SC/605/KG,Okene Town,KO,Kogi,,,,APC,Suleiman Abdulrazak
+stha,2023-stha,606,SC/606/KG,Okene II (South),KO,Kogi,,,,APC,Yusuf Zakari Eneve
+stha,2023-stha,607,SC/607/KG,Olamaboro I,KO,Kogi,,,,APC,Ujah Alewo Anthony
+stha,2023-stha,608,SC/608/KG,Omala,KO,Kogi,,,,APC,Yahaya Umar
+stha,2023-stha,609,SC/609/KG,Yagba East,KO,Kogi,,,,APC,Obaro Emmanuel
+stha,2023-stha,610,SC/610/KG,Yagba West,KO,Kogi,,,,ADC,Idowu Ibikunle
+stha,2023-stha,611,SC/611/KW,Afon,KW,Kwara,,,,APC,Bello Yinusa Oniboki
+stha,2023-stha,612,SC/612/KW,Onire/Owode,KW,Kwara,,,,APC,Shittu Rukayat Motunrayo
+stha,2023-stha,613,SC/613/KW,Ilesha/Gwanara Barutin I,KW,Kwara,,,,APC,Yakubu Danladi Salihu
+stha,2023-stha,614,SC/614/KW,Okuta/Ayashkira Barutin II,KW,Kwara,,,,APC,Salihu Mohammed Baba
+stha,2023-stha,615,SC/615/KW,Lafiagi / Edu,KW,Kwara,,,,APC,Saba Yisa Gideon
+stha,2023-stha,616,SC/616/KW,Patigi,KW,Kwara,,,,APC,Mohammed Kareem Musa
+stha,2023-stha,617,SC/617/KW,Ekiti,KW,Kwara,,,,APC,Abolarin Ganiyu Gabriel
+stha,2023-stha,618,SC/618/KW,Oke-Ero,KW,Kwara,,,,APC,Bamigboye Joseph Olajire
+stha,2023-stha,619,SC/619/KW,Omupo/Igbaja Ifelodun I,KW,Kwara,,,,APC,Salahu Folabi Ganiyu
+stha,2023-stha,620,SC/620/KW,Share/Oke-Ode Ifelodun II,KW,Kwara,,,,APC,Owolabi Olatunde Rasaq
+stha,2023-stha,621,SC/621/KW,Ilorin East,KW,Kwara,,,,APC,Lawanl Arinola Fatimoh
+stha,2023-stha,622,SC/622/KW,Ilorin South,KW,Kwara,,,,APC,Yusuf Maryam
+stha,2023-stha,623,SC/623/KW,Ilorin Central / Ilorin West I,KW,Kwara,,,,APC,Oba Abdulkadir Magaji
+stha,2023-stha,624,SC/624/KW,Ilorin West / Ilorin West II,KW,Kwara,,,,APC,Babatunde Ayi Olatundun
+stha,2023-stha,625,SC/625/KW,Irepodun,KW,Kwara,,,,APC,Odetundu Olushola
+stha,2023-stha,626,SC/626/KW,Isin,KW,Kwara,,,,APC,Omotosho Olakunle Rasaq
+stha,2023-stha,627,SC/627/KW,Gwanabe/Adena/ Banni /,KW,Kwara,,,,APC,Ahmed Saidu Baba
+stha,2023-stha,628,SC/628/KW,Kaiama/Wajibe/ Kemanji /,KW,Kwara,,,,APC,Abdullahi Halidu Bambaba
+stha,2023-stha,629,SC/629/KW,Lanwa/Ejidongari / Moro I,KW,Kwara,,,,APC,Abdulraheem M. Motunrayo
+stha,2023-stha,630,SC/630/KW,Oloru/Malete/ Ipaiye / Moro,KW,Kwara,,,,APC,Lawal Ayanshola Saliu
+stha,2023-stha,631,SC/631/KW,Balogun/Ojumu / Offa I,KW,Kwara,,,,APC,Oguniyi David Sheun
+stha,2023-stha,632,SC/632/KW,Shawo/Essa / Offa II,KW,Kwara,,,,APC,Yussuf Abdulwaheed Gbenga
+stha,2023-stha,633,SC/633/KW,Odo-Ogun/ Oyun I,KW,Kwara,,,,PDP,Afolabi Taye Otumba
+stha,2023-stha,634,SC/634/KW,Oke-Ogun / Oyun II,KW,Kwara,,,,APC,Ojo Olayiiwola Oyebode
+stha,2023-stha,635,SC/635/LA,Agege I,LA,Lagos,,,,APC,Obasa Mudashiru
+stha,2023-stha,636,SC/636/LA,Agege II,LA,Lagos,,,,APC,Abdulkareem Jubreel Ayodeji
+stha,2023-stha,637,SC/637/LA,Ajeromi/Ifelodun I,LA,Lagos,,,,APC,Olumo Saad Lukman
+stha,2023-stha,638,SC/638/LA,Ajeromi/Ifelodun II,LA,Lagos,,,,APC,Oluwa Akanbi Sabur
+stha,2023-stha,639,SC/639/LA,Alimosho I,LA,Lagos,,,,APC,Jimoh Orelope L. Olatunji
+stha,2023-stha,640,SC/640/LA,Alimosho II,LA,Lagos,,,,APC,Joseph Kehinde Olaide
+stha,2023-stha,641,SC/641/LA,Amuwo Odofin I,LA,Lagos,,,,LP,Osafile Foluke Stella
+stha,2023-stha,642,SC/642/LA,Amuwo Odofin II,LA,Lagos,,,,LP,Tunde Fashina
+stha,2023-stha,643,SC/643/LA,Apapa I,LA,Lagos,,,,APC,Meranda Mojisola Lasbat
+stha,2023-stha,644,SC/644/LA,Apapa II,LA,Lagos,,,,APC,Lawal Aina Musibau
+stha,2023-stha,645,SC/645/LA,Badagry I,LA,Lagos,,,,APC,Bonu Solomon Saanu
+stha,2023-stha,646,SC/646/LA,Badagry II,LA,Lagos,,,,APC,David Setonji Samuel
+stha,2023-stha,647,SC/647/LA,Epe I,LA,Lagos,,,,APC,Tobun Mustainu Abiodun
+stha,2023-stha,648,SC/648/LA,Epe II,LA,Lagos,,,,APC,Ogunkelu S. Olwadahunsi
+stha,2023-stha,649,SC/649/LA,Eti-Osa I,LA,Lagos,,,,APC,Adams Noheem Babatunde
+stha,2023-stha,650,SC/650/LA,Eti-Osa II,LA,Lagos,,,,APC,Yishawo G. R. Olusegun Alabi
+stha,2023-stha,651,SC/651/LA,Ibeju-Lekki I,LA,Lagos,,,,APC,Mojeed Fatai Adebola
+stha,2023-stha,652,SC/652/LA,Ibeju-Lekki II,LA,Lagos,,,,APC,Ajayi Oladele Oluwadamilare
+stha,2023-stha,653,SC/653/LA,Ifako / Ijaiye I,LA,Lagos,,,,APC,Adewale Temitope Adedeji
+stha,2023-stha,654,SC/654/LA,Ifako / Ijaiye II,LA,Lagos,,,,APC,Olotu Ojo Emmanuel
+stha,2023-stha,655,SC/655/LA,Ikeja I,LA,Lagos,,,,APC,Lawal Adeseyi Lawal
+stha,2023-stha,656,SC/656/LA,Ikeja II,LA,Lagos,,,,APC,Kasunmu A. A. Richard
+stha,2023-stha,657,SC/657/LA,Ikorodu I,LA,Lagos,,,,APC,Ogunleye G. Adetokunbo
+stha,2023-stha,658,SC/658/LA,Ikorodu II,LA,Lagos,,,,APC,Aro Moshood Abiodun
+stha,2023-stha,659,SC/659/LA,Kosofe I,LA,Lagos,,,,APC,Sanni Ganiyu Babatunde
+stha,2023-stha,660,SC/660/LA,Kosofe II,LA,Lagos,,,,APC,Saheend Wasiu Obafemi
+stha,2023-stha,661,SC/661/LA,Island I,LA,Lagos,,,,APC,Lawal O. O. Omotade
+stha,2023-stha,662,SC/662/LA,Island II,LA,Lagos,,,,APC,Afinni Olanrewaju Suleiman
+stha,2023-stha,663,SC/663/LA,Mainland I,LA,Lagos,,,,APC,Owolabi Ibrahim Ajani
+stha,2023-stha,664,SC/664/LA,Mainland II,LA,Lagos,,,,APC,Shabi Rasheed A. Adekola
+stha,2023-stha,665,SC/665/LA,Mushin I,LA,Lagos,,,,APC,Akinsanya Ayinde Nureni
+stha,2023-stha,666,SC/666/LA,Mushin II,LA,Lagos,,,,APC,Kazeem Olayinka M.
+stha,2023-stha,667,SC/667/LA,Ojo I,LA,Lagos,,,,APC,Ege Olusegun Adebisi
+stha,2023-stha,668,SC/668/LA,Ojo II,LA,Lagos,,,,APC,Tijjani Suraju Olatunji
+stha,2023-stha,669,SC/669/LA,Oshodi/Isolo I,LA,Lagos,,,,APC,Ogundipe Stephen Olukoyode
+stha,2023-stha,670,SC/670/LA,Oshodi/Isolo II,LA,Lagos,,,,APC,Ajomale Oladipo Oluyinka
+stha,2023-stha,671,SC/671/LA,Shomolu I,LA,Lagos,,,,APC,Orekoya Abiodun
+stha,2023-stha,672,SC/672/LA,Shomolu II,LA,Lagos,,,,APC,Apata Samuel Olu
+stha,2023-stha,673,SC/673/LA,Surulere I,LA,Lagos,,,,APC,Elliot Olushola
+stha,2023-stha,674,SC/674/LA,Surulere II,LA,Lagos,,,,APC,Sangodara M. Rotimi
+stha,2023-stha,675,SC/675/NW,Akwanga North,NA,Nasarawa,,,,APC,Ven-Bawa Larry
+stha,2023-stha,676,SC/676/NW,Akwanga South,NA,Nasarawa,,,,PDP,Aliyu Yusuf Chunbaya
+stha,2023-stha,677,SC/677/NW,Awe North,NA,Nasarawa,,,,APC,Hudu Alhaji Hudu
+stha,2023-stha,678,SC/678/NW,Awe South,NA,Nasarawa,,,,APC,Yakubu Suleiman Abdullahi
+stha,2023-stha,679,SC/679/NW,Doma North,NA,Nasarawa,,,,PDP,Adamu Muhammed Oyanki
+stha,2023-stha,680,SC/680/NW,Doma South,NA,Nasarawa,,,,NNPP,Ibrahim Musa Abubakar
+stha,2023-stha,681,SC/681/NW,Karu/Gitata,NA,Nasarawa,,,,PDP,Ali Jonah Dizaho
+stha,2023-stha,682,SC/682/NW,Karshi/Uke,NA,Nasarawa,,,,SDP,Musa Saidu Gude
+stha,2023-stha,683,SC/683/NW,Keana,NA,Nasarawa,,,,APC,Adamu Mohammed Omadefu
+stha,2023-stha,684,SC/684/NW,Keffi West,NA,Nasarawa,,,,APC,Ibrahim Aliyu Nana
+stha,2023-stha,685,SC/685/NW,Keffi East,NA,Nasarawa,,,,PDP,John Ovey
+stha,2023-stha,686,SC/686/NW,Kokona East,NA,Nasarawa,,,,APC,Ogazi Daniel Ogah
+stha,2023-stha,687,SC/687/NW,Kokona West,NA,Nasarawa,,,,APC,Jatau Danladi Angbo
+stha,2023-stha,688,SC/688/NW,Lafia Central,NA,Nasarawa,,,,SDP,Solomon Yakubu Akwashiki
+stha,2023-stha,689,SC/689/NW,Lafia North,NA,Nasarawa,,,,PDP,Mairiga Ambina Esson
+stha,2023-stha,690,SC/690/NW,Central,NA,Nasarawa,,,,APC,Ibrahim Danyaro Hajarat
+stha,2023-stha,691,SC/691/NW,West (Loki/Udege),NA,Nasarawa,,,,SDP,Onarigu Onah Kana
+stha,2023-stha,692,SC/692/NW,Nasarawa-Eggon West,NA,Nasarawa,,,,PDP,Bala Abel Yakubu
+stha,2023-stha,693,SC/693/NW,Nasarawa-Eggon East,NA,Nasarawa,,,,APC,Kudu Ajegana Jacob
+stha,2023-stha,694,SC/694/NW,Obi I,NA,Nasarawa,,,,PDP,Akwe Ibrahim Peter
+stha,2023-stha,695,SC/695/NW,Obi II,NA,Nasarawa,,,,PDP,Zhekaba Iliya Luka
+stha,2023-stha,696,SC/696/NW,Gadabuke/Toto (Toto I),NA,Nasarawa,,,,NNPP,Garba Mohammed Isimbabi
+stha,2023-stha,697,SC/697/NW,Umaisha/Dausu (Toto II),NA,Nasarawa,,,,APC,Abdullahi Ibrahim Balarabe
+stha,2023-stha,698,SC/698/NW,Wamba,NA,Nasarawa,,,,APC,Ezekiel Emmanuel Manding
+stha,2023-stha,699,SC/699/NG,Agaie,NI,Niger,,,,APC,Mohammed Isa Etsuagaie
+stha,2023-stha,700,SC/700/NG,Agwara,NI,Niger,,,,APC,Mohammed Garba
+stha,2023-stha,701,SC/701/NG,Bida I (North),NI,Niger,,,,PDP,Sulieman M. Wanchiko
+stha,2023-stha,702,SC/702/NG,Bida II (South),NI,Niger,,,,APC,Haruna Mohammed Alhaji
+stha,2023-stha,703,SC/703/NG,Borgu,NI,Niger,,,,APC,Gambo Abdulrahman Bala
+stha,2023-stha,704,SC/704/NG,Bosso,NI,Niger,,,,APC,Suleiman Abubakar Gomna
+stha,2023-stha,705,SC/705/NG,Chanchanga,NI,Niger,,,,APC,Abubakar Mohammed
+stha,2023-stha,706,SC/706/NG,Edatti,NI,Niger,,,,PDP,Mohammed Ahmed
+stha,2023-stha,707,SC/707/NG,Gbako,NI,Niger,,,,APC,Ahmadu Yahaya Abubakar
+stha,2023-stha,708,SC/708/NG,Gurara,NI,Niger,,,,APC,Afiniki Eunice Dauda
+stha,2023-stha,709,SC/709/NG,Katcha,NI,Niger,,,,SDP,Yakubu Andulmalik Bala
+stha,2023-stha,710,SC/710/NG,Kontagora I,NI,Niger,,,,APC,Phalal Bako Mohammed
+stha,2023-stha,711,SC/711/NG,Kotangora II,NI,Niger,,,,APC,Isah Abdullahi
+stha,2023-stha,712,SC/712/NG,Lapai,NI,Niger,,,,APC,Musa Idris Vatsa
+stha,2023-stha,713,SC/713/NG,Lavun,NI,Niger,,,,PDP,Yusuf Baba Dabban
+stha,2023-stha,714,SC/714/NG,Magama,NI,Niger,,,,APC,Mohammed G.N. Abdullazeez
+stha,2023-stha,715,SC/715/NG,Mariga,NI,Niger,,,,APC,Muhammed Abdulmalik
+stha,2023-stha,716,SC/716/NG,Mashegu,NI,Niger,,,,APC,Alhassan Isah
+stha,2023-stha,717,SC/717/NG,Mokwa,NI,Niger,,,,PDP,Ndagi Zakari
+stha,2023-stha,718,SC/718/NG,Munya,NI,Niger,,,,PDP,Joseph Haruna Sduza
+stha,2023-stha,719,SC/719/NG,Paikoro,NI,Niger,,,,APC,Umar Nasiru
+stha,2023-stha,720,SC/720/NG,Rafi,NI,Niger,,,,APC,Zubairu Ismaila
+stha,2023-stha,721,SC/721/NG,Rijau,NI,Niger,,,,APC,Bako Bello Alhaji
+stha,2023-stha,722,SC/722/NG,Shiroro,NI,Niger,,,,PDP,Doma Andrew
+stha,2023-stha,723,SC/723/NG,Suleja,NI,Niger,,,,APC,Murtala Adamu Badaru
+stha,2023-stha,724,SC/724/NG,Tafa,NI,Niger,,,,APC,Idris Muhammed Sani
+stha,2023-stha,725,SC/725/NG,Wushishi,NI,Niger,,,,APC,Sheshi Aliyu Wushishi
+stha,2023-stha,726,SC/726/OG,Abeokuta South I,OG,Ogun,,,,PDP,Lukmon Atobatele
+stha,2023-stha,727,SC/727/OG,Abeokuta South II,OG,Ogun,,,,APC,Ayodele Wasiu Sunday
+stha,2023-stha,728,SC/728/OG,Odeda Area,OG,Ogun,,,,APC,Elemide Oludaisi Olusegun
+stha,2023-stha,729,SC/729/OG,Abeokuta North,OG,Ogun,,,,APC,Tella Babatunde Opiolu
+stha,2023-stha,730,SC/730/OG,Obafemi/Owode,OG,Ogun,,,,APC,Sonieye Damilola Kayode
+stha,2023-stha,731,SC/731/OG,Ifo I,OG,Ogun,,,,APC,Oluomo Olakunle Taiwo
+stha,2023-stha,732,SC/732/OG,Ifo II,OG,Ogun,,,,APC,Salami Fatiu Folawewo
+stha,2023-stha,733,SC/733/OG,Ewekoro,OG,Ogun,,,,APC,Amosun Yusuf Olawole
+stha,2023-stha,734,SC/734/OG,Ijebu North I,OG,Ogun,,,,PDP,Kashamu Rasheed
+stha,2023-stha,735,SC/735/OG,Ijebu North II,OG,Ogun,,,,APC,Odunuga Kaka Olusegun Ayodele
+stha,2023-stha,736,SC/736/OG,Ijebu East Area,OG,Ogun,,,,PDP,Owode Waliu Ifedolapo
+stha,2023-stha,737,SC/737/OG,Waterside,OG,Ogun,,,,PDP,Lawal Samusideen Adekunle
+stha,2023-stha,738,SC/738/OG,Ijebu-Ode,OG,Ogun,,,,APC,Bakare Olanrenwaju Omolola
+stha,2023-stha,739,SC/739/OG,Odogbolu,OG,Ogun,,,,PDP,Adeyele Lukman Olalekan
+stha,2023-stha,740,SC/740/OG,Ijebu North East,OG,Ogun,,,,PDP,Adesanya Oluseun Samuel
+stha,2023-stha,741,SC/941/OG,Sagamu I Offin,OG,Ogun,,,,PDP,Bello Mohamed Oluwadamilare
+stha,2023-stha,742,SC/742/OG,Sagamu II Makun,OG,Ogun,,,,APC,Adeniran Ademola Adeyinka
+stha,2023-stha,743,SC/743/OG,Ikenne,OG,Ogun,,,,PDP,Owodunne Babajide
+stha,2023-stha,744,SC/744/OG,Remo North,OG,Ogun,,,,PDP,Awolaja Dickson Kolawole
+stha,2023-stha,745,SC/745/OG,Imeko-Afon,OG,Ogun,,,,APC,Akinbade Jemili Adigun
+stha,2023-stha,746,SC/746/OG,Egbado North I,OG,Ogun,,,,APC,Adeyanju Adegoke Olusesi
+stha,2023-stha,747,SC/747/OG,Egbado North II,OG,Ogun,,,,APC,Wahab Haruna Abiodun
+stha,2023-stha,748,SC/748/OG,Idiroko Ipokia,OG,Ogun,,,,APC,Oyedele Adebisi Jacob
+stha,2023-stha,749,SC/749/OG,Egbado South,OG,Ogun,,,,APC,Ajayi Bolanle Lateefat
+stha,2023-stha,750,SC/750/OG,Ado/Odo/Ota I,OG,Ogun,,,,APC,Yusuf Sheriff Abiodun
+stha,2023-stha,751,SC/751/OG,Ado-Odo/Ota II,OG,Ogun,,,,APC,Lamidi Musefiu Olatunji
+stha,2023-stha,752,SC/752/OD,Akoko North East,ON,Ondo,,,,APC,Japhet Victor Toyin
+stha,2023-stha,753,SC/753/OD,Akoko North West I,ON,Ondo,,,,APC,Tiamiyu Fatai Ojara Atare Abolaji
+stha,2023-stha,754,SC/754/OD,Akoko North West II,ON,Ondo,,,,PDP,Afe Felix
+stha,2023-stha,755,SC/755/OD,Akoko South East,ON,Ondo,,,,APC,Suleiman Murtala
+stha,2023-stha,756,SC/756/OD,Akoko South West I,ON,Ondo,,,,PDP,Daodu Oluwatoyin Raymond
+stha,2023-stha,757,SC/757/OD,Akoko South West II,ON,Ondo,,,,PDP,Agbulu Tope Akeem
+stha,2023-stha,758,SC/758/OD,Akure North,ON,Ondo,,,,APC,Ologede Kolawole Nichael
+stha,2023-stha,759,SC/759/OD,Akure South I,ON,Ondo,,,,PDP,Oguntiodu Olajide Johnson
+stha,2023-stha,760,SC/760/OD,Akure South II,ON,Ondo,,,,APC,Abitogun Rotimi Stephen
+stha,2023-stha,761,SC/761/OD,Ese Odo,ON,Ondo,,,,APC,Allen Messiah Oluwatoyin
+stha,2023-stha,762,SC/762/OD,Idanre,ON,Ondo,,,,APC,Ogunlowo Olwatosin Ajirotutu
+stha,2023-stha,763,SC/763/OD,Ifedore,ON,Ondo,,,,APC,Akomolafe Temitope
+stha,2023-stha,764,SC/764/OD,Ilaje I,ON,Ondo,,,,APC,Akinruntan Abayomi Babatunde
+stha,2023-stha,765,SC/765/OD,Ilaje II,ON,Ondo,,,,APC,Fayemi Olawunmi Annah
+stha,2023-stha,766,SC/766/OD,Ile Oluji / Oke Igbo,ON,Ondo,,,,APC,Akinsoruji Akindolani Nelson
+stha,2023-stha,767,SC/767/OD,Irele,ON,Ondo,,,,APC,Ogunlana Christopher Akinwunmi
+stha,2023-stha,768,SC/768/OD,Odigbo I,ON,Ondo,,,,APC,Ifabiyi Samuel Olatunji
+stha,2023-stha,769,SC/769/OD,Odigbo II,ON,Ondo,,,,APC,Fasonu Oluwarotimi Babatunde
+stha,2023-stha,770,SC/770/OD,Okitipupa I,ON,Ondo,,,,APC,Ayebusiwa Odunayo Chris Ahris
+stha,2023-stha,771,SC/771/OD,Okitipupa II,ON,Ondo,,,,APC,Gbegudu Ololade James
+stha,2023-stha,772,SC/772/OD,East,ON,Ondo,,,,APC,Olajide Olumide Adesanmi
+stha,2023-stha,773,SC/773/OD,West I,ON,Ondo,,,,APC,Ogunwumiji Moyinolofun Taiwo
+stha,2023-stha,774,SC/774/OD,West II,ON,Ondo,,,,APC,Oladapo John Biola
+stha,2023-stha,775,SC/775/OD,Ose,ON,Ondo,,,,APC,Oshati Olatunji Emmanuel
+stha,2023-stha,776,SC/776/OD,Owo I,ON,Ondo,,,,APC,Ogunmolasuyi Oluwole Emanuel
+stha,2023-stha,777,SC/777/OD,Owo II,ON,Ondo,,,,APC,Witherspoon Atinuke Morenike
+stha,2023-stha,778,SC/778/OS,Boripe/Boluwa-Duro,OS,Osun,,,,APC,Popoola Simeon Olufemi
+stha,2023-stha,779,SC/779/OS,Ifelodun,OS,Osun,,,,PDP,Adeyemi Tajudeen Akinloye
+stha,2023-stha,780,SC/780/OS,Ila,OS,Osun,,,,PDP,Bajepade Akinolye Sikiru
+stha,2023-stha,781,SC/781/OS,Ifedayo,OS,Osun,,,,PDP,Abolarin Kasope Ajibade
+stha,2023-stha,782,SC/782/OS,Irepodun/Orulu,OS,Osun,,,,PDP,Oladimeji Adekunle Emmanuel
+stha,2023-stha,783,SC/783/OS,Odo-Otin,OS,Osun,,,,PDP,Egbedun Adewole Olumide
+stha,2023-stha,784,SC/784/OS,Olorunda,OS,Osun,,,,PDP,Ajibola Olaide Kolwole
+stha,2023-stha,785,SC/785/OS,Osogbo,OS,Osun,,,,PDP,Lawal Bamidele Rasheed
+stha,2023-stha,786,SC/786/OS,Atakunmosa East and West,OS,Osun,,,,PDP,Areoye Sanmi Ebenezer
+stha,2023-stha,787,SC/787/OS,Ife Central,OS,Osun,,,,PDP,Awoyeye Abiola Jeremiah
+stha,2023-stha,788,SC/788/OS,Ife East,OS,Osun,,,,PDP,Fatumisin Olumide Saheed
+stha,2023-stha,789,SC/789/OS,Ife North,OS,Osun,,,,PDP,Oyewusi Akinyode Abidemi
+stha,2023-stha,790,SC/790/OS,Ife South,OS,Osun,,,,PDP,Adeoti Lawrence Olalekan
+stha,2023-stha,791,SC/791/OS,Ilesa East,OS,Osun,,,,PDP,Olatunbosu Oladiran Oyewole
+stha,2023-stha,792,SC/792/OS,Ilesa West,OS,Osun,,,,PDP,Akerele Olawale Oladipupo
+stha,2023-stha,793,SC/793/OS,Obokun,OS,Osun,,,,PDP,Adeyemi Adewumi
+stha,2023-stha,794,SC/794/OS,Oriade,OS,Osun,,,,PDP,Ajibola Micahel Olakanmi
+stha,2023-stha,795,SC/795/OS,Ayedade,OS,Osun,,,,PDP,Ogundare Folrunso Yemi
+stha,2023-stha,796,SC/796/OS,Ayedire,OS,Osun,,,,PDP,Oderinwale Elisha Akinyeme
+stha,2023-stha,797,SC/797/OS,Ede North,OS,Osun,,,,PDP,Adewumi Babajide Kofoworola
+stha,2023-stha,798,SC/798/OS,Ede South,OS,Osun,,,,PDP,Olayiwola Taofeek Olalekan
+stha,2023-stha,799,SC/799/OS,Egbedore,OS,Osun,,,,PDP,Ogunrinade Rotimi Adesola
+stha,2023-stha,800,SC/800/OS,Irewole/Isokan,OS,Osun,,,,PDP,Ibrahim Abiola Waheed
+stha,2023-stha,801,SC/801/OS,Iwo,OS,Osun,,,,PDP,Rabiu Adesina Atanda
+stha,2023-stha,802,SC/802/OS,Ola-Oluwa,OS,Osun,,,,PDP,Ibrahim Afeez Abiodun
+stha,2023-stha,803,SC/803/OS,Ejigbo,OS,Osun,,,,PDP,Asagade Olujimi A.
+stha,2023-stha,804,SC/804/OY,Afijio,OY,Oyo,,,,PDP,Oparinde Oladeji
+stha,2023-stha,805,SC/805/OY,Akinyele I,OY,Oyo,,,,PDP,Abiola Monsuru Olalekan
+stha,2023-stha,806,SC/806/OY,Akinyele II,OY,Oyo,,,,PDP,Kehinde Olatunde Taofik
+stha,2023-stha,807,SC/807/OY,Saki West,OY,Oyo,,,,APC,Shittu Ibraheem Aremu
+stha,2023-stha,808,SC/808/OY,Ibadan North West,OY,Oyo,,,,PDP,Olalere Dawood
+stha,2023-stha,809,SC/809/OY,Egbeda,OY,Oyo,,,,PDP,Babalola Olasunkanmi Samson
+stha,2023-stha,810,SC/810/OY,Ibadan North I,OY,Oyo,,,,PDP,Olajide Olufunke Comforter
+stha,2023-stha,811,SC/811/OY,Ibadan North II,OY,Oyo,,,,PDP,Adebayo Babajide Gabriel
+stha,2023-stha,812,SC/812/OY,Ibadan North East I,OY,Oyo,,,,PDP,Babalola Abiodun Oluwaseun
+stha,2023-stha,813,SC/813/OY,Ibadan North-East II,OY,Oyo,,,,PDP,Owolabi Olusola Adewale
+stha,2023-stha,814,SC/814/OY,Ibadan South-East I,OY,Oyo,,,,PDP,Akande Modiu Opeyemi
+stha,2023-stha,815,SC/815/OY,Ibadan South-East II,OY,Oyo,,,,PDP,Omikunle Olayinka Ayobami
+stha,2023-stha,816,SC/816/OY,Ibadan South-West I,OY,Oyo,,,,PDP,Adebisi Yususf Oladeni
+stha,2023-stha,817,SC/817/OY,Ibadan South West II,OY,Oyo,,,,PDP,Oluwafowokanmi Oluwafemi Adebayo
+stha,2023-stha,818,SC/818/OY,Ibarapa North & Ibarapa,OY,Oyo,,,,PDP,Ojedokun Peter Gbadegesin
+stha,2023-stha,819,SC/819/OY,Ibarapa East,OY,Oyo,,,,PDP,Ogundoye Adebo Edward
+stha,2023-stha,820,SC/820/OY,Ido,OY,Oyo,,,,PDP,Mabaje Rasaq Adekunle
+stha,2023-stha,821,SC/821/OY,Saki East And Atisbo,OY,Oyo,,,,PDP,Saminu Rilwan Gbadamosi
+stha,2023-stha,822,SC/822/OY,Irepo & Olorunsogo,OY,Oyo,,,,APC,Salami Waliu Ayinde
+stha,2023-stha,823,SC/823/OY,Iseyin And Itesiwaju,OY,Oyo,,,,PDP,Adeola Bamidele Oladeimeji
+stha,2023-stha,824,SC/824/OY,Kajola,OY,Oyo,,,,APC,Azeez Musibau
+stha,2023-stha,825,SC/825/OY,Iwajowa,OY,Oyo,,,,PDP,Ogunsola Anthony Oladeji
+stha,2023-stha,826,SC/826/OY,Lagelu,OY,Oyo,,,,PDP,Olajide Akintunde Emmanuel
+stha,2023-stha,827,SC/827/OY,Ogbomoso North,OY,Oyo,,,,PDP,Michael Olubisi Margeret
+stha,2023-stha,828,SC/828/OY,Ogbomoso South,OY,Oyo,,,,PDP,Onaolapo Sanjo Adedoyin
+stha,2023-stha,829,SC/829/OY,Oluyole,OY,Oyo,,,,PDP,Akintayo Waheed Kolawole
+stha,2023-stha,830,SC/830/OY,Ona-Ara,OY,Oyo,,,,PDP,Fadeyi Abiodun Moh
+stha,2023-stha,831,SC/831/OY,Oorelope,OY,Oyo,,,,APC,Jimoh Lukman Ishiola
+stha,2023-stha,832,SC/832/OY,Oriire,OY,Oyo,,,,PDP,Ogundele Johnson Akintola
+stha,2023-stha,833,SC/833/OY,Atiba,OY,Oyo,,,,PDP,Oyekola Gbenga Joseph
+stha,2023-stha,834,SC/834/OY,West / Oyo East,OY,Oyo,,,,PDP,Rahman Olorunpoto Cephas
+stha,2023-stha,835,SC/835/OY,Ogo-Oluwa / Surulere,OY,Oyo,,,,PDP,Ogundare Abideen Adeoye
+stha,2023-stha,836,SC/836/PL,Barkin Ladi,PL,Plateau,,,,PDP,Jwe Philip Gwom
+stha,2023-stha,837,SC/837/PL,Pengana,PL,Plateau,,,,PDP,Happiness Matthew Akawu
+stha,2023-stha,838,SC/838/PL,Rukuba/Irigwe,PL,Plateau,,,,PDP,Agbalak Adukuchili Ibrahim
+stha,2023-stha,839,SC/839/PL,Bokkos,PL,Plateau,,,,PDP,Maren Ishaku
+stha,2023-stha,840,SC/840/PL,Jos East,PL,Plateau,,,,APC,Madaki Isa Ajiji
+stha,2023-stha,841,SC/841/PL,Jos North,PL,Plateau,,,,APC,Aliyu Adamu
+stha,2023-stha,842,SC/842/PL,Jos North West,PL,Plateau,,,,PDP,Azi Danjuma
+stha,2023-stha,843,SC/843/PL,Jos South,PL,Plateau,,,,PDP,Gwottson Dalyop Fom
+stha,2023-stha,844,SC/844/PL,Kanke,PL,Plateau,,,,APC,Gokum Joseph Gomos
+stha,2023-stha,845,SC/845/PL,Pankshin North,PL,Plateau,,,,YPP,Dewan Kundanggbena Gabriel
+stha,2023-stha,846,SC/846/PL,Pankshin South,PL,Plateau,,,,PDP,Wanglek Tanimu Salome
+stha,2023-stha,847,SC/847/PL,Dengi,PL,Plateau,,,,APC,Idris Kalamudal
+stha,2023-stha,848,SC/848/PL,Kantana,PL,Plateau,,,,APC,Ismail Hudu Bala
+stha,2023-stha,849,SC/849/PL,Langtang North,PL,Plateau,,,,PDP,Nannim Joseph Langyi
+stha,2023-stha,850,SC/850/PL,Langtang Central,PL,Plateau,,,,PDP,Rimvyat Nanbol
+stha,2023-stha,851,SC/851/PL,Langtang South,PL,Plateau,,,,PDP,Nimchak Samson Rims
+stha,2023-stha,852,SC/852/PL,Mangu South,PL,Plateau,,,,PDP,Fwangje Bala Ndat
+stha,2023-stha,853,SC/853/PL,Mangu North,PL,Plateau,,,,PDP,Abubakar Sani Idris
+stha,2023-stha,854,SC/854/PL,Mikang,PL,Plateau,,,,PDP,Sule Moses Thomas
+stha,2023-stha,855,SC/855/PL,Qua’an Pan North,PL,Plateau,,,,PDP,Datugun Paul Naankot
+stha,2023-stha,856,SC/856/PL,Qua’an Pan South,PL,Plateau,,,,PDP,Doe Yok Cornelius Donga’an
+stha,2023-stha,857,SC/857/PL,Riyom,PL,Plateau,,,,PDP,Datong Timothy Dalyop
+stha,2023-stha,858,SC/858/PL,Shendam,PL,Plateau,,,,APC,Longshin Bakar Joseph
+stha,2023-stha,859,SC/859/PL,Wase,PL,Plateau,,,,APC,Adamu Ibrahim Galadima
+stha,2023-stha,860,SC/860/RV,Abua/Odual,RI,Rivers,,,,PDP,John Dominc Iderima
+stha,2023-stha,861,SC/861/RV,Ahoada East I,RI,Rivers,,,,PDP,Tony Williams Queen Uwuma
+stha,2023-stha,862,SC/862/RV,Ahoada East II,RI,Rivers,,,,PDP,Ehi Ogerenye Edison
+stha,2023-stha,863,SC/863/RV,Ahoada West,RI,Rivers,,,,PDP,Sokari Goodboy Sokari
+stha,2023-stha,864,SC/864/RV,Akuku-Toru I,RI,Rivers,,,,PDP,Jack Major M.
+stha,2023-stha,865,SC/865/RV,Akuku-Toru II,RI,Rivers,,,,PDP,Opuende Lolo Isaiah
+stha,2023-stha,866,SC/866/RV,Andoni I,RI,Rivers,,,,PDP,Ofiks Kagbang Christopher
+stha,2023-stha,867,SC/867/RV,Asari-Toru I,RI,Rivers,,,,PDP,Grandville Tekenari Wellington
+stha,2023-stha,868,SC/868/RV,Asari-Toru II,RI,Rivers,,,,PDP,George Enemi Alabo
+stha,2023-stha,869,SC/869/RV,Bonny,RI,Rivers,,,,PDP,Jumbo Victor Oko
+stha,2023-stha,870,SC/870/RV,Degema,RI,Rivers,,,,PDP,Abbey Peter Enemeneya
+stha,2023-stha,871,SC/871/RV,Emohua,RI,Rivers,,,,PDP,Emeji Justina
+stha,2023-stha,872,SC/872/RV,Eleme,RI,Rivers,,,,PDP,Igwe Obey Aforji
+stha,2023-stha,873,SC/873/RV,Etche I,RI,Rivers,,,,PDP,Onwuka Ignatius Obenachi
+stha,2023-stha,874,SC/874/RV,Etche II,RI,Rivers,,,,PDP,Nwankwo Chimezie Christian
+stha,2023-stha,875,SC/875/RV,Gokana,RI,Rivers,,,,PDP,Maol Dumle
+stha,2023-stha,876,SC/876/RV,Ikwere I,RI,Rivers,,,,PDP,Nyeche Prince Lemechi
+stha,2023-stha,877,SC/877/RV,Khana I,RI,Rivers,,,,PDP,Nwakoh Barlie
+stha,2023-stha,878,SC/878/RV,Khana Ii,RI,Rivers,,,,PDP,Loolo Dinebari
+stha,2023-stha,879,SC/879/RV,Obio/Akpor I,RI,Rivers,,,,PDP,Amaewhule Martin Chike
+stha,2023-stha,880,SC/880/RV,Obio/Akpor II,RI,Rivers,,,,PDP,Amadi Emilia Lucky
+stha,2023-stha,881,SC/881/RV,Ogba/Egbema/Ndoni,RI,Rivers,,,,PDP,Nwabochi Frankline Uchenna
+stha,2023-stha,882,SC/882/RV,Onelga II,RI,Rivers,,,,PDP,Ezekwe Nkemjika Ijeoma
+stha,2023-stha,883,SC/883/RV,Ogu/Bolo,RI,Rivers,,,,PDP,Davids Okobiriari Arnold
+stha,2023-stha,884,SC/884/RV,Okrika,RI,Rivers,,,,PDP,Somiari –Stewart Linda Koroma
+stha,2023-stha,885,SC/885/RV,Omuma,RI,Rivers,,,,PDP,Nwankwo Sylvanus Enyinna
+stha,2023-stha,886,SC/886/RV,Opobo/Nkoro,RI,Rivers,,,,PDP,Orubienimigha Adolphus T.
+stha,2023-stha,887,SC/887/RV,Oyigbo,RI,Rivers,,,,PDP,Oforji Gerald
+stha,2023-stha,888,SC/888/RV,Port-Harcourt I,RI,Rivers,,,,PDP,Wami Solomon
+stha,2023-stha,889,SC/889/RV,Port-Harcourt II,RI,Rivers,,,,PDP,Adoki Tonye Smart
+stha,2023-stha,890,SC/890/RV,Port-Harcourt III,RI,Rivers,,,,PDP,Opara Azeru
+stha,2023-stha,891,SC/891/RV,Tai,RI,Rivers,,,,PDP,Ngbar Bernard Baridamue
+stha,2023-stha,892,SC/892/SO,Binji,SO,Sokoto,,,,APC,Umar Tukr
+stha,2023-stha,893,SC/893/SO,Bodinga North,SO,Sokoto,,,,PDP,Magaji Abubakar
+stha,2023-stha,894,SC/894/SO,Bodinga South,SO,Sokoto,,,,APC,Bala Tukur
+stha,2023-stha,895,SC/895/SO,Dange Shuni,SO,Sokoto,,,,APC,Muhammed Sirajo
+stha,2023-stha,896,SC/896/SO,Gada East,SO,Sokoto,,,,APC,Dauda Kabiru
+stha,2023-stha,897,SC/897/SO,Gada West,SO,Sokoto,,,,PDP,Awaisu M. Aliyu
+stha,2023-stha,898,SC/898/SO,Goronyo,SO,Sokoto,,,,PDP,Adamu Nasiru
+stha,2023-stha,899,SC/899/SO,Gudu,SO,Sokoto,,,,APC,Yahaya Amadu
+stha,2023-stha,900,SC/900/SO,Gwadabawa North,SO,Sokoto,,,,APC,Idris Bello
+stha,2023-stha,901,SC/901/SO,Gwadabawa South,SO,Sokoto,,,,APC,Sidi Faruku
+stha,2023-stha,902,SC/902/SO,Illela,SO,Sokoto,,,,APC,Sirajo Abdulkarim Danjuma
+stha,2023-stha,903,SC/903/SO,Isa,SO,Sokoto,,,,PDP,Halilu Habibu Modachi
+stha,2023-stha,904,SC/904/SO,Kware,SO,Sokoto,,,,APC,Ibrahim Kabiru
+stha,2023-stha,905,SC/905/SO,Kebbe,SO,Sokoto,,,,APC,Hamisu Samaila
+stha,2023-stha,906,SC/906/SO,Rabah,SO,Sokoto,,,,APC,Abdullahi Alhaji Zakari
+stha,2023-stha,907,SC/907/SO,Sabon Birni North,SO,Sokoto,,,,APC,Almustapha Aminu Gobir
+stha,2023-stha,908,SC/908/SO,Sabon Birni South,SO,Sokoto,,,,APC,Ibrahim Saidu Naino
+stha,2023-stha,909,SC/909/SO,Shagari,SO,Sokoto,,,,PDP,Mohammed Shagari Masa’ud
+stha,2023-stha,910,SC/910/SO,Silame,SO,Sokoto,,,,PDP,Liman Atiku
+stha,2023-stha,911,SC/911/SO,North I,SO,Sokoto,,,,PDP,Haliru Buhari
+stha,2023-stha,912,SC/912/SO,North II,SO,Sokoto,,,,APC,Tukur Faru Hussaini
+stha,2023-stha,913,SC/913/SO,South I,SO,Sokoto,,,,APC,Abdullahi Mustapha
+stha,2023-stha,914,SC/914/SO,South II,SO,Sokoto,,,,APC,Gidado Aminu Garba
+stha,2023-stha,915,SC/915/SO,Tambuwal West,SO,Sokoto,,,,PDP,Hantsi Sule Romo
+stha,2023-stha,916,SC/916/SO,Tambuwal East,SO,Sokoto,,,,PDP,Isah Bashar
+stha,2023-stha,917,SC/917/SO,Tangaza,SO,Sokoto,,,,APC,Aliyu Lomo Usman
+stha,2023-stha,918,SC/918/SO,Tureta,SO,Sokoto,,,,PDP,Muhammed Randa Abdullahi
+stha,2023-stha,919,SC/919/SO,Wamakko,SO,Sokoto,,,,APC,Lamido Abubakar
+stha,2023-stha,920,SC/920/SO,Wurno,SO,Sokoto,,,,APC,Aliyu Shamsu
+stha,2023-stha,921,SC/921/SO,Yabo,SO,Sokoto,,,,APC,Shehu Yabo Abubakar
+stha,2023-stha,922,SC/922/TR,Bali I,TA,Taraba,,,,PDP,Alhassan Veronica
+stha,2023-stha,923,SC/923/TR,Bali II,TA,Taraba,,,,PDP,Abdullahi Hamman Adama Borkono
+stha,2023-stha,924,SC/924/TR,Gassol I,TA,Taraba,,,,APC,Abdullahi Musa Abubakar
+stha,2023-stha,925,SC/925/TR,Gassol II,TA,Taraba,,,,PDP,Abdullahi (Chul) Musa
+stha,2023-stha,926,SC/926/TR,Jalingo I,TA,Taraba,,,,NNPP,Adamu Umar
+stha,2023-stha,927,SC/927/TR,Jalingo II,TA,Taraba,,,,APC,Mairiga Usman Uba
+stha,2023-stha,928,SC/928/TR,Ardo-Kola,TA,Taraba,,,,PDP,Shonruba Happy Joshua
+stha,2023-stha,929,SC/929/TR,Takum I,TA,Taraba,,,,PDP,Tanko-Yusuf Abubakar John
+stha,2023-stha,930,SC/930/TR,Kashimbila (Takum II),TA,Taraba,,,,PDP,Lamba John
+stha,2023-stha,931,SC/931/TR,Ussa/Likam,TA,Taraba,,,,APC,Rikupki Joshua Urenyang
+stha,2023-stha,932,SC/932/TR,Gembu (Sardauna I),TA,Taraba,,,,APC,Suleiman T. Abdul-Azeez Tanko
+stha,2023-stha,933,SC/933/TR,Nguroje,TA,Taraba,,,,PDP,Cyprain Nelson Len
+stha,2023-stha,934,SC/934/TR,Mbamnga,TA,Taraba,,,,APC,Peter Abel Diah
+stha,2023-stha,935,SC/935/TR,Kurmi,TA,Taraba,,,,PDP,Tafarki Agbadu Eneme
+stha,2023-stha,936,SC/936/TR,Zing,TA,Taraba,,,,PDP,Bonzena Kizito John
+stha,2023-stha,937,SC/937/TR,Karim Lamido I,TA,Taraba,,,,PDP,Mike Dio M.M. Jen
+stha,2023-stha,938,SC/938/TR,Karim Lamido II,TA,Taraba,,,,APGA,Shuaibu Anas
+stha,2023-stha,939,SC/939/TR,Wukari I,TA,Taraba,,,,PDP,Zikengyu Yakubu Jethro
+stha,2023-stha,940,SC/940/TR,Wukari II,TA,Taraba,,,,PDP,Angye Josiah Yaro
+stha,2023-stha,941,SC/941/TR,Ibi,TA,Taraba,,,,NNPP,Sanusi Zakari
+stha,2023-stha,942,SC/942/TR,Donda,TA,Taraba,,,,APC,Bibonga Dinkomiya Nulamuga
+stha,2023-stha,943,SC/943/TR,Gashaka,TA,Taraba,,,,APC,Muhammad Batulu Kaltume
+stha,2023-stha,944,SC/944/TR,Lau,TA,Taraba,,,,PDP,Akila Nuhu Rantiyo
+stha,2023-stha,945,SC/945/TR,Yorro,TA,Taraba,,,,SDP,Kassong Kannoh Joseph
+stha,2023-stha,946,SC/946/YB,Bade East,YO,Yobe,,,,PDP,Sadiq Yahaya
+stha,2023-stha,947,SC/947/YB,Bade West,YO,Yobe,,,,APC,Karabade Sanda
+stha,2023-stha,948,SC/948/YB,Bursari,YO,Yobe,,,,APC,Zanna Baba Gana
+stha,2023-stha,949,SC/949/YB,Damaturu I,YO,Yobe,,,,APC,Hassan Yusuf Nasiru
+stha,2023-stha,950,SC/950/YB,Damaturu II,YO,Yobe,,,,APC,Ibrahim Buba
+stha,2023-stha,951,SC/951/YB,Fika/Ngalda,YO,Yobe,,,,APC,Suleiman Yakubu Maluri
+stha,2023-stha,952,SC/952/YB,Goya/Ngeji,YO,Yobe,,,,APC,Sani Ishaku Audu
+stha,2023-stha,953,SC/953/YB,Damagum,YO,Yobe,,,,APC,Digma Gana Maina
+stha,2023-stha,954,SC/954/YB,Jajere,YO,Yobe,,,,APC,Buba Chiroma A.
+stha,2023-stha,955,SC/955/YB,Geidam South,YO,Yobe,,,,APC,Ali Mohammed
+stha,2023-stha,956,SC/956/YB,Geidam North,YO,Yobe,,,,APC,Mustapha Alhaji Bukar
+stha,2023-stha,957,SC/957/YB,Gujba,YO,Yobe,,,,APC,Bukar Bulama
+stha,2023-stha,958,SC/958/YB,Gulani,YO,Yobe,,,,APC,Zannani Bularaba Bunu
+stha,2023-stha,959,SC/959/YB,Jakusko,YO,Yobe,,,,APC,Yau Usman Dachia
+stha,2023-stha,960,SC/960/YB,Karasuwa,YO,Yobe,,,,APC,Dala Dogo Adamu
+stha,2023-stha,961,SC/961/YB,Machina,YO,Yobe,,,,APC,Maina Kachalla Saminu
+stha,2023-stha,962,SC/962/YB,Nangere,YO,Yobe,,,,APC,Lawan Musa Saminu
+stha,2023-stha,963,SC/963/YB,Nguru I,YO,Yobe,,,,APC,Inuwa Lawan Sani
+stha,2023-stha,964,SC/964/YB,Nguru II,YO,Yobe,,,,PDP,Lawan Musa
+stha,2023-stha,965,SC/965/YB,Potiskum Town,YO,Yobe,,,,APC,Adamu Ahmed
+stha,2023-stha,966,SC/966/YB,Mamudo,YO,Yobe,,,,APC,Isah Muhammad Bello
+stha,2023-stha,967,SC/967/YB,Tarmuwa,YO,Yobe,,,,APC,Maina Buba Saleh
+stha,2023-stha,968,SC/968/YB,Yunusari I,YO,Yobe,,,,APC,Musa Ahmed Dumbol
+stha,2023-stha,969,SC/969/YB,Yusufari II,YO,Yobe,,,,APC,Mohammed Hassan
+stha,2023-stha,970,SC/970/ZF,Kaura Namoda North,ZA,Zamfara,,,,PDP,Nasir Mukhtar
+stha,2023-stha,971,SC/971/ZF,Kaura Namoda South,ZA,Zamfara,,,,APC,Ibrahim Aminu
+stha,2023-stha,972,SC/972/ZF,Birnin Magaji,ZA,Zamfara,,,,APC,Dahiru Nura
+stha,2023-stha,973,SC/973/ZF,Zurmi East,ZA,Zamfara,,,,PDP,Abdullahi Haliru Kuturu
+stha,2023-stha,974,SC/974/ZF,Zurmi West,ZA,Zamfara,,,,PDP,Ismail Bilyaminu
+stha,2023-stha,975,SC/975/ZF,Shinkafi,ZA,Zamfara,,,,APC,Aliyu Usman Mahmud
+stha,2023-stha,976,SC/976/ZF,Tsafe East,ZA,Zamfara,,,,PDP,Muhammed Bello
+stha,2023-stha,977,SC/977/ZF,Tsafe West,ZA,Zamfara,,,,PDP,Ahmed Amiru
+stha,2023-stha,978,SC/978/ZF,Gusau West,ZA,Zamfara,,,,PDP,Wambai Ibrahim Ibrahim
+stha,2023-stha,979,SC/979/ZF,Gusau East,ZA,Zamfara,,,,PDP,Ibrahim Garba Liman
+stha,2023-stha,980,SC/980/ZF,Bungudu East,ZA,Zamfara,,,,PDP,Yakubu Almajir
+stha,2023-stha,981,SC/981/ZF,Bungudu West,ZA,Zamfara,,,,PDP,Bello Basiru
+stha,2023-stha,982,SC/982/ZF,Maru North,ZA,Zamfara,,,,PDP,Abdullahi Nasiru
+stha,2023-stha,983,SC/983/ZF,Maru South,ZA,Zamfara,,,,PDP,Mikailu Kabiru Dangulbi
+stha,2023-stha,984,SC/984/ZF,Anka,ZA,Zamfara,,,,PDP,Marafa Rilwanu
+stha,2023-stha,985,SC/985/ZF,Talata Mafara North,ZA,Zamfara,,,,APC,Hassan Shamsudeen
+stha,2023-stha,986,SC/986/ZF,Talata Mafara South,ZA,Zamfara,,,,APC,Ango Aliyu Kangara
+stha,2023-stha,987,SC/987/ZF,Bakura,ZA,Zamfara,,,,APC,Tukur Tudu Ibrahim
+stha,2023-stha,988,SC/988/ZF,Maradun I,ZA,Zamfara,,,,APC,Musa Faruk
+stha,2023-stha,989,SC/989/ZF,Maradun II,ZA,Zamfara,,,,PDP,Mahrazu Salisu
+stha,2023-stha,990,SC/990/ZF,Gummi I,ZA,Zamfara,,,,PDP,Aliyu Bashar
+stha,2023-stha,991,SC/991/ZF,Gummi II,ZA,Zamfara,,,,PDP,Adamu Aliyu
+stha,2023-stha,992,SC/992/ZF,Bukkuyum North,ZA,Zamfara,,,,PDP,Abubakar Bashir
+stha,2023-stha,993,SC/993/ZF,Bukkuyum South,ZA,Zamfara,,,,PDP,A Faru Hamisu

@@ -110,4 +110,49 @@ async function upsertInecSubmission({
   return { upserted: true, submissionId };
 }
 
-module.exports = { upsertInecSubmission, close };
+// Catalog-only write: upsert one IReV per-PU record into irev_pu_catalog
+// (migration 0016). No image, no FK to our registry — this is the staging
+// landing zone for `node scrape.js --catalog-only`. Idempotent on
+// (irev_election_id, pu_code).
+async function upsertCatalogEntry(row) {
+  if (config.dryRun) return { upserted: true, dryRun: true };
+
+  const client = await db();
+  await client.query(
+    `INSERT INTO irev_pu_catalog (
+       irev_election_id, pu_code, pu_code_string, pu_name, polling_unit_id,
+       election_label, election_type_id, state_id, lga_name, lga_code, ward_name,
+       document_url, document_size, is_zero_pu, result_updated_at, irev_record_id,
+       fetched_at, raw
+     ) VALUES (
+       $1,$2,$3,$4,$5, $6,$7,$8,$9,$10,$11, $12,$13,$14,$15,$16, NOW(), $17::jsonb
+     )
+     ON CONFLICT (irev_election_id, pu_code) DO UPDATE SET
+       pu_code_string    = EXCLUDED.pu_code_string,
+       pu_name           = EXCLUDED.pu_name,
+       polling_unit_id   = EXCLUDED.polling_unit_id,
+       election_label    = EXCLUDED.election_label,
+       election_type_id  = EXCLUDED.election_type_id,
+       state_id          = EXCLUDED.state_id,
+       lga_name          = EXCLUDED.lga_name,
+       lga_code          = EXCLUDED.lga_code,
+       ward_name         = EXCLUDED.ward_name,
+       document_url      = EXCLUDED.document_url,
+       document_size     = EXCLUDED.document_size,
+       is_zero_pu        = EXCLUDED.is_zero_pu,
+       result_updated_at = EXCLUDED.result_updated_at,
+       irev_record_id    = EXCLUDED.irev_record_id,
+       fetched_at        = NOW(),
+       raw               = EXCLUDED.raw`,
+    [
+      row.irev_election_id, row.pu_code, row.pu_code_string, row.pu_name,
+      row.polling_unit_id, row.election_label, row.election_type_id, row.state_id,
+      row.lga_name, row.lga_code, row.ward_name, row.document_url,
+      row.document_size, row.is_zero_pu, row.result_updated_at, row.irev_record_id,
+      JSON.stringify(row.raw ?? null),
+    ]
+  );
+  return { upserted: true };
+}
+
+module.exports = { upsertInecSubmission, upsertCatalogEntry, close };

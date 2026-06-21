@@ -36,9 +36,9 @@
 
 const config = require('./config');
 const client = require('./lib/irev_client');
-const { parsePuEntry } = require('./lib/parse');
+const { parsePuEntry, parseCatalogEntry } = require('./lib/parse');
 const { uploadImage } = require('./lib/storage');
-const { upsertInecSubmission, close: closeDb } = require('./lib/persist');
+const { upsertInecSubmission, upsertCatalogEntry, close: closeDb } = require('./lib/persist');
 const progress = require('./lib/progress');
 const { sleep } = require('./lib/http');
 
@@ -114,7 +114,27 @@ async function selectElections(args) {
   return all.filter((e) => matchesFilters(e, args));
 }
 
-async function processOne(progressState, dbEid, electionIntegerId, puEntry, args) {
+async function processOne(progressState, dbEid, election, puEntry, args) {
+  // Catalog-only: record every PU's metadata + EC8A URL into irev_pu_catalog
+  // (no image download, no ec8a_submissions write). document_url is null for
+  // PUs without an upload yet, so the catalog also tracks upload coverage.
+  if (args.catalogOnly) {
+    const cat = parseCatalogEntry(puEntry, election);
+    if (!cat) {
+      progress.done(progressState, dbEid, puEntry.pu_code || '?', 'not_uploaded');
+      return 'not_uploaded';
+    }
+    try {
+      await upsertCatalogEntry(cat);
+      const status = cat.document_url ? 'ok' : 'not_uploaded';
+      progress.done(progressState, dbEid, cat.pu_code, status);
+      return status;
+    } catch (e) {
+      progress.fail(progressState, dbEid, cat.pu_code, e.message);
+      return 'error';
+    }
+  }
+
   const parsed = parsePuEntry(puEntry);
   if (!parsed) {
     progress.done(progressState, dbEid, puEntry.pu_code || '?', 'not_uploaded');
@@ -187,7 +207,7 @@ async function scrapeWard(progressState, election, lga, ward, args) {
     }
 
     const t0 = Date.now();
-    const status = await processOne(progressState, dbEid, election.election_id, puEntry, args);
+    const status = await processOne(progressState, dbEid, election, puEntry, args);
     processed += 1;
 
     if (processed === 1 || processed % 25 === 0) {

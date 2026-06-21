@@ -28,6 +28,7 @@ export function Header({ locale }: { locale: Locale }) {
 
   const navLinks: Array<{ href: string; label: string }> = [
     { href: `/${locale}/results`, label: t('results') },
+    { href: `/${locale}/results-2023`, label: t('results2023') },
     { href: `/${locale}/map`, label: t('map') },
     { href: `/${locale}/discrepancies`, label: t('discrepancies') },
     { href: `/${locale}/anomalies`, label: t('anomalies') },
