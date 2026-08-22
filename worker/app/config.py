@@ -46,6 +46,12 @@ class Settings(BaseSettings):
     # against real EC8A photographs and must not be treated as settled.
     blur_threshold: float = 130.0               # below this reads as blurred
     min_legible_long_edge: int = 1_000          # pixels on the longer edge
+
+    # Document layout / rectification (issue #69). Runs as a separate service
+    # so the worker does not carry torch. Unset means no layout analysis:
+    # every consumer degrades gracefully rather than failing.
+    layout_service_url: str | None = None
+    layout_timeout_seconds: float = 8.0
     extraction_confidence_floor: float = 0.85   # below this routes to human review
     consensus_min_sources: int = 2              # parties/observers required for consensus
     consensus_tolerance_votes: int = 0          # exact agreement required by default

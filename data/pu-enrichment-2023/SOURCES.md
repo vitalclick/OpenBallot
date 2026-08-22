@@ -29,6 +29,7 @@ interpolated.
 | `pu_roster.csv` | 176,846 | `AllPollingUnitsInfo.csv` |
 | `pu_results_2023.csv` | 176,846 | `voter_info.csv` |
 | `lga_results_2023.csv` | 774 | `LGALevelResult.csv` (verbatim) |
+| `authentication_labels.csv` | 22,681 | `stamp_sig_missing.csv` (verbatim) |
 
 `pu_roster.csv` columns: `polling_unit_code`, `status`, `state_name`,
 `lga_name`, `ward_name`, `unit_name`, `lat`, `lng`, `document_slug`.
@@ -110,6 +111,30 @@ way concentrated in Oguta, or the official figure could be. It is exactly the
 kind of localised, checkable disagreement the LGA rung exists to surface, and
 it wants a human. Imo is also where CCIJ sent journalists over accreditation
 disparities (Oru East).
+
+## `authentication_labels.csv` — an evaluation set, not an input
+
+22,681 polling units labelled for the elements that make a result sheet
+legally meaningful: the presiding officer's name and signature, polling agent
+signatures, and the black stamp.
+
+This is **not loaded into the database**. It is ground truth for measuring
+whether our own detection of those elements is any good — `ExtractedEC8A`
+carries all three fields and nothing measured them until now.
+
+What makes it usable is how many negatives it contains:
+
+| element | present | absent | absent % |
+|---|--:|--:|--:|
+| presiding officer signature | 18,726 | 3,955 | 17.4% |
+| polling agent signatures | 19,254 | 3,427 | 15.1% |
+| official (black) stamp | 9,681 | 13,000 | 57.3% |
+
+Score against it with `scripts/eval_authentication.py`. The headline metric is
+**negative recall** — of the forms genuinely missing an element, how many we
+catch. Accuracy alone is actively misleading here: 83% of forms carry the
+officer's signature, so a detector that answers "signed" every time scores 83%
+while being wrong in precisely the case that matters.
 
 ## Accuracy, and what this data may not be used for
 
