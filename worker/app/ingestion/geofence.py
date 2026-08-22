@@ -9,8 +9,8 @@ A hard reject is the one ingestion outcome an agent cannot recover from: the
 submission is refused and the EC8A goes back in the folder. That is only a
 defensible response when the registered coordinate is precise enough to bear
 it. Rosters resolve co-located polling units - several PUs in one school or
-market - to a single shared point, and in the CCIJ 2023 roster roughly one PU
-in twelve sits on a point it shares with another. An agent standing at the
+market - to a single shared point. In the CCIJ 2023 roster that is 20,542
+polling units, 11.6% of those with a coordinate. An agent standing at the
 right polling unit can be hundreds of metres from such a point through no
 fault of their own.
 

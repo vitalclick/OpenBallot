@@ -5,10 +5,10 @@ an operator tool, not part of the running service), so this test pulls it in
 via a sys.path tweak - the same arrangement as test_ward_reconciliation.py.
 Kept here so it runs in CI alongside the rest of the Python suite.
 
-Fixtures below are synthetic. The loader's real input is third-party data
-whose licensing is unsettled (issue #64), and none of it belongs in this
-repository until that is resolved. The shapes are what matter for these
-tests, and they are documented in issues #65 and #66.
+Fixtures below are synthetic and deliberately tiny: these tests pin the
+parsing, validation and planning logic, not the data. The real input lives in
+`data/pu-enrichment-2023/` with its provenance in that directory's
+SOURCES.md.
 """
 
 from __future__ import annotations
@@ -32,6 +32,7 @@ from load_pu_enrichment import (
     read_roster,
     read_roster_geography,
     read_voter_info,
+    state_prefix,
     ward_prefix,
 )
 
@@ -243,6 +244,7 @@ def test_missing_registered_count_is_reported(tmp_path):
 def test_prefix_helpers():
     assert ward_prefix("01-08-10-004") == "01-08-10"
     assert lga_prefix("01-08-10-004") == "01-08"
+    assert state_prefix("01-08-10-004") == "01"
 
 
 # ─── Gap-fill planning ────────────────────────────────────────────────────
@@ -256,41 +258,75 @@ def test_gap_fill_groups_missing_pus_by_ward():
         "01-08-09-001": ("KNOWN", "Known Ward", "Isuikwuato", "ABIA"),
     }
     known = {"01-08-09-001"}
-    missing, orphans = plan_gap_fill(
+    missing, creatable, orphans = plan_gap_fill(
         roster_geo,
         known_pus=known,
         ward_by_prefix={"01-08-09": "AB-08-09"},
         lga_by_prefix={"01-08": "AB-08"},
+        state_by_prefix={"01": "AB"},
     )
 
     assert orphans == []
+    assert creatable == {}
     assert missing == {
         "01-08-10": ["01-08-10-001", "01-08-10-002"],
         "01-08-11": ["01-08-11-001"],
     }
 
 
-def test_gap_fill_reports_pus_whose_lga_is_unknown():
-    # Our LGA count already matches INEC's published 774, so a polling unit
-    # naming an absent LGA means the input disagrees with the registry about
-    # the shape of the country. The loader surfaces it instead of inventing.
+def test_missing_lga_in_a_known_state_is_creatable_not_an_orphan():
+    """The Borno / Abadam case.
+
+    INEC's published count of 774 LGAs includes Abadam, but its polling-unit
+    roster returns nothing for it, so load_polling_units.py never created the
+    row and we hold 773. A roster supplying Abadam's polling units is filling
+    a real hole, not contradicting the registry - so it is offered for
+    creation (still gated behind --create-missing-lgas) rather than aborting.
+    """
+    roster_geo = {
+        "08-01-01-001": ("AREGE PRI. SCH.", "Arege", "Abadam", "BORNO"),
+        "08-01-01-002": ("DOGON CHUKU", "Arege", "Abadam", "BORNO"),
+    }
+    missing, creatable, orphans = plan_gap_fill(
+        roster_geo,
+        known_pus=set(),
+        ward_by_prefix={},
+        lga_by_prefix={"08-02": "BO-02"},      # Askira/Uba is present
+        state_by_prefix={"08": "BO"},          # ... so Borno is placeable
+    )
+
+    assert orphans == []
+    assert creatable == {"08-01": ("Abadam", "BO")}
+    assert missing == {"08-01-01": ["08-01-01-001", "08-01-01-002"]}
+
+
+def test_pus_in_an_unknown_state_stay_orphans():
+    # A missing LGA can be legitimate; a missing state means the input and the
+    # registry disagree about the shape of the country. Never invented.
     roster_geo = {"99-99-99-001": ("MYSTERY", "Nowhere", "Nowhere", "ATLANTIS")}
-    missing, orphans = plan_gap_fill(
-        roster_geo, known_pus=set(), ward_by_prefix={}, lga_by_prefix={"01-08": "AB-08"}
+    missing, creatable, orphans = plan_gap_fill(
+        roster_geo,
+        known_pus=set(),
+        ward_by_prefix={},
+        lga_by_prefix={"01-08": "AB-08"},
+        state_by_prefix={"01": "AB"},
     )
 
     assert missing == {}
+    assert creatable == {}
     assert orphans == ["99-99-99-001"]
 
 
 def test_gap_fill_is_a_no_op_when_the_registry_is_complete():
     roster_geo = {"01-08-09-001": ("KNOWN", "Known Ward", "Isuikwuato", "ABIA")}
-    missing, orphans = plan_gap_fill(
+    missing, creatable, orphans = plan_gap_fill(
         roster_geo,
         known_pus={"01-08-09-001"},
         ward_by_prefix={"01-08-09": "AB-08-09"},
         lga_by_prefix={"01-08": "AB-08"},
+        state_by_prefix={"01": "AB"},
     )
 
     assert missing == {}
+    assert creatable == {}
     assert orphans == []

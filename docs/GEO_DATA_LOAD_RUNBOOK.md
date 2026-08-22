@@ -71,12 +71,11 @@ If the Supabase pooler drops the connection mid-load, the loader
 reconnects and continues from the next state. Re-running from
 scratch is also safe — every upsert is `ON CONFLICT DO UPDATE`.
 
-## Step 2b — Enrich coordinates and registered voters (optional)
+## Step 2b — Enrich coordinates and registered voters
 
-> **Gated on issue #64.** The roster this step consumes is third-party
-> data whose licensing is unsettled. Do not run it against a real input
-> until that is resolved. The tooling is in the repository so the schema
-> and the loader can be reviewed independently of the data.
+> Input and attribution: `data/pu-enrichment-2023/SOURCES.md`. Licensing
+> was agreed with CCIJ; every figure derived from it must be attributed
+> to them wherever it is published.
 
 INEC's roster carries neither GPS coordinates nor registered-voter
 counts, so after step 2 `polling_units.geog` and `registered_voters`
@@ -87,15 +86,33 @@ code that never fires.
 ```bash
 # Parse and report without touching the database:
 python scripts/load_pu_enrichment.py \
-    --roster roster.csv --voter-info voters.csv \
+    --roster data/pu-enrichment-2023/pu_roster.csv \
+    --voter-info data/pu-enrichment-2023/pu_results_2023.csv \
     --dry-run --report /tmp/rejects.csv
 
-# Apply:
+# Apply. --create-missing-lgas is needed for Borno / Abadam, whose
+# polling units INEC's roster omits entirely:
 DATABASE_URL=... python scripts/load_pu_enrichment.py \
-    --roster roster.csv --voter-info voters.csv
+    --roster data/pu-enrichment-2023/pu_roster.csv \
+    --voter-info data/pu-enrichment-2023/pu_results_2023.csv \
+    --create-missing-lgas
 ```
 
 Requires migration `0017_pu_geo_provenance.sql`.
+
+Takes about four minutes against a local Postgres. Expected output:
+
+```
+Gap fill: 2,671 polling units absent from the registry, across 97 wards
+          (97 of them new), 1 LGAs missing
+  created LGA BO-01: Abadam (BO)
+  LGAs created: 1   wards created: 97   polling units inserted: 2,671
+Enrichment: 176,526 polling units (155,984 exact, 20,542 shared_site);
+            176,846 with registered-voter counts
+```
+
+After it, the registry matches every count in INEC's own report — 37
+states, 774 LGAs, 8,809 wards, 176,846 polling units.
 
 Two passes run by default, either of which can be skipped with
 `--no-gap-fill` / `--no-enrich`:
@@ -112,10 +129,10 @@ provenance columns for polling units we already have.
 
 ### Coordinate precision — read before tightening the fence
 
-The loader labels every coordinate `exact` or `shared_site`.
-Co-located polling units — several in one school or market — resolve
-to a single point in the sources we have seen, and roughly one PU in
-twelve shares its point with another.
+The loader labels every coordinate `exact` or `shared_site`. Co-located
+polling units — several in one school or market — resolve to a single
+point in the sources we have seen. In the CCIJ roster that is 20,542
+polling units, 11.6% of those mapped.
 
 `shared_site` coordinates are **not** used for hard rejects. An agent
 standing at the correct polling unit can be hundreds of metres from a
@@ -134,7 +151,8 @@ SELECT geog_source, geog_precision, count(*)
   FROM polling_units WHERE geog IS NOT NULL
  GROUP BY 1, 2 ORDER BY 1, 2;
 
--- Registered voters should approach INEC's published 93,469,008.
+-- 93,299,647 from this source, 0.18% below INEC's published
+-- 93,469,008. The shortfall is in the source and is not corrected.
 SELECT sum(registered_voters) FROM polling_units;
 ```
 
@@ -144,8 +162,9 @@ reason per row: `malformed_pu_code`, `duplicate_pu_code`,
 `missing_registered_voters`.
 
 The loader is idempotent — re-running against the same input leaves the
-registry byte-identical. It aborts with exit code 3, before writing
-anything, if any polling unit names an LGA the registry does not have.
+registry byte-identical. Before writing anything it aborts with exit 3 if a polling unit sits in a
+state the registry lacks, and with exit 4 if an LGA is missing and
+`--create-missing-lgas` was not given.
 
 ## Step 3 — Apply the ward polygon API migration
 

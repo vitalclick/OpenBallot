@@ -45,9 +45,12 @@ What this loader deliberately does not do
   one election, not about a polling unit, so it belongs with the per-election
   baseline (#67) rather than in the election-agnostic registry.
 * **Vote tallies are ignored entirely**, for the same reason.
-* **No LGA is ever created.** Our LGA count already matches INEC's published
-  774 exactly, so a missing LGA means the input disagrees with the registry in
-  a way a loader should not paper over. It aborts and says so.
+* **No LGA is created without ``--create-missing-lgas``.** One is legitimately
+  missing: INEC's published count of 774 includes Borno / Abadam, but its
+  polling-unit roster returns nothing for it, so the registry holds 773. A
+  roster supplying Abadam's units fills a real hole. Creating an LGA is still
+  opt-in and logged. A polling unit in an unknown *state* is never accommodated
+  at all -- that aborts.
 
 Provenance
 ----------
@@ -299,8 +302,8 @@ def classify_precision(rows: list[RosterRow]) -> dict[str, str]:
 
     Co-located polling units - several PUs in one school, market or town hall
     - resolve to a single point in every roster we have seen. In the CCIJ 2023
-    roster, 176,846 polling units share only 162,545 distinct coordinate
-    pairs, so roughly one PU in twelve sits on a point it does not own.
+    roster that is 20,542 polling units, 11.6% of the 176,526 with a usable
+    coordinate.
 
     ``exact`` here means *unique within this source*, not survey-grade. It is
     the strongest claim the input supports, and the geofence treats it as the
@@ -321,6 +324,11 @@ def ward_prefix(pu_code: str) -> str:
 def lga_prefix(pu_code: str) -> str:
     """``"01-08-10-004"`` -> ``"01-08"``."""
     return "-".join(pu_code.split("-")[:2])
+
+
+def state_prefix(pu_code: str) -> str:
+    """``"01-08-10-004"`` -> ``"01"``."""
+    return pu_code.split("-")[0]
 
 
 # ─── Database access ──────────────────────────────────────────────────────
@@ -345,27 +353,48 @@ def connect(url: str):
     )
 
 
-def fetch_registry(cur) -> tuple[set[str], dict[str, str], dict[str, str]]:
+def fetch_registry(cur) -> tuple[set[str], dict[str, str], dict[str, str], dict[str, str]]:
     """Read what the registry already holds.
 
-    Returns (pu codes, ward-prefix -> ward_code, lga-prefix -> lga_code).
+    Returns (pu codes, ward-prefix -> ward_code, lga-prefix -> lga_code,
+    state-prefix -> state_code).
 
     The prefix maps are built from existing polling units rather than by
     re-deriving codes from the delim, because ``load_polling_units.py`` merges
     LGAs and wards that collide on ``UNIQUE (parent, name)`` and the resulting
     code is not always the one string construction would predict.
     """
-    cur.execute("SELECT pu_code, ward_code, lga_code FROM polling_units")
+    cur.execute("SELECT pu_code, ward_code, lga_code, state_code FROM polling_units")
     pu_codes: set[str] = set()
     ward_by_prefix: dict[str, str] = {}
     lga_by_prefix: dict[str, str] = {}
+    state_by_prefix: dict[str, str] = {}
 
-    for pu_code, ward_code, lga_code in cur.fetchall():
+    for pu_code, ward_code, lga_code, state_code in cur.fetchall():
         pu_codes.add(pu_code)
         ward_by_prefix.setdefault(ward_prefix(pu_code), ward_code)
         lga_by_prefix.setdefault(lga_prefix(pu_code), lga_code)
+        state_by_prefix.setdefault(state_prefix(pu_code), state_code)
 
-    return pu_codes, ward_by_prefix, lga_by_prefix
+    return pu_codes, ward_by_prefix, lga_by_prefix, state_by_prefix
+
+
+def upsert_lga(cur, code: str, name: str, state_code: str) -> str:
+    """Insert an LGA, returning its effective code.
+
+    Only reachable under ``--create-missing-lgas``. Mirrors
+    ``load_polling_units.upsert_lga``: on a ``UNIQUE (state_code, name)``
+    collision the existing row wins and its code comes back.
+    """
+    cur.execute(
+        """
+        INSERT INTO lgas (code, name, state_code) VALUES (%s, %s, %s)
+        ON CONFLICT (state_code, name) DO UPDATE SET name = EXCLUDED.name
+        RETURNING code
+        """,
+        (code, name, state_code),
+    )
+    return cur.fetchone()[0]
 
 
 def upsert_ward(cur, code: str, name: str, lga_code: str, source: str) -> str:
@@ -410,6 +439,31 @@ def insert_pus(cur, rows: list[tuple], source: str) -> None:
     )
 
 
+def enrich_registered_only_batch(cur, rows: list[tuple]) -> None:
+    """rows: (registered, source, pu_code).
+
+    Registered voters and coordinates are independent facts about a polling
+    unit, and the roster supplies plenty of units with one and not the other.
+    Writing the count only where a coordinate happened to parse would silently
+    drop it for the rest - 320 polling units and 120,988 registered voters in
+    the CCIJ roster, which is exactly the sort of quiet shortfall that later
+    reads as a data-quality problem in the totals.
+    """
+    import psycopg2.extras
+
+    psycopg2.extras.execute_batch(
+        cur,
+        """
+        UPDATE polling_units SET
+            registered_voters = %s,
+            registered_voters_source = %s
+        WHERE pu_code = %s
+        """,
+        rows,
+        page_size=500,
+    )
+
+
 def enrich_batch(cur, rows: list[tuple]) -> None:
     """rows: (lng, lat, precision, registered, source, pu_code).
 
@@ -443,61 +497,118 @@ def plan_gap_fill(
     known_pus: set[str],
     ward_by_prefix: dict[str, str],
     lga_by_prefix: dict[str, str],
-) -> tuple[dict[str, list[str]], list[str]]:
+    state_by_prefix: dict[str, str] | None = None,
+) -> tuple[dict[str, list[str]], dict[str, tuple[str, str]], list[str]]:
     """Work out what gap fill would insert.
 
-    Returns (ward prefix -> missing PU codes, orphan PU codes).
+    Returns (ward prefix -> missing PU codes,
+             lga prefix -> (lga_name, state_code) for LGAs we could create,
+             orphan PU codes).
 
-    An orphan is a polling unit whose LGA is absent from the registry. Our LGA
-    count already matches INEC's published 774, so an orphan means the input
-    and the registry disagree about the shape of the country. That is a
-    condition to surface, not to resolve by inventing an LGA.
+    An LGA absent from the registry is not automatically an error. Borno /
+    Abadam is the known case: INEC's published count of 774 includes it, but
+    its polling-unit roster returns nothing for it, so
+    ``load_polling_units.py`` never created the row and we hold 773. A roster
+    that supplies Abadam's polling units is filling a real hole.
+
+    What is never acceptable is inventing an LGA in a *state* we cannot place.
+    Those stay orphans and abort the run. So the two cases are separated here:
+    a creatable LGA needs a state we already know; anything else is a
+    disagreement about the shape of the country and belongs with a human.
+
+    Creating even a placeable LGA still requires ``--create-missing-lgas``.
     """
+    state_by_prefix = state_by_prefix or {}
     missing_by_ward: dict[str, list[str]] = defaultdict(list)
+    creatable_lgas: dict[str, tuple[str, str]] = {}
     orphans: list[str] = []
 
     for code in sorted(set(roster_geo) - known_pus):
-        if lga_prefix(code) not in lga_by_prefix:
-            orphans.append(code)
-            continue
+        lga_pfx = lga_prefix(code)
+        if lga_pfx not in lga_by_prefix:
+            state_code = state_by_prefix.get(state_prefix(code))
+            if state_code is None:
+                orphans.append(code)
+                continue
+            _, _, lga_name, _ = roster_geo[code]
+            creatable_lgas.setdefault(lga_pfx, (lga_name, state_code))
         missing_by_ward[ward_prefix(code)].append(code)
 
-    return dict(missing_by_ward), orphans
+    return dict(missing_by_ward), creatable_lgas, orphans
 
 
 def abort_on_orphans(orphans: list[str]) -> None:
-    """Refuse to run when polling units name an LGA the registry lacks.
+    """Refuse to run when polling units sit in a state the registry lacks.
 
-    Our LGA count already matches INEC's published 774, so an orphan means
-    the input and the registry disagree about the shape of the country.
-    Inventing an LGA to accommodate it would bury that disagreement in the
+    A missing LGA can be legitimate (see ``plan_gap_fill``), but a missing
+    *state* means the input and the registry disagree about the shape of the
+    country. Accommodating that silently would bury the disagreement in the
     geography table, where nobody would find it again.
     """
     if not orphans:
         return
     print(
-        f"\nABORTING: {len(orphans)} polling unit(s) name an LGA that is not in the"
-        " registry.\nThe registry's 774 LGAs already match INEC's published count,"
-        " so this loader\nwill not create one. Investigate before re-running:",
+        f"\nABORTING: {len(orphans)} polling unit(s) sit in a state that is not in"
+        " the registry.\nThis loader will not invent one. Investigate before"
+        " re-running:",
         file=sys.stderr,
     )
     for code in orphans[:10]:
-        print(f"  {code}  (LGA prefix {lga_prefix(code)})", file=sys.stderr)
+        print(f"  {code}  (state prefix {state_prefix(code)})", file=sys.stderr)
     if len(orphans) > 10:
         print(f"  ... and {len(orphans) - 10} more", file=sys.stderr)
     raise SystemExit(3)
+
+
+def abort_on_uncreated_lgas(creatable: dict[str, tuple[str, str]]) -> None:
+    """Refuse to proceed when LGAs are missing and ``--create-missing-lgas``
+    was not given.
+
+    Creating an LGA changes the shape of the geography table, so it is an
+    opt-in act with a name attached, not a side effect of an enrichment run.
+    """
+    if not creatable:
+        return
+    print(
+        f"\nABORTING: {len(creatable)} LGA(s) in the roster are absent from the"
+        " registry.\nThis is legitimate for Borno / Abadam, whose polling units"
+        " INEC's roster omits\nentirely (we hold 773 LGAs against INEC's published"
+        " 774). Re-run with\n--create-missing-lgas if these are the LGAs you expect:",
+        file=sys.stderr,
+    )
+    for pfx, (name, state_code) in sorted(creatable.items()):
+        print(f"  {pfx} -> {state_code}: {name}", file=sys.stderr)
+    raise SystemExit(4)
 
 
 def run_gap_fill(
     cur,
     roster_geo: dict[str, tuple[str, str, str, str]],
     missing_by_ward: dict[str, list[str]],
+    creatable_lgas: dict[str, tuple[str, str]],
     ward_by_prefix: dict[str, str],
     lga_by_prefix: dict[str, str],
     source: str,
     dry_run: bool,
 ) -> dict[str, int]:
-    stats = {"wards_created": 0, "pus_inserted": 0}
+    stats = {"lgas_created": 0, "wards_created": 0, "pus_inserted": 0}
+
+    # LGAs first: wards reference them.
+    for pfx, (lga_name, state_code) in sorted(creatable_lgas.items()):
+        requested = f"{state_code}-{pfx.split('-')[-1]}"
+        if dry_run:
+            lga_by_prefix[pfx] = requested
+        else:
+            effective = upsert_lga(cur, requested, lga_name, state_code)
+            if effective != requested:
+                print(
+                    f"  merged LGA {state_code}/{lga_name}: {requested} ->"
+                    f" {effective} (existing row with same name)",
+                    file=sys.stderr,
+                )
+            lga_by_prefix[pfx] = effective
+        print(f"  created LGA {lga_by_prefix[pfx]}: {lga_name} ({state_code})")
+        stats["lgas_created"] += 1
 
     for prefix in sorted(missing_by_ward):
         codes = sorted(missing_by_ward[prefix])
@@ -544,6 +655,7 @@ def run_enrichment(
         "enriched": 0,
         "skipped_unknown_pu": 0,
         "with_registered": 0,
+        "registered_only": 0,
         PRECISION_EXACT: 0,
         PRECISION_SHARED: 0,
     }
@@ -568,6 +680,26 @@ def run_enrichment(
 
     if batch and not dry_run:
         enrich_batch(cur, batch)
+
+    # Second pass: polling units with a voter count but no usable coordinate.
+    # The count is a fact in its own right and does not depend on our being
+    # able to place the unit on a map.
+    mapped = {r.pu_code for r in rows}
+    reg_only: list[tuple] = []
+    for pu_code, reg in registered.items():
+        if pu_code in mapped or pu_code not in known_pus:
+            continue
+        stats["registered_only"] += 1
+        stats["with_registered"] += 1
+        reg_only.append((reg, source, pu_code))
+
+        if len(reg_only) >= 5_000:
+            if not dry_run:
+                enrich_registered_only_batch(cur, reg_only)
+            reg_only = []
+
+    if reg_only and not dry_run:
+        enrich_registered_only_batch(cur, reg_only)
 
     return stats
 
@@ -617,6 +749,15 @@ def build_parser() -> argparse.ArgumentParser:
         dest="enrich",
         action="store_false",
         help="skip populating geog/registered_voters (#65)",
+    )
+    p.add_argument(
+        "--create-missing-lgas",
+        action="store_true",
+        help=(
+            "create LGAs present in the roster but absent from the registry."
+            " Needed for Borno / Abadam, whose polling units INEC's roster omits"
+            " entirely. Off by default: creating an LGA is a deliberate act."
+        ),
     )
     return p
 
@@ -675,30 +816,34 @@ def main(argv: list[str] | None = None) -> int:
     conn.autocommit = False
     try:
         cur = conn.cursor()
-        known_pus, ward_by_prefix, lga_by_prefix = fetch_registry(cur)
+        known_pus, ward_by_prefix, lga_by_prefix, state_by_prefix = fetch_registry(cur)
         print(f"\nRegistry holds {len(known_pus):,} polling units")
 
         if args.gap_fill:
-            missing_by_ward, orphans = plan_gap_fill(
-                roster_geo, known_pus, ward_by_prefix, lga_by_prefix
+            missing_by_ward, creatable_lgas, orphans = plan_gap_fill(
+                roster_geo, known_pus, ward_by_prefix, lga_by_prefix, state_by_prefix
             )
             missing_count = sum(len(v) for v in missing_by_ward.values())
             new_wards = sum(1 for p in missing_by_ward if p not in ward_by_prefix)
             print(
                 f"Gap fill: {missing_count:,} polling units absent from the registry,"
                 f" across {len(missing_by_ward):,} wards ({new_wards:,} of them new)"
-                + (f"; {len(orphans):,} with an unknown LGA" if orphans else "")
+                + (f", {len(creatable_lgas):,} LGAs missing" if creatable_lgas else "")
+                + (f"; {len(orphans):,} in an unknown state" if orphans else "")
             )
             # Reported before aborting, so the operator sees the whole picture
             # rather than only the reason for stopping.
             abort_on_orphans(orphans)
+            if not args.create_missing_lgas:
+                abort_on_uncreated_lgas(creatable_lgas)
 
             stats = run_gap_fill(
-                cur, roster_geo, missing_by_ward, ward_by_prefix, lga_by_prefix,
-                args.source, args.dry_run,
+                cur, roster_geo, missing_by_ward, creatable_lgas, ward_by_prefix,
+                lga_by_prefix, args.source, args.dry_run,
             )
             print(
-                f"  wards created: {stats['wards_created']:,}"
+                f"  LGAs created: {stats['lgas_created']:,}"
+                f"   wards created: {stats['wards_created']:,}"
                 f"   polling units inserted: {stats['pus_inserted']:,}"
             )
             # Newly inserted PUs are enrichable in the same run.
@@ -712,6 +857,12 @@ def main(argv: list[str] | None = None) -> int:
                 f"Enrichment: {stats['enriched']:,} polling units"
                 f" ({stats[PRECISION_EXACT]:,} exact, {stats[PRECISION_SHARED]:,} shared_site);"
                 f" {stats['with_registered']:,} with registered-voter counts"
+                + (
+                    f" (of which {stats['registered_only']:,} have a count but no"
+                    " usable coordinate)"
+                    if stats["registered_only"]
+                    else ""
+                )
             )
             if stats["skipped_unknown_pu"]:
                 print(
