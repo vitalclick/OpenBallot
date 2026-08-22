@@ -10,7 +10,6 @@ import pytest
 
 from app.admin.csv_import import RosterImportError, parse_roster_csv
 
-
 GOOD_CSV = """name,phone,pu_code,language
 Aminu Yusuf,08035550101,25-11-04-007,en
 Chidi Okeke,+2348022223333,33-15-05-001,ig

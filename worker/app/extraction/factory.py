@@ -17,8 +17,8 @@ from __future__ import annotations
 import logging
 
 from ..config import settings
-from .engine import ExtractionEngine, StubExtractor
 from . import document_ai, gpt4o_vision
+from .engine import ExtractionEngine, StubExtractor
 
 log = logging.getLogger(__name__)
 

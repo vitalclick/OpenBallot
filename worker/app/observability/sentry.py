@@ -71,4 +71,7 @@ def capture_exception(error: BaseException, **context: Any) -> None:
                 scope.set_extra(k, v)
             sentry_sdk.capture_exception(error)
     except Exception:
-        pass
+        # The error reporter failing must never mask the error it was
+        # reporting, so this stays swallowed -- but at debug level it is at
+        # least discoverable when Sentry itself is misconfigured.
+        logging.getLogger(__name__).debug("sentry.capture_failed", exc_info=True)

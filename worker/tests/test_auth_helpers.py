@@ -1,11 +1,10 @@
 """Tests for device binding, rate limiting, and phone normalisation."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from app.auth.device import device_fingerprint_hash, evaluate_device_change
 from app.auth.phone import normalise_phone
 from app.auth.rate_limit import evaluate_rate_limit
-
 
 # ─── Device binding ──────────────────────────────────────────────────────────
 
@@ -40,7 +39,7 @@ def test_device_change_blocks():
 
 
 def _t(seconds_ago: int) -> datetime:
-    return datetime.now(timezone.utc) - timedelta(seconds=seconds_ago)
+    return datetime.now(UTC) - timedelta(seconds=seconds_ago)
 
 
 def test_rate_limit_allows_first_request():

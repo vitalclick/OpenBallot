@@ -20,7 +20,6 @@ from uuid import UUID
 from ..models import ExtractedEC8A
 from .types import AnomalyHit, AnomalyType, Severity
 
-
 # Threshold for the "single party dominates" check. The 2023 Rivers
 # Eleme/Andoni election tribunal record shows several PUs with 99.6%+
 # for one party; that's the bar we want to flag.
@@ -71,6 +70,31 @@ def run_sanity_checks(
             accredited=accredited,
             cast=cast,
             excess=cast - accredited,
+        )
+
+    # Votes recorded while accreditation reads exactly zero. Deliberately a
+    # step below the over-voting check above, which compares two positive
+    # numbers and admits no innocent reading.
+    #
+    # A zero is ambiguous. It can mean nobody was accredited, or that the BVAS
+    # device never synced its count over a poor network. The CCIJ 2023
+    # investigation found 6,610 polling units in this state and did not treat
+    # the figure alone as proof: journalists visited the largest-disparity
+    # locations (Oru East in Imo, Zaki in Bauchi) and confirmed irregular
+    # accreditation on the ground.
+    #
+    # HIGH, not CRITICAL, so it is investigated rather than asserted -- and so
+    # a region with bad connectivity cannot be made to look like a region with
+    # fraud by the network alone.
+    if accredited == 0 and cast > 0:
+        hit(
+            AnomalyType.VOTES_WITHOUT_ACCREDITATION,
+            Severity.HIGH,
+            cast=cast,
+            note=(
+                "accreditation synced as zero; may indicate BVAS sync failure "
+                "rather than unaccredited voting"
+            ),
         )
 
     if rejected > cast and cast > 0:

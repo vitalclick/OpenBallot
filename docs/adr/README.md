@@ -24,6 +24,8 @@ text are by ADR number (e.g. "see ADR-0004").
 | 0011 | Geographic identifiers derived from INEC's `delim` | Accepted |
 | 0012 | GRID3 ↔ INEC ward reconciliation strategy | Accepted |
 | 0013 | Choropleth fill = leading party at every level | Accepted |
+| 0014 | Layout judgement in pure geometry, model in a separate service | Accepted |
+| 0015 | Geometric table reconstruction: evaluated, deferred | Proposed |
 
 ## How to add an ADR
 

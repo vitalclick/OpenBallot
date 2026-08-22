@@ -7,7 +7,7 @@ external Redis required.
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
@@ -56,14 +56,14 @@ def queue():
     return JobQueue(FakeRedis())
 
 
-def _job(sid: str = None) -> IngestionJob:
+def _job(sid: str | None = None) -> IngestionJob:
     return IngestionJob(
         submission_id=sid or str(uuid4()),
         election_id="2027-presidential",
         pu_code="25-11-04-007",
         image_url="https://x/y.jpg",
         image_sha256="a" * 64,
-        enqueued_at=datetime.now(timezone.utc).isoformat(),
+        enqueued_at=datetime.now(UTC).isoformat(),
     )
 
 

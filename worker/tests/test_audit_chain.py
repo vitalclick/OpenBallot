@@ -6,7 +6,7 @@ The chain must:
   3. Match what the Postgres trigger computes (cross-implementation parity)
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from app.audit.chain import GENESIS_HASH, AuditEvent, link_hash, verify_chain
 from app.audit.merkle import merkle_root
@@ -19,7 +19,7 @@ def _ev(seq: int, prev: str, et: str = "submission.created", data: dict | None =
         entity_type="ec8a_submission",
         entity_id=f"sub-{seq}",
         actor_id=None,
-        event_at=datetime(2027, 2, 27, 17, 43, 22, tzinfo=timezone.utc),
+        event_at=datetime(2027, 2, 27, 17, 43, 22, tzinfo=UTC),
         event_data=data or {"pu_code": f"25-11-04-{seq:03d}"},
         prev_hash=prev,
     )

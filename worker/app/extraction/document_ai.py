@@ -21,6 +21,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from datetime import UTC
 from typing import Any
 
 import httpx
@@ -96,13 +97,13 @@ class DocumentAIExtractor(Extractor):
         # In production this uses google-auth's google.oauth2.service_account
         # to mint a JWT-signed access token. We keep that path behind a
         # method so unit tests can stub it without touching Google libs.
-        from datetime import datetime, timezone
-        now = datetime.now(timezone.utc).timestamp()
+        from datetime import datetime
+        now = datetime.now(UTC).timestamp()
         if self._access_token and self._token_expires_at > now + 60:
             return self._access_token
 
-        from google.oauth2 import service_account
         from google.auth.transport.requests import Request
+        from google.oauth2 import service_account
 
         if self.credentials_json:
             info = json.loads(self.credentials_json)
@@ -201,7 +202,7 @@ class DocumentAIExtractor(Extractor):
                        "rejected_ballots", "total_votes_cast"}:
                 scalar_values[t] = _to_int(text)
                 per_field_confidence[t] = conf
-            elif t.startswith("party_") or t.startswith("candidate_"):
+            elif t.startswith(("party_", "candidate_")):
                 # Format: party_APC, candidate_PDP - the suffix is the party code
                 party = t.split("_", 1)[1].upper()
                 candidate_votes[party] = _to_int(text)

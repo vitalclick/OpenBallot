@@ -38,7 +38,7 @@ class EventPublisher:
         self.redis = redis
 
     @classmethod
-    def from_settings(cls) -> "EventPublisher":
+    def from_settings(cls) -> EventPublisher:
         return cls(aioredis.from_url(settings().redis_url, decode_responses=True))
 
     async def publish(self, channel: str, event: dict[str, Any]) -> None:

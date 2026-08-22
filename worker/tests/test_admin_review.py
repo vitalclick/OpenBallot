@@ -9,6 +9,7 @@ decisions and downstream consensus recomputation.
 from __future__ import annotations
 
 import json
+from datetime import UTC
 from uuid import uuid4
 
 import pytest
@@ -62,7 +63,7 @@ async def test_approve_flips_status_and_recomputes_consensus():
     }
     # After approval the submission joins the consensus pool. We seed two
     # independent sources so the engine returns CONSENSUS.
-    from datetime import datetime, timezone
+    from datetime import datetime
     base_row = {
         "id": uuid4(),
         "source_type": "party_agent",
@@ -70,7 +71,7 @@ async def test_approve_flips_status_and_recomputes_consensus():
         "image_url": "https://x/y.jpg",
         "image_sha256": "a" * 64,
         "extracted_data": _good_extracted_json(),
-        "submitted_at": datetime.now(timezone.utc),
+        "submitted_at": datetime.now(UTC),
         "confidence_score": 0.97,
         "validation_flags": {},
         "review_status": "auto_approved",

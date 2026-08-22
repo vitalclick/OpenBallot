@@ -23,7 +23,6 @@ from uuid import UUID
 
 from .types import AnomalyHit, AnomalyType, Severity
 
-
 DEFAULT_TURNOUT_SHIFT_PP = 40.0     # percentage points
 DEFAULT_LEADER_SHIFT_PP = 50.0
 

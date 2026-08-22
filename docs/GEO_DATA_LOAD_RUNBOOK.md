@@ -71,6 +71,101 @@ If the Supabase pooler drops the connection mid-load, the loader
 reconnects and continues from the next state. Re-running from
 scratch is also safe — every upsert is `ON CONFLICT DO UPDATE`.
 
+## Step 2b — Enrich coordinates and registered voters
+
+> Input and attribution: `data/pu-enrichment-2023/SOURCES.md`. Licensing
+> was agreed with CCIJ; every figure derived from it must be attributed
+> to them wherever it is published.
+
+INEC's roster carries neither GPS coordinates nor registered-voter
+counts, so after step 2 `polling_units.geog` and `registered_voters`
+are NULL for every row. Until they are populated the GPS geofence in
+`worker/app/ingestion/geofence.py` cannot make a decision: it is live
+code that never fires.
+
+```bash
+# Parse and report without touching the database:
+python scripts/load_pu_enrichment.py \
+    --roster data/pu-enrichment-2023/pu_roster.csv \
+    --voter-info data/pu-enrichment-2023/pu_results_2023.csv \
+    --dry-run --report /tmp/rejects.csv
+
+# Apply. --create-missing-lgas is needed for Borno / Abadam, whose
+# polling units INEC's roster omits entirely:
+DATABASE_URL=... python scripts/load_pu_enrichment.py \
+    --roster data/pu-enrichment-2023/pu_roster.csv \
+    --voter-info data/pu-enrichment-2023/pu_results_2023.csv \
+    --create-missing-lgas
+```
+
+Requires migration `0017_pu_geo_provenance.sql`.
+
+Takes about four minutes against a local Postgres. Expected output:
+
+```
+Gap fill: 2,671 polling units absent from the registry, across 97 wards
+          (97 of them new), 1 LGAs missing
+  created LGA BO-01: Abadam (BO)
+  LGAs created: 1   wards created: 97   polling units inserted: 2,671
+Enrichment: 176,526 polling units (155,984 exact, 20,542 shared_site);
+            176,846 with registered-voter counts
+```
+
+After it, the registry matches every count in INEC's own report — 37
+states, 774 LGAs, 8,809 wards, 176,846 polling units.
+
+Two passes run by default, either of which can be skipped with
+`--no-gap-fill` / `--no-enrich`:
+
+**Gap fill** inserts wards and polling units absent from our registry.
+`Polling-Units/reconciliation/RECONCILIATION-2023.md` records a
+2,671-PU deficit against INEC's own published count that INEC's API
+cannot supply — those wards return zero polling units from it. Rows
+inserted here carry `source = 'ccij_2023'` (or whatever `--source`
+says), so they stay distinguishable from INEC-enumerated geography.
+
+**Enrichment** populates `geog`, `registered_voters` and their
+provenance columns for polling units we already have.
+
+### Coordinate precision — read before tightening the fence
+
+The loader labels every coordinate `exact` or `shared_site`. Co-located
+polling units — several in one school or market — resolve to a single
+point in the sources we have seen. In the CCIJ roster that is 20,542
+polling units, 11.6% of those mapped.
+
+`shared_site` coordinates are **not** used for hard rejects. An agent
+standing at the correct polling unit can be hundreds of metres from a
+shared point, and a hard reject is the one ingestion outcome with no
+recovery path: the EC8A is refused and goes back in the folder. The
+distance is still measured and flagged, so a reviewer sees it.
+
+If a future source supplies surveyed per-PU positions, load them with
+`geog_precision = 'exact'` and the hard fence starts applying to them
+automatically. Nothing else needs to change.
+
+### Verify
+
+```sql
+SELECT geog_source, geog_precision, count(*)
+  FROM polling_units WHERE geog IS NOT NULL
+ GROUP BY 1, 2 ORDER BY 1, 2;
+
+-- 93,299,647 from this source, 0.18% below INEC's published
+-- 93,469,008. The shortfall is in the source and is not corrected.
+SELECT sum(registered_voters) FROM polling_units;
+```
+
+Rejected rows are never loaded silently. `--report` writes them with a
+reason per row: `malformed_pu_code`, `duplicate_pu_code`,
+`missing_coordinate`, `coordinate_outside_nigeria`,
+`missing_registered_voters`.
+
+The loader is idempotent — re-running against the same input leaves the
+registry byte-identical. Before writing anything it aborts with exit 3 if a polling unit sits in a
+state the registry lacks, and with exit 4 if an LGA is missing and
+`--create-missing-lgas` was not given.
+
 ## Step 3 — Apply the ward polygon API migration
 
 ```bash
@@ -181,6 +276,9 @@ Re-run when:
 - **A new state code or LGA alias is needed** — edit
   `GRID3_TO_INEC_STATE_CODE` or `LGA_NAME_ALIASES` in
   `scripts/reconcile_ward_names.py`, re-run step 5.
+- **A better coordinate source becomes available** — re-run step
+  2b with it. Enrichment is an upsert; a coordinate carrying a
+  higher precision supersedes a `shared_site` one.
 
 ## Related ADRs
 

@@ -20,7 +20,6 @@ from uuid import UUID
 
 from .types import AnomalyHit, AnomalyType, Severity
 
-
 # Default z-threshold for "extreme outlier". 3.0 corresponds to ~0.3% of
 # a normal distribution. Configurable per election via settings.
 DEFAULT_Z_THRESHOLD = 3.0

@@ -9,6 +9,18 @@ Per-state figures: `per-state-reconciliation.csv` · Re-scrape targets: `rescrap
 > **Status (2026-06-20):** the gap-fill re-scrape was run live against INEC and **recovered 0 of the
 > 2,671 missing polling units** — every flagged ward returns 0 from INEC's own API. The deficit is
 > confirmed to be **missing upstream at INEC**, not a scraper defect. Full detail in §8.
+>
+> **Status (2026-08-22): the gap is closed — from CCIJ, not from INEC.**
+> `scripts/load_pu_enrichment.py` (migration 0017) loaded the CCIJ 2023 roster, inserting the
+> **2,671** missing polling units across **97** wards, plus the one missing LGA (Borno / Abadam,
+> §3). The registry now holds 37 states / 774 LGAs / 8,809 wards / 176,846 polling units — every
+> count matching INEC's own report exactly.
+>
+> The §8 finding below stands unchanged and is not superseded: **INEC's API still returns zero
+> polling units for those wards.** Every inserted row carries `source = 'ccij_2023'` rather than
+> `inec_scrape`, so the distinction survives in the registry. These units are attested by a third
+> party, not by INEC, and a ward INEC cannot enumerate while 2,559 result documents exist for it
+> remains a finding in its own right. Provenance: `data/pu-enrichment-2023/SOURCES.md`.
 
 ---
 
@@ -20,6 +32,10 @@ Per-state figures: `per-state-reconciliation.csv` · Re-scrape targets: `rescrap
 | LGAs | 774 | 774 | 0 ✅ |
 | Wards (Registration Areas) | 8,799 | 8,809 | **−10** |
 | Polling Units | 174,175 | 176,846 | **−2,671 (−1.51%)** |
+
+> The figures above describe **the scrape**, and remain accurate as such. After the CCIJ
+> enrichment load (see the status note above) the *registry* holds 8,809 wards and 176,846
+> polling units — both differences now zero.
 
 Report figures cross-checked against three independent tables in the PDF that all agree:
 Table 3.2 (per-state PU comparison 2019 vs 2023), the Ch. 9 per-state RA table, and Table 12.1

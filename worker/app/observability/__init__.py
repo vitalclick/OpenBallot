@@ -14,39 +14,39 @@ All three are no-ops when their respective configuration is absent, so
 local dev and CI environments don't require any monitoring stack.
 """
 
-from .sentry import init_sentry, capture_exception
+from .logging_config import configure_logging
 from .metrics import (
-    INGESTION_COUNTER,
-    INGESTION_REJECTED_COUNTER,
-    EXTRACTION_HISTOGRAM,
-    EXTRACTION_CONFIDENCE_HISTOGRAM,
-    EXTRACTION_FAILURE_COUNTER,
-    QUEUE_DEPTH_GAUGE,
-    INFLIGHT_GAUGE,
-    AUDIT_LOG_SEQ_GAUGE,
-    AUTH_OTP_COUNTER,
     ANCHOR_COUNTER,
     ANOMALY_COUNTER,
+    AUDIT_LOG_SEQ_GAUGE,
+    AUTH_OTP_COUNTER,
+    EXTRACTION_CONFIDENCE_HISTOGRAM,
+    EXTRACTION_FAILURE_COUNTER,
+    EXTRACTION_HISTOGRAM,
+    INFLIGHT_GAUGE,
+    INGESTION_COUNTER,
+    INGESTION_REJECTED_COUNTER,
+    QUEUE_DEPTH_GAUGE,
     metrics_response,
     observe_extraction,
 )
-from .logging_config import configure_logging
+from .sentry import capture_exception, init_sentry
 
 __all__ = [
-    "init_sentry",
-    "capture_exception",
-    "INGESTION_COUNTER",
-    "INGESTION_REJECTED_COUNTER",
-    "EXTRACTION_HISTOGRAM",
-    "EXTRACTION_CONFIDENCE_HISTOGRAM",
-    "EXTRACTION_FAILURE_COUNTER",
-    "QUEUE_DEPTH_GAUGE",
-    "INFLIGHT_GAUGE",
-    "AUDIT_LOG_SEQ_GAUGE",
-    "AUTH_OTP_COUNTER",
     "ANCHOR_COUNTER",
     "ANOMALY_COUNTER",
+    "AUDIT_LOG_SEQ_GAUGE",
+    "AUTH_OTP_COUNTER",
+    "EXTRACTION_CONFIDENCE_HISTOGRAM",
+    "EXTRACTION_FAILURE_COUNTER",
+    "EXTRACTION_HISTOGRAM",
+    "INFLIGHT_GAUGE",
+    "INGESTION_COUNTER",
+    "INGESTION_REJECTED_COUNTER",
+    "QUEUE_DEPTH_GAUGE",
+    "capture_exception",
+    "configure_logging",
+    "init_sentry",
     "metrics_response",
     "observe_extraction",
-    "configure_logging",
 ]

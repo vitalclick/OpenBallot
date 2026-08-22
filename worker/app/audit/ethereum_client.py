@@ -143,7 +143,7 @@ class EthereumAnchorClient:
         signed = Account.sign_transaction(tx, self.private_key)
         # eth-account < 0.10 exposed `rawTransaction`; >= 0.10 renamed it
         # to `raw_transaction`. Support both.
-        raw_bytes = getattr(signed, "raw_transaction", None) or getattr(signed, "rawTransaction")
+        raw_bytes = getattr(signed, "raw_transaction", None) or signed.rawTransaction
         raw = raw_bytes.hex()
         if not raw.startswith("0x"):
             raw = "0x" + raw
@@ -191,6 +191,7 @@ def build_from_settings() -> EthereumAnchorClient | None:
     required env is present. Returns None otherwise so the caller knows
     to skip anchor cron runs in dev / staging."""
     import os
+
     from ..config import settings as _s
     s = _s()
     if not s.anchor_enabled:

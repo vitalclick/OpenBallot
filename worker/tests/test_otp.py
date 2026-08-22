@@ -5,7 +5,7 @@ We exercise the four failure modes: code mismatch, expired, already
 consumed, too-many-attempts.
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from app.auth.otp import OTPService, generate_otp, hash_otp
 
@@ -67,7 +67,7 @@ def test_verify_locks_after_max_attempts():
 def test_verify_rejects_expired():
     svc = OTPService()
     rec, code = svc.create("+2348035550101")
-    rec.expires_at = datetime.now(timezone.utc) - timedelta(seconds=1)
+    rec.expires_at = datetime.now(UTC) - timedelta(seconds=1)
     ok, reason = svc.verify(rec, code)
     assert ok is False
     assert reason == "expired"

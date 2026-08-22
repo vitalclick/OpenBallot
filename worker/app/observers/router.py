@@ -69,7 +69,9 @@ async def register(body: ObserverRegistrationIn, request: Request):
     try:
         phone = normalise_phone(body.phone)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail={"code": "bad_phone", "message": str(e)})
+        raise HTTPException(
+            status_code=400, detail={"code": "bad_phone", "message": str(e)}
+        ) from e
 
     ip = request.client.host if request.client else None
 
@@ -197,45 +199,44 @@ async def decide(
             detail={"code": "reject_requires_reason"},
         )
 
-    async with pool().acquire() as conn:
-        async with conn.transaction():
-            row = await conn.fetchrow(
-                """
+    async with pool().acquire() as conn, conn.transaction():
+        row = await conn.fetchrow(
+            """
                 SELECT id, full_name, email, phone_e164, observer_org, language,
                        review_status
                   FROM observer_registrations
                  WHERE id = $1
                  FOR UPDATE
                 """,
-                registration_id,
+            registration_id,
+        )
+        if row is None:
+            raise HTTPException(status_code=404, detail={"code": "not_found"})
+        if row["review_status"] != "pending":
+            raise HTTPException(
+                status_code=400,
+                detail={"code": "already_decided",
+                        "message": f"current status: {row['review_status']}"},
             )
-            if row is None:
-                raise HTTPException(status_code=404, detail={"code": "not_found"})
-            if row["review_status"] != "pending":
-                raise HTTPException(
-                    status_code=400,
-                    detail={"code": "already_decided",
-                            "message": f"current status: {row['review_status']}"},
-                )
 
-            agent_id = None
-            if body.action == "approve":
-                agent_id = await conn.fetchval(
-                    """
+        agent_id = None
+        if body.action == "approve":
+            agent_id = await conn.fetchval(
+                """
                     INSERT INTO agents (
                       role, full_name, phone_e164, observer_org,
                       credential_ref, language
                     ) VALUES ('observer', $1, $2, $3, $4, $5)
                     RETURNING id
                     """,
-                    row["full_name"],
-                    row["phone_e164"],
-                    row["observer_org"],
-                    None,
-                    row["language"],
-                )
-                await conn.execute(
-                    """
+                row["full_name"],
+                row["phone_e164"],
+                row["observer_org"],
+                None,
+                row["language"],
+            )
+            await conn.execute(
+                """
                     UPDATE observer_registrations
                        SET review_status = 'approved',
                            reviewed_by = $1,
@@ -243,14 +244,14 @@ async def decide(
                            agent_id = $2
                      WHERE id = $3
                     """,
-                    UUID(reviewer.sub),
-                    agent_id,
-                    registration_id,
-                )
-                event_type = "observer.approved"
-            else:
-                await conn.execute(
-                    """
+                UUID(reviewer.sub),
+                agent_id,
+                registration_id,
+            )
+            event_type = "observer.approved"
+        else:
+            await conn.execute(
+                """
                     UPDATE observer_registrations
                        SET review_status = 'rejected',
                            reviewed_by = $1,
@@ -258,26 +259,26 @@ async def decide(
                            rejection_reason = $2
                      WHERE id = $3
                     """,
-                    UUID(reviewer.sub),
-                    body.reason,
-                    registration_id,
-                )
-                event_type = "observer.rejected"
+                UUID(reviewer.sub),
+                body.reason,
+                registration_id,
+            )
+            event_type = "observer.rejected"
 
-            await conn.execute(
-                """
+        await conn.execute(
+            """
                 INSERT INTO audit_log (event_type, entity_type, entity_id, actor_id, event_data)
                 VALUES ($1, 'observer_registration', $2, $3, $4::jsonb)
                 """,
-                event_type,
-                str(registration_id),
-                UUID(reviewer.sub),
-                json.dumps({
-                    "observer_org": row["observer_org"],
-                    "reason": body.reason,
-                    "agent_id": str(agent_id) if agent_id else None,
-                }),
-            )
+            event_type,
+            str(registration_id),
+            UUID(reviewer.sub),
+            json.dumps({
+                "observer_org": row["observer_org"],
+                "reason": body.reason,
+                "agent_id": str(agent_id) if agent_id else None,
+            }),
+        )
 
     return ReviewOut(
         registration_id=registration_id,

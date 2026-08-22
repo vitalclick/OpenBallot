@@ -12,7 +12,7 @@ This prompt is versioned; each change bumps PROMPT_VERSION so we can
 correlate extraction quality with the prompt revision over time.
 """
 
-PROMPT_VERSION = "1.1.0"
+PROMPT_VERSION = "1.2.0"
 
 EXTRACTION_PROMPT = """\
 You are reviewing a photograph of a Nigerian INEC Form EC8A. The form
@@ -30,7 +30,11 @@ Schema you must return:
   "registered_voters": <integer>,
   "accredited_voters": <integer>,
   "candidate_votes": {
-    "<party code in upper case>": <integer>,
+    "<party code in upper case>": <integer, the FIGURES column>,
+    ...
+  },
+  "candidate_votes_words": {
+    "<party code in upper case>": "<the WORDS column, transcribed verbatim>",
     ...
   },
   "total_valid_votes": <integer>,
@@ -54,6 +58,15 @@ Schema you must return:
 Notes:
   - Party codes are usually three to four upper-case letters. Common
     Nigerian parties include APC, PDP, LP, NNPP, ADC, APGA, SDP.
+  - The form records each party's votes TWICE: once in figures and once
+    in words. Transcribe BOTH. Put the figures in candidate_votes and the
+    words in candidate_votes_words, keyed by the same party code.
+  - Transcribe the words column exactly as written, including apparent
+    misspellings. Do NOT convert it to a number and do NOT correct it --
+    the platform reconciles the two columns itself, and a "helpful"
+    correction destroys the independence that makes the second reading
+    worth having. If a party's words cell is blank, omit that key.
+  - "Nil" or "None" in the words column means zero votes.
   - The bottom of the form has spaces for party agent signatures.
     Count how many are filled in (signed), not how many spaces exist.
   - The presiding officer signature is on a labelled line near the

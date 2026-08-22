@@ -20,8 +20,8 @@ Persistence is the caller's job. This keeps the algorithm trivially testable.
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from datetime import datetime, timezone
-from typing import Iterable
+from collections.abc import Iterable
+from datetime import UTC, datetime
 
 from ..models import (
     ExtractedEC8A,
@@ -180,7 +180,7 @@ def compute_consensus(
             submission_count=0,
             source_count=0,
             consensus_data=None,
-            computed_at=datetime.now(timezone.utc),
+            computed_at=datetime.now(UTC),
         )
 
     by_source: dict[str, list[SubmissionRecord]] = defaultdict(list)
@@ -201,7 +201,7 @@ def compute_consensus(
             submission_count=len(accepted),
             source_count=len(by_source),
             consensus_data=by_source["inec_irev"][0].extracted_data,
-            computed_at=datetime.now(timezone.utc),
+            computed_at=datetime.now(UTC),
         )
 
     # Single non-INEC source (one party agent or one observer).
@@ -213,7 +213,7 @@ def compute_consensus(
             submission_count=len(accepted),
             source_count=len(by_source),
             consensus_data=accepted[0].extracted_data,
-            computed_at=datetime.now(timezone.utc),
+            computed_at=datetime.now(UTC),
         )
 
     # Cross-source consensus among parties + observers
@@ -229,7 +229,7 @@ def compute_consensus(
             source_count=len(by_source),
             consensus_data=None,
             discrepant_fields=differing,
-            computed_at=datetime.now(timezone.utc),
+            computed_at=datetime.now(UTC),
         )
 
     # Independent consensus exists. Compare to INEC if present.
@@ -245,7 +245,7 @@ def compute_consensus(
                 source_count=len(by_source),
                 consensus_data=consensus,
                 discrepant_fields=inec_diff,
-                computed_at=datetime.now(timezone.utc),
+                computed_at=datetime.now(UTC),
             )
         return VerificationOutcome(
             election_id=election_id,
@@ -254,7 +254,7 @@ def compute_consensus(
             submission_count=len(accepted),
             source_count=len(by_source),
             consensus_data=consensus,
-            computed_at=datetime.now(timezone.utc),
+            computed_at=datetime.now(UTC),
         )
 
     return VerificationOutcome(
@@ -264,7 +264,7 @@ def compute_consensus(
         submission_count=len(accepted),
         source_count=len(by_source),
         consensus_data=consensus,
-        computed_at=datetime.now(timezone.utc),
+        computed_at=datetime.now(UTC),
     )
 
 

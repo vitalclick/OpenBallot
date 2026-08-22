@@ -14,13 +14,12 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID
 
 import redis.asyncio as aioredis
 
 from ..config import settings
-
 
 INGESTION_QUEUE = "openballot:jobs:ingest"
 INFLIGHT_HASH = "openballot:jobs:inflight"
@@ -47,7 +46,7 @@ class IngestionJob:
         return json.dumps(asdict(self))
 
     @classmethod
-    def from_json(cls, raw: str) -> "IngestionJob":
+    def from_json(cls, raw: str) -> IngestionJob:
         return cls(**json.loads(raw))
 
 
@@ -62,7 +61,7 @@ class JobQueue:
         self.redis = redis
 
     @classmethod
-    def from_settings(cls) -> "JobQueue":
+    def from_settings(cls) -> JobQueue:
         r = aioredis.from_url(settings().redis_url, decode_responses=True)
         return cls(r)
 
@@ -118,7 +117,7 @@ async def enqueue_ingestion(
         pu_code=pu_code,
         image_url=image_url,
         image_sha256=image_sha256,
-        enqueued_at=datetime.now(timezone.utc).isoformat(),
+        enqueued_at=datetime.now(UTC).isoformat(),
     )
     await queue.enqueue(job)
 

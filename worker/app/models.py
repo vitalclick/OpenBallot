@@ -55,6 +55,12 @@ class ExtractedEC8A(BaseModel):
     registered_voters: int = Field(ge=0)
     accredited_voters: int = Field(ge=0)
     candidate_votes: dict[str, int]            # {party_code: votes}
+    # EC8A records every count twice, in figures and in words. The words are
+    # kept verbatim as read, not as a parsed number: they are the second
+    # channel's evidence, and a reviewer looking at a disputed cell needs to
+    # see what was actually written. Reconciliation lives in
+    # extraction/word_numbers.py. None when the backend did not read them.
+    candidate_votes_words: dict[str, str] | None = None
     total_valid_votes: int = Field(ge=0)
     rejected_ballots: int = Field(ge=0)
     total_votes_cast: int = Field(ge=0)

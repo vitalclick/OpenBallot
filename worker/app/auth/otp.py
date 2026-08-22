@@ -17,7 +17,7 @@ import hashlib
 import hmac
 import secrets
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
 
@@ -71,7 +71,7 @@ class OTPService:
             phone_e164=phone_e164,
             code_hash=hash_otp(code, salt),
             code_salt=salt,
-            expires_at=datetime.now(timezone.utc) + timedelta(seconds=self.ttl_seconds),
+            expires_at=datetime.now(UTC) + timedelta(seconds=self.ttl_seconds),
         )
         return rec, code
 
@@ -84,7 +84,7 @@ class OTPService:
           - "too_many_attempts" : attempts >= max_attempts
           - "code_mismatch"     : the submitted code is wrong
         """
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         if rec.consumed_at is not None:
             return False, "already_consumed"
         if rec.expires_at < now:

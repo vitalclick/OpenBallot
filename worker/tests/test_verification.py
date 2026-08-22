@@ -5,7 +5,7 @@ public map's colour states. They are intentionally not coupled to the
 database - the engine is pure.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from app.models import (
@@ -39,7 +39,7 @@ def _sub(
         image_url="https://x/y.jpg",
         image_sha256="a" * 64,
         gps=None,
-        submitted_at=datetime.now(timezone.utc),
+        submitted_at=datetime.now(UTC),
         confidence_score=0.97,
         extracted_data=ExtractedEC8A(
             pu_code="25-11-04-007",

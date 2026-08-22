@@ -16,21 +16,20 @@ import pytest
 
 from app.audit.ethereum_client import EthereumAnchorClient, GasPriceTooHigh
 
-
 # A deterministic test private key (well known public test key, NEVER use in production).
 TEST_PK = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 TEST_ADDR = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 
 
 def _client(**kw) -> EthereumAnchorClient:
-    defaults = dict(
-        rpc_url="http://test-rpc",
-        private_key=TEST_PK,
-        max_gas_gwei=80.0,
-        chain_id=1,
-        poll_interval_seconds=0.0,
-        max_wait_seconds=5.0,
-    )
+    defaults = {
+        "rpc_url": "http://test-rpc",
+        "private_key": TEST_PK,
+        "max_gas_gwei": 80.0,
+        "chain_id": 1,
+        "poll_interval_seconds": 0.0,
+        "max_wait_seconds": 5.0,
+    }
     defaults.update(kw)
     return EthereumAnchorClient(**defaults)
 
@@ -42,9 +41,11 @@ async def test_gas_too_high_refuses_submission():
         # eth_getBlockByNumber - base fee 50 gwei (over the 20 ceiling)
         {"baseFeePerGas": hex(50 * 10**9)},
     ]
-    with patch.object(client, "_rpc", new_callable=AsyncMock, side_effect=rpc_returns):
-        with pytest.raises(GasPriceTooHigh, match="50"):
-            await client.send_data_tx(data_hex="0x" + "a" * 64)
+    with (
+        patch.object(client, "_rpc", new_callable=AsyncMock, side_effect=rpc_returns),
+        pytest.raises(GasPriceTooHigh, match="50"),
+    ):
+        await client.send_data_tx(data_hex="0x" + "a" * 64)
 
 
 @pytest.mark.asyncio
@@ -89,7 +90,7 @@ async def test_receipt_polling_loop_eventually_succeeds():
     ]
 
     with patch.object(client, "_rpc", new_callable=AsyncMock, side_effect=rpc_returns):
-        tx_hash, block = await client.send_data_tx(data_hex="0x" + "b" * 64)
+        _tx_hash, block = await client.send_data_tx(data_hex="0x" + "b" * 64)
 
     assert block == 18_500_001
 
@@ -112,9 +113,8 @@ async def test_receipt_timeout_raises():
         except StopIteration:
             return None        # every subsequent receipt poll: not ready
 
-    with patch.object(client, "_rpc", new=rpc):
-        with pytest.raises(TimeoutError):
-            await client.send_data_tx(data_hex="0x" + "c" * 64)
+    with patch.object(client, "_rpc", new=rpc), pytest.raises(TimeoutError):
+        await client.send_data_tx(data_hex="0x" + "c" * 64)
 
 
 @pytest.mark.asyncio

@@ -23,7 +23,6 @@ from dataclasses import dataclass
 
 from ..auth.phone import normalise_phone
 
-
 _VALID_LANGS = {"en", "ha", "yo", "ig", "pcm"}
 
 

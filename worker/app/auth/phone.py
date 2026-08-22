@@ -21,7 +21,7 @@ def normalise_phone(raw: str, default_region: str = "NG") -> str:
     try:
         parsed = phonenumbers.parse(raw, default_region)
     except phonenumbers.NumberParseException as e:
-        raise ValueError(f"unparseable phone: {e}")
+        raise ValueError(f"unparseable phone: {e}") from e
     if not phonenumbers.is_valid_number(parsed):
         raise ValueError("invalid phone number")
     return phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)

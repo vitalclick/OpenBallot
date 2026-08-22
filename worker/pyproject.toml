@@ -57,3 +57,59 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+# The rule set is pinned explicitly.
+#
+# Without a `select`, ruff enforces whatever its current release considers
+# default, and that set grows. `ruff>=0.3` in the dev extra resolves to the
+# newest release, so CI's definition of "clean" changed underneath the
+# repository and the Lint step began failing on 122 findings in code nobody
+# had touched. A linter that reports different results on the same commit
+# depending on the day is not a check; pin it, and change it deliberately.
+[tool.ruff.lint]
+select = [
+  "E", "W",    # pycodestyle
+  "F",         # pyflakes
+  "I",         # import sorting
+  "UP",        # pyupgrade
+  "B",         # bugbear
+  "C4",        # comprehensions
+  "SIM",       # simplify
+  "PIE",       # misc lints
+  "RUF",       # ruff-specific
+  "S",         # bandit (security)
+]
+ignore = [
+  # FastAPI's dependency injection IS a call in an argument default --
+  # `Depends(...)`, `File(...)`, `Query(...)`. Applying this rule's advice
+  # would break dependency injection across every router in the service.
+  "B008",
+  # Long, explanatory comment lines are worth more here than a column limit.
+  # E501 still applies to code via line-length.
+  "E501",
+  # `class Foo(str, Enum)` -> `StrEnum` is NOT a cosmetic change. It alters
+  # what str() and f-strings produce: "AnomalyType.VOTES_EXCEED_REGISTERED"
+  # becomes "votes_exceed_registered". These enums reach log lines, JSONB
+  # columns and the audit chain, so the rewrite would quietly change recorded
+  # values. Worth doing deliberately, with the call sites audited -- not as a
+  # side effect of a lint pass.
+  "UP042",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests assert on behaviour, not on hardened credentials handling.
+"tests/*" = [
+  "S101",    # assert is the point of a test
+  "S105",    # "hardcoded password" - test fixtures
+  "S106",
+  "S311",    # pseudo-random in fixtures is fine
+]
+# Operator scripts are run by hand, not served.
+"cli/*" = ["S101"]
+# These tests import a script from repo `scripts/`, which needs sys.path
+# adjusting first -- so the import genuinely cannot sit at the top of the file.
+"tests/test_2023_baseline_loader.py" = ["E402"]
+"tests/test_2023_lga_results_loader.py" = ["E402"]
+"tests/test_eval_authentication.py" = ["E402"]
+"tests/test_pu_enrichment.py" = ["E402"]
+"tests/test_ward_reconciliation.py" = ["E402"]

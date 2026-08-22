@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from app.anomaly.statistical import (
-    PUTurnout,
     PeerDistribution,
+    PUTurnout,
     run_leader_share_check,
     run_statistical_checks,
     z_score,

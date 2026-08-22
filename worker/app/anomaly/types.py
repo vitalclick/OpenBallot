@@ -11,6 +11,7 @@ from uuid import UUID
 class AnomalyType(str, Enum):
     VOTES_EXCEED_REGISTERED = "votes_exceed_registered"
     TURNOUT_EXCEEDS_ACCREDITATION = "turnout_exceeds_accreditation"
+    VOTES_WITHOUT_ACCREDITATION = "votes_without_accreditation"
     REJECTED_EXCEEDS_CAST = "rejected_exceeds_cast"
     LEADER_EXTREME_SHARE = "leader_extreme_share"
     ZERO_REGISTERED_VOTERS = "zero_registered_voters"

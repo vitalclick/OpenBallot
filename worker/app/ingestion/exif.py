@@ -8,9 +8,8 @@ or processed before upload.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
-
 
 SUSPICIOUS_SOFTWARE_HINTS = (
     "photoshop",
@@ -47,7 +46,7 @@ def evaluate_exif(
     if election_date is not None and (dt_str := exif.get("DateTimeOriginal")):
         try:
             captured = datetime.strptime(str(dt_str), "%Y:%m:%d %H:%M:%S").replace(
-                tzinfo=timezone.utc
+                tzinfo=UTC
             )
             delta_days = abs((captured.date() - election_date.date()).days)
             if delta_days > 1:

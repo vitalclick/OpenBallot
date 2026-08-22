@@ -20,21 +20,19 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 
+from .admin.router import router as admin_router
+from .anomaly import AnomalyEngine
 from .audit import cron as anchor_cron
 from .audit.chain import AuditEvent, verify_chain
 from .audit.ethereum_client import build_from_settings as build_eth_client
 from .auth.router import router as auth_router
-from .admin.router import router as admin_router
-from .anomaly import AnomalyEngine
-from .observers import observer_router
-from .uploads import uploads_router
 from .config import settings
 from .db import close_pool, init_pool, pool
 from .extraction import build_engine
 from .ingestion import IngestionPipeline
+from .ingestion.pipeline import IngestionContext
 from .jobs import enqueue_ingestion
 from .jobs.queue import close_queue, get_queue
-from .ingestion.pipeline import IngestionContext
 from .models import IngestionPayload
 from .observability import (
     INFLIGHT_GAUGE,
@@ -45,6 +43,8 @@ from .observability import (
     init_sentry,
     metrics_response,
 )
+from .observers import observer_router
+from .uploads import uploads_router
 
 log = logging.getLogger(__name__)
 
@@ -97,9 +97,11 @@ async def metrics():
         queue = await get_queue()
         QUEUE_DEPTH_GAUGE.set(await queue.depth())
         INFLIGHT_GAUGE.set(await queue.inflight_count())
-    except Exception:
-        # Metric refresh failure must not block the scrape.
-        pass
+    except Exception as e:
+        # A metric refresh failure must not block the scrape -- but it must
+        # not be invisible either. A gauge silently stuck at its last value
+        # during an election is worse than a gap in the series.
+        log.warning("metrics.refresh_failed", extra={"error": str(e)})
     return metrics_response()
 
 
@@ -109,7 +111,9 @@ async def ingest(payload: IngestionPayload) -> dict:
     async with pool().acquire() as conn:
         row = await conn.fetchrow(
             """
-            SELECT ST_Y(geog::geometry) AS lat, ST_X(geog::geometry) AS lng
+            SELECT ST_Y(geog::geometry) AS lat,
+                   ST_X(geog::geometry) AS lng,
+                   geog_precision
             FROM polling_units WHERE pu_code = $1
             """,
             payload.pu_code,
@@ -137,8 +141,12 @@ async def ingest(payload: IngestionPayload) -> dict:
         )
 
     ctx = IngestionContext(
+        # Both are NULL until the registry is enriched (migration 0017 /
+        # scripts/load_pu_enrichment.py). The pipeline flags that rather than
+        # attempting a fence it cannot evaluate.
         pu_lat=row["lat"],
         pu_lng=row["lng"],
+        pu_coordinate_precision=row["geog_precision"],
         election_date=election_date,
         min_image_bytes=s.min_image_bytes,
         max_image_bytes=s.max_image_bytes,
