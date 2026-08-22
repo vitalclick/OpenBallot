@@ -115,3 +115,67 @@ def test_duplicate_rule_does_not_apply_to_observers():
         _ctx(existing_party_submission=True),  # irrelevant for observers
     )
     assert r.accepted is True
+
+
+# ─── Coordinate precision and absence (migration 0017, issue #65) ──────────
+#
+# Every polling unit starts with geog NULL, and enrichment resolves co-located
+# PUs to a shared point. Neither case can be allowed to reject real evidence.
+
+
+def test_unknown_pu_coordinates_do_not_crash_and_are_flagged():
+    # Before enrichment, geog is NULL for every polling unit, so the API hands
+    # the pipeline None for both coordinates. This must not attempt a fence.
+    r = IngestionPipeline().run(_payload(), _ctx(pu_lat=None, pu_lng=None))
+    assert r.accepted is True
+    assert ValidationFlag.PU_COORDINATES_UNKNOWN.value in r.flags
+    # The submission carried GPS, so it must not be reported as missing it.
+    assert ValidationFlag.GPS_MISSING.value not in r.flags
+    assert r.distance_metres is None
+
+
+def test_shared_site_coordinate_does_not_hard_reject():
+    # ~5km east: a hard violation on an exact coordinate. On a coordinate
+    # shared with other polling units the distance is real but the fence is
+    # not authority enough to discard the EC8A.
+    far = _payload(gps=GPSPoint(lat=PU_LAT, lng=PU_LNG + 0.045))
+    r = IngestionPipeline().run(far, _ctx(pu_coordinate_precision="shared_site"))
+
+    assert r.accepted is True
+    assert ValidationFlag.GPS_VIOLATION.value not in r.flags
+    assert ValidationFlag.PU_COORDINATE_APPROXIMATE.value in r.flags
+    assert ValidationFlag.GPS_WARNING.value in r.flags
+
+    # The unenforced breach is recorded with its measurements, so a reviewer
+    # sees what the fence would have done and why it did not.
+    detail = r.flags[ValidationFlag.GEOFENCE_HARD_LIMIT_UNENFORCED.value]
+    assert detail["pu_coordinate_precision"] == "shared_site"
+    assert detail["hard_limit_metres"] == 2_000
+    assert 4_500 < detail["distance_metres"] < 5_500
+
+
+def test_exact_coordinate_still_hard_rejects():
+    # The relaxation must be scoped to imprecise coordinates only.
+    far = _payload(gps=GPSPoint(lat=PU_LAT, lng=PU_LNG + 0.045))
+    r = IngestionPipeline().run(far, _ctx(pu_coordinate_precision="exact"))
+    assert r.accepted is False
+    assert ValidationFlag.GPS_VIOLATION.value in r.flags
+
+
+def test_shared_site_within_soft_fence_is_clean_but_marked():
+    # An approximate coordinate is still worth knowing about even when the
+    # capture point sits comfortably inside the soft fence.
+    r = IngestionPipeline().run(_payload(), _ctx(pu_coordinate_precision="shared_site"))
+    assert r.accepted is True
+    assert ValidationFlag.PU_COORDINATE_APPROXIMATE.value in r.flags
+    assert ValidationFlag.GPS_WARNING.value not in r.flags
+
+
+def test_missing_precision_does_not_weaken_the_fence():
+    # A NULL precision alongside a real coordinate is impossible under the
+    # 0017 CHECK constraint, but if it ever occurs the fence must fail toward
+    # flagging rather than toward silently discarding evidence.
+    far = _payload(gps=GPSPoint(lat=PU_LAT, lng=PU_LNG + 0.045))
+    r = IngestionPipeline().run(far, _ctx(pu_coordinate_precision=None))
+    assert r.accepted is True
+    assert ValidationFlag.GEOFENCE_HARD_LIMIT_UNENFORCED.value in r.flags

@@ -39,7 +39,8 @@ overwriting rows under ``ON CONFLICT (pu_code) DO UPDATE``.
 
 INEC's published roster carries neither GPS coordinates nor registered
 voter counts; ``geog`` and ``registered_voters`` are left NULL and can be
-enriched from another source later.
+enriched from another source later — see ``scripts/load_pu_enrichment.py``,
+which also fills polling units INEC's API does not return at all.
 
 Usage::
 

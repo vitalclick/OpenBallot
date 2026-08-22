@@ -24,7 +24,7 @@ from uuid import UUID, uuid4
 
 from ..models import IngestionPayload, SubmissionSource
 from .exif import evaluate_exif
-from .geofence import evaluate_geofence
+from .geofence import HARD_FENCE_PRECISIONS, evaluate_geofence
 
 
 class ValidationFlag(str, Enum):
@@ -35,6 +35,13 @@ class ValidationFlag(str, Enum):
     GPS_MISSING = "gps_missing"
     GPS_WARNING = "geofence_warning"
     GPS_VIOLATION = "geofence_violation"
+    # The registry has no coordinate for this PU, so no fence could be
+    # evaluated. Distinct from GPS_MISSING, which is about the submission.
+    PU_COORDINATES_UNKNOWN = "pu_coordinates_unknown"
+    # The PU's coordinate is shared with other polling units or otherwise
+    # approximate, so the hard fence was measured but not enforced.
+    PU_COORDINATE_APPROXIMATE = "pu_coordinate_approximate"
+    GEOFENCE_HARD_LIMIT_UNENFORCED = "geofence_hard_limit_unenforced"
     EXIF_MISSING = "exif_missing"
     EXIF_SOFTWARE_WARNING = "exif_software_warning"
     EXIF_DATETIME_MISMATCH = "exif_datetime_mismatch"
@@ -43,14 +50,20 @@ class ValidationFlag(str, Enum):
 
 @dataclass
 class IngestionContext:
-    pu_lat: float
-    pu_lng: float
+    # None until the registry has been enriched with coordinates. Every row
+    # starts NULL - see scripts/load_polling_units.py - so the pipeline must
+    # cope with their absence rather than assume enrichment has happened.
+    pu_lat: float | None
+    pu_lng: float | None
     election_date: datetime | None
     min_image_bytes: int
     max_image_bytes: int
     gps_soft_metres: int
     gps_hard_metres: int
     existing_party_submission: bool
+    # polling_units.geog_precision (migration 0017). Defaults to "exact" so
+    # an omitted precision never silently weakens the fence.
+    pu_coordinate_precision: str | None = "exact"
 
 
 @dataclass
@@ -104,7 +117,16 @@ class IngestionPipeline:
         # 3. Geofence
         if payload.gps is None:
             flags[ValidationFlag.GPS_MISSING.value] = True
+        elif ctx.pu_lat is None or ctx.pu_lng is None:
+            # The registry has no coordinate for this polling unit, so there
+            # is nothing to measure against. Record that the check could not
+            # run - silently treating it as a pass would misrepresent an
+            # unchecked submission as a checked one.
+            flags[ValidationFlag.PU_COORDINATES_UNKNOWN.value] = True
         else:
+            if ctx.pu_coordinate_precision not in HARD_FENCE_PRECISIONS:
+                flags[ValidationFlag.PU_COORDINATE_APPROXIMATE.value] = True
+
             distance, decision = evaluate_geofence(
                 capture_lat=payload.gps.lat,
                 capture_lng=payload.gps.lng,
@@ -112,9 +134,20 @@ class IngestionPipeline:
                 pu_lng=ctx.pu_lng,
                 soft_metres=ctx.gps_soft_metres,
                 hard_metres=ctx.gps_hard_metres,
+                precision=ctx.pu_coordinate_precision,
             )
             if decision == "geofence_warning":
                 flags[ValidationFlag.GPS_WARNING.value] = True
+            elif decision == "geofence_hard_limit_unenforced":
+                # Beyond the hard fence, but the coordinate is not precise
+                # enough to justify discarding evidence on its say-so. Flag
+                # loudly and publish; a reviewer can weigh it.
+                flags[ValidationFlag.GPS_WARNING.value] = True
+                flags[ValidationFlag.GEOFENCE_HARD_LIMIT_UNENFORCED.value] = {
+                    "distance_metres": round(distance),
+                    "hard_limit_metres": ctx.gps_hard_metres,
+                    "pu_coordinate_precision": ctx.pu_coordinate_precision,
+                }
             elif decision == "geofence_violation":
                 return IngestionResult(
                     accepted=False,

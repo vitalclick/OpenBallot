@@ -9,6 +9,13 @@ Per-state figures: `per-state-reconciliation.csv` · Re-scrape targets: `rescrap
 > **Status (2026-06-20):** the gap-fill re-scrape was run live against INEC and **recovered 0 of the
 > 2,671 missing polling units** — every flagged ward returns 0 from INEC's own API. The deficit is
 > confirmed to be **missing upstream at INEC**, not a scraper defect. Full detail in §8.
+>
+> **Status (2026-08-22):** the deficit is unchanged and still unfilled. A loader that *can* close it
+> from a third-party roster now exists — `scripts/load_pu_enrichment.py`, with migration 0017 — but
+> it has not been run, because the roster's licensing is unresolved (issue #64). Rows it inserts
+> carry `source = 'ccij_2023'` rather than `inec_scrape`, so if the gap is ever closed this way the
+> distinction survives in the registry: those polling units would be attested by a third party, not
+> by INEC. That INEC's own API cannot enumerate them remains a finding in its own right.
 
 ---
 

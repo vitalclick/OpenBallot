@@ -71,6 +71,82 @@ If the Supabase pooler drops the connection mid-load, the loader
 reconnects and continues from the next state. Re-running from
 scratch is also safe — every upsert is `ON CONFLICT DO UPDATE`.
 
+## Step 2b — Enrich coordinates and registered voters (optional)
+
+> **Gated on issue #64.** The roster this step consumes is third-party
+> data whose licensing is unsettled. Do not run it against a real input
+> until that is resolved. The tooling is in the repository so the schema
+> and the loader can be reviewed independently of the data.
+
+INEC's roster carries neither GPS coordinates nor registered-voter
+counts, so after step 2 `polling_units.geog` and `registered_voters`
+are NULL for every row. Until they are populated the GPS geofence in
+`worker/app/ingestion/geofence.py` cannot make a decision: it is live
+code that never fires.
+
+```bash
+# Parse and report without touching the database:
+python scripts/load_pu_enrichment.py \
+    --roster roster.csv --voter-info voters.csv \
+    --dry-run --report /tmp/rejects.csv
+
+# Apply:
+DATABASE_URL=... python scripts/load_pu_enrichment.py \
+    --roster roster.csv --voter-info voters.csv
+```
+
+Requires migration `0017_pu_geo_provenance.sql`.
+
+Two passes run by default, either of which can be skipped with
+`--no-gap-fill` / `--no-enrich`:
+
+**Gap fill** inserts wards and polling units absent from our registry.
+`Polling-Units/reconciliation/RECONCILIATION-2023.md` records a
+2,671-PU deficit against INEC's own published count that INEC's API
+cannot supply — those wards return zero polling units from it. Rows
+inserted here carry `source = 'ccij_2023'` (or whatever `--source`
+says), so they stay distinguishable from INEC-enumerated geography.
+
+**Enrichment** populates `geog`, `registered_voters` and their
+provenance columns for polling units we already have.
+
+### Coordinate precision — read before tightening the fence
+
+The loader labels every coordinate `exact` or `shared_site`.
+Co-located polling units — several in one school or market — resolve
+to a single point in the sources we have seen, and roughly one PU in
+twelve shares its point with another.
+
+`shared_site` coordinates are **not** used for hard rejects. An agent
+standing at the correct polling unit can be hundreds of metres from a
+shared point, and a hard reject is the one ingestion outcome with no
+recovery path: the EC8A is refused and goes back in the folder. The
+distance is still measured and flagged, so a reviewer sees it.
+
+If a future source supplies surveyed per-PU positions, load them with
+`geog_precision = 'exact'` and the hard fence starts applying to them
+automatically. Nothing else needs to change.
+
+### Verify
+
+```sql
+SELECT geog_source, geog_precision, count(*)
+  FROM polling_units WHERE geog IS NOT NULL
+ GROUP BY 1, 2 ORDER BY 1, 2;
+
+-- Registered voters should approach INEC's published 93,469,008.
+SELECT sum(registered_voters) FROM polling_units;
+```
+
+Rejected rows are never loaded silently. `--report` writes them with a
+reason per row: `malformed_pu_code`, `duplicate_pu_code`,
+`missing_coordinate`, `coordinate_outside_nigeria`,
+`missing_registered_voters`.
+
+The loader is idempotent — re-running against the same input leaves the
+registry byte-identical. It aborts with exit code 3, before writing
+anything, if any polling unit names an LGA the registry does not have.
+
 ## Step 3 — Apply the ward polygon API migration
 
 ```bash
@@ -181,6 +257,9 @@ Re-run when:
 - **A new state code or LGA alias is needed** — edit
   `GRID3_TO_INEC_STATE_CODE` or `LGA_NAME_ALIASES` in
   `scripts/reconcile_ward_names.py`, re-run step 5.
+- **A better coordinate source becomes available** — re-run step
+  2b with it. Enrichment is an upsert; a coordinate carrying a
+  higher precision supersedes a `shared_site` one.
 
 ## Related ADRs
 

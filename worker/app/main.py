@@ -109,7 +109,9 @@ async def ingest(payload: IngestionPayload) -> dict:
     async with pool().acquire() as conn:
         row = await conn.fetchrow(
             """
-            SELECT ST_Y(geog::geometry) AS lat, ST_X(geog::geometry) AS lng
+            SELECT ST_Y(geog::geometry) AS lat,
+                   ST_X(geog::geometry) AS lng,
+                   geog_precision
             FROM polling_units WHERE pu_code = $1
             """,
             payload.pu_code,
@@ -137,8 +139,12 @@ async def ingest(payload: IngestionPayload) -> dict:
         )
 
     ctx = IngestionContext(
+        # Both are NULL until the registry is enriched (migration 0017 /
+        # scripts/load_pu_enrichment.py). The pipeline flags that rather than
+        # attempting a fence it cannot evaluate.
         pu_lat=row["lat"],
         pu_lng=row["lng"],
+        pu_coordinate_precision=row["geog_precision"],
         election_date=election_date,
         min_image_bytes=s.min_image_bytes,
         max_image_bytes=s.max_image_bytes,
