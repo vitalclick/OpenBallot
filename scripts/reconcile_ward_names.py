@@ -71,9 +71,14 @@ LGA_NAME_ALIASES: dict[tuple[str, str], str] = {
     ("OG", "yewa south"):  "egbado south",
     ("KO", "kogi"):        "kogi k k",
     ("KN", "dambatta"):    "danbata",
-    # Borno / Abadam intentionally absent: the LGA has zero polling
-    # units in the INEC scrape (load_polling_units.py skipped it),
-    # so there is no bucket to alias into.
+    # From the FOIA'd LGA results (scripts/load_2023_lga_results.py): the
+    # source prints "IHALA" for Anambra's Ihiala. A one-character typo in the
+    # document, not a distinct LGA.
+    ("AN", "ihala"):       "ihiala",
+    # Borno / Abadam no longer needs an exception here. It had zero polling
+    # units in the INEC scrape, so load_polling_units.py skipped it and there
+    # was no bucket to alias into; scripts/load_pu_enrichment.py now creates
+    # it (--create-missing-lgas) and the registry holds all 774.
 }
 
 

@@ -72,8 +72,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 # Parties this source carries. The 2023 presidential ballot had 18; these four
-# took 99.4% of the valid votes. Minor-party votes are not in the source, so
-# the totals here are four-party totals and are documented as such.
+# took 23,377,466 of 24,025,940 valid votes (97.3%). The other 14 parties'
+# 648,474 votes are not in the source, so every total here is a four-party
+# total and is documented as such.
 MAJOR_PARTIES = ("APC", "PDP", "LP", "NNPP")
 
 DEFAULT_ELECTION_ID = "2023-presidential"
