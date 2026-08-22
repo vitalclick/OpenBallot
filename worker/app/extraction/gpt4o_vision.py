@@ -23,6 +23,7 @@ from ..models import ExtractedEC8A
 from .arithmetic import arithmetic_consistent
 from .engine import ExtractionResult, Extractor
 from .prompts import EXTRACTION_PROMPT, PROMPT_VERSION
+from .word_numbers import reconcile_votes
 
 log = logging.getLogger(__name__)
 
@@ -97,11 +98,36 @@ class GPT4oVisionExtractor(Extractor):
         image_url: str,
     ) -> ExtractionResult:
         candidate_votes_raw = parsed.get("candidate_votes") or {}
-        candidate_votes = {
-            str(k).strip().upper(): int(v or 0)
-            for k, v in candidate_votes_raw.items()
-            if v is not None
+        words_raw = parsed.get("candidate_votes_words") or {}
+        candidate_votes_words = {
+            str(k).strip().upper(): str(v)
+            for k, v in words_raw.items()
+            if v is not None and str(v).strip()
         }
+
+        # Reconcile the two columns the form carries. When the model returned
+        # the words, this both picks the reading they agree on and tells us
+        # WHICH party is in doubt when they do not -- far better than an
+        # arithmetic failure that condemns the whole extraction.
+        if candidate_votes_words:
+            figures_raw = {
+                str(k).strip().upper(): v
+                for k, v in candidate_votes_raw.items()
+            }
+            candidate_votes, reconciliation, votes_confidence = reconcile_votes(
+                figures_raw, candidate_votes_words
+            )
+            disputed = [p for p, r in reconciliation.items() if r.needs_review]
+        else:
+            candidate_votes = {
+                str(k).strip().upper(): int(v or 0)
+                for k, v in candidate_votes_raw.items()
+                if v is not None
+            }
+            reconciliation = {}
+            votes_confidence = None
+            disputed = []
+
         if not candidate_votes:
             raise RuntimeError("GPT-4o returned no candidate votes")
 
@@ -110,6 +136,7 @@ class GPT4oVisionExtractor(Extractor):
             registered_voters=int(parsed.get("registered_voters") or 0),
             accredited_voters=int(parsed.get("accredited_voters") or 0),
             candidate_votes=candidate_votes,
+            candidate_votes_words=candidate_votes_words or None,
             total_valid_votes=int(parsed.get("total_valid_votes") or sum(candidate_votes.values())),
             rejected_ballots=int(parsed.get("rejected_ballots") or 0),
             total_votes_cast=int(parsed.get("total_votes_cast") or 0)
@@ -124,6 +151,18 @@ class GPT4oVisionExtractor(Extractor):
         per_field_confidence: dict[str, float] = {
             k: float(v) for k, v in conf.items() if isinstance(v, (int, float))
         }
+
+        # Agreement between the two columns is evidence about the votes that
+        # the model's own self-reported confidence is not. Where we have it,
+        # it wins: a model can be confidently wrong about a digit, but it
+        # cannot easily be wrong about a digit AND its written form in the
+        # same direction. Take the lower of the two so agreement can raise
+        # confidence only as far as the model's own estimate allows.
+        if votes_confidence is not None:
+            per_field_confidence["candidate_votes"] = min(
+                votes_confidence,
+                per_field_confidence.get("candidate_votes", 1.0),
+            )
         confidence_score = (
             sum(per_field_confidence.values()) / max(1, len(per_field_confidence))
         ) if per_field_confidence else 0.5
@@ -138,6 +177,15 @@ class GPT4oVisionExtractor(Extractor):
                 "image_url": image_url,
                 "prompt_version": PROMPT_VERSION,
                 "model": self.model,
+                "votes_reconciliation": {
+                    party: {
+                        "figures": r.figures,
+                        "words": r.words,
+                        "agreed": r.agreed,
+                    }
+                    for party, r in reconciliation.items()
+                },
+                "votes_disputed": disputed,
             },
         )
 

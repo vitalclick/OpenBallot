@@ -26,6 +26,9 @@ export interface ExtractedEC8A {
   registered_voters: number;
   accredited_voters: number;
   candidate_votes: Record<string, number>;
+  /** Votes as written in words on the form, verbatim. EC8A records every
+   *  count twice; this is the second channel, kept for reviewers. */
+  candidate_votes_words?: Record<string, string> | null;
   total_valid_votes: number;
   rejected_ballots: number;
   total_votes_cast: number;

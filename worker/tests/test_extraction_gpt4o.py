@@ -142,3 +142,94 @@ async def test_extract_arithmetic_inconsistent_flagged(extractor, good_response_
 
     assert result.arithmetic.consistent is False
     assert "candidate_votes_sum_neq_total_valid" in result.arithmetic.failed_checks
+
+
+# ─── Figures-vs-words reconciliation (issue #68) ──────────────────────────
+
+
+async def _extract(extractor, payload):
+    with patch("httpx.AsyncClient.post", new=AsyncMock()) as post:
+        post.return_value.status_code = 200
+        post.return_value.json = lambda: _mock_openai_response(payload)
+        post.return_value.raise_for_status = lambda: None
+        return await extractor.extract("https://cdn/test.jpg", "25-11-04-007")
+
+
+@pytest.mark.asyncio
+async def test_words_column_is_preserved_verbatim(extractor, good_response_json):
+    payload = dict(good_response_json)
+    payload["candidate_votes_words"] = {
+        "APC": "one hundred forty two",
+        "PDP": "eighty nine",
+        "LP": "two hundred three",
+    }
+    result = await _extract(extractor, payload)
+
+    # Kept as written, not as a parsed number: a reviewer looking at a
+    # disputed cell needs to see what was actually on the form.
+    assert result.extracted.candidate_votes_words["APC"] == "one hundred forty two"
+    assert result.extracted.candidate_votes == {"APC": 142, "PDP": 89, "LP": 203}
+
+
+@pytest.mark.asyncio
+async def test_agreement_across_both_columns_is_recorded(extractor, good_response_json):
+    payload = dict(good_response_json)
+    payload["candidate_votes_words"] = {
+        "APC": "one hundred forty two",
+        "PDP": "eighty nine",
+        "LP": "two hundred three",
+    }
+    result = await _extract(extractor, payload)
+
+    assert result.raw_response["votes_disputed"] == []
+    assert all(v["agreed"] for v in result.raw_response["votes_reconciliation"].values())
+
+
+@pytest.mark.asyncio
+async def test_disagreement_lowers_confidence_and_names_the_party(
+    extractor, good_response_json
+):
+    """The point of the second channel: the doubt localises to one party
+    instead of condemning the whole extraction."""
+    payload = dict(good_response_json)
+    payload["candidate_votes_words"] = {
+        "APC": "one hundred forty two",
+        "PDP": "eighty nine",
+        "LP": "nine hundred ninety nine",     # disagrees with the figure 203
+    }
+    result = await _extract(extractor, payload)
+
+    assert result.raw_response["votes_disputed"] == ["LP"]
+    # Below ExtractionEngine's 0.85 floor, so the engine escalates.
+    assert result.per_field_confidence["candidate_votes"] < 0.85
+    # Both readings survive for the reviewer.
+    assert result.raw_response["votes_reconciliation"]["LP"]["figures"] == 203
+    assert result.raw_response["votes_reconciliation"]["LP"]["words"] == 999
+
+
+@pytest.mark.asyncio
+async def test_words_disambiguate_a_split_figure(extractor, good_response_json):
+    payload = dict(good_response_json)
+    payload["candidate_votes"] = {"APC": "1 42", "PDP": 89, "LP": 203}
+    payload["candidate_votes_words"] = {
+        "APC": "one hundred forty two",
+        "PDP": "eighty nine",
+        "LP": "two hundred three",
+    }
+    result = await _extract(extractor, payload)
+
+    assert result.extracted.candidate_votes["APC"] == 142
+    assert result.raw_response["votes_disputed"] == []
+
+
+@pytest.mark.asyncio
+async def test_absent_words_column_keeps_the_old_behaviour(
+    extractor, good_response_json
+):
+    """Older prompt versions and the Document AI backend return no words.
+    Reconciliation must be additive, never a regression."""
+    result = await _extract(extractor, good_response_json)
+
+    assert result.extracted.candidate_votes_words is None
+    assert result.extracted.candidate_votes == {"APC": 142, "PDP": 89, "LP": 203}
+    assert result.raw_response["votes_disputed"] == []
