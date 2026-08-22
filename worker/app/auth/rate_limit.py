@@ -14,7 +14,7 @@ caller fetches events and persists outcomes. Keeps this layer hermetic.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 
 @dataclass
@@ -34,7 +34,7 @@ def evaluate_rate_limit(
     ip_max: int = 30,
     now: datetime | None = None,
 ) -> RateLimitDecision:
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
 
     phone_window_start = now - timedelta(seconds=phone_window_seconds)
     recent_phone = [t for t in phone_request_times if t >= phone_window_start]

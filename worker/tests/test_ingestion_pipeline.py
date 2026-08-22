@@ -4,13 +4,12 @@ Covers all of the boundary conditions the pipeline is meant to catch:
 hash format, GPS geofence, EXIF integrity, duplicate party submissions.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from app.ingestion import IngestionPipeline
 from app.ingestion.pipeline import IngestionContext, ValidationFlag
 from app.models import GPSPoint, IngestionPayload, SubmissionSource
-
 
 PU_LAT, PU_LNG = 6.4969, 3.3515  # Surulere Ward 4 / Unit 1
 
@@ -25,7 +24,7 @@ def _payload(**overrides) -> IngestionPayload:
         "image_sha256": "a" * 64,
         "image_bytes": 800_000,
         "gps": GPSPoint(lat=PU_LAT, lng=PU_LNG, accuracy_metres=8),
-        "captured_at": datetime(2027, 2, 27, 17, 43, 22, tzinfo=timezone.utc),
+        "captured_at": datetime(2027, 2, 27, 17, 43, 22, tzinfo=UTC),
         "exif_metadata": {"Software": "iOS 18.2", "DateTimeOriginal": "2027:02:27 17:43:22"},
         "client_submission_uuid": uuid4(),
     }
@@ -34,16 +33,16 @@ def _payload(**overrides) -> IngestionPayload:
 
 
 def _ctx(**overrides) -> IngestionContext:
-    base = dict(
-        pu_lat=PU_LAT,
-        pu_lng=PU_LNG,
-        election_date=datetime(2027, 2, 27, tzinfo=timezone.utc),
-        min_image_bytes=60_000,
-        max_image_bytes=12_000_000,
-        gps_soft_metres=100,
-        gps_hard_metres=2_000,
-        existing_party_submission=False,
-    )
+    base = {
+        "pu_lat": PU_LAT,
+        "pu_lng": PU_LNG,
+        "election_date": datetime(2027, 2, 27, tzinfo=UTC),
+        "min_image_bytes": 60_000,
+        "max_image_bytes": 12_000_000,
+        "gps_soft_metres": 100,
+        "gps_hard_metres": 2_000,
+        "existing_party_submission": False,
+    }
     base.update(overrides)
     return IngestionContext(**base)
 

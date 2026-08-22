@@ -16,12 +16,12 @@ import logging
 from typing import Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
 
+from ..auth.jwt_tokens import AgentClaims
 from ..auth.router import require_agent
 from ..auth.twilio_adapter import build_default_adapter
-from ..auth.jwt_tokens import AgentClaims
 from ..config import settings
 from ..db import pool
 from . import csv_import, review
@@ -72,57 +72,56 @@ async def import_roster(
         raise HTTPException(
             status_code=400,
             detail={"code": "csv_invalid", "errors": e.errors},
-        )
+        ) from e
 
     inserted = 0
     skipped = 0
-    async with pool().acquire() as conn:
-        async with conn.transaction():
-            for row in rows:
-                exists = await conn.fetchval(
-                    "SELECT 1 FROM agents WHERE phone_e164 = $1", row.phone_e164
+    async with pool().acquire() as conn, conn.transaction():
+        for row in rows:
+            exists = await conn.fetchval(
+                "SELECT 1 FROM agents WHERE phone_e164 = $1", row.phone_e164
+            )
+            if exists:
+                skipped += 1
+                continue
+            pu_exists = await conn.fetchval(
+                "SELECT 1 FROM polling_units WHERE pu_code = $1", row.pu_code
+            )
+            if not pu_exists:
+                raise HTTPException(
+                    status_code=400,
+                    detail={
+                        "code": "unknown_pu",
+                        "message": f"polling unit {row.pu_code} not in registry (line {row.line})",
+                    },
                 )
-                if exists:
-                    skipped += 1
-                    continue
-                pu_exists = await conn.fetchval(
-                    "SELECT 1 FROM polling_units WHERE pu_code = $1", row.pu_code
-                )
-                if not pu_exists:
-                    raise HTTPException(
-                        status_code=400,
-                        detail={
-                            "code": "unknown_pu",
-                            "message": f"polling unit {row.pu_code} not in registry (line {row.line})",
-                        },
-                    )
-                await conn.execute(
-                    """
+            await conn.execute(
+                """
                     INSERT INTO agents (
                       role, full_name, phone_e164, party_code,
                       assigned_pu_code, language
                     ) VALUES ('party_agent', $1, $2, $3, $4, $5)
                     """,
-                    row.full_name,
-                    row.phone_e164,
-                    admin.party,
-                    row.pu_code,
-                    row.language,
-                )
-                await conn.execute(
-                    """
+                row.full_name,
+                row.phone_e164,
+                admin.party,
+                row.pu_code,
+                row.language,
+            )
+            await conn.execute(
+                """
                     INSERT INTO audit_log (event_type, entity_type, entity_id, actor_id, event_data)
                     VALUES ('agent.provisioned', 'agent', $1, $2, $3::jsonb)
                     """,
-                    row.phone_e164,
-                    admin.sub,
-                    {
-                        "party": admin.party,
-                        "pu_code": row.pu_code,
-                        "language": row.language,
-                    },
-                )
-                inserted += 1
+                row.phone_e164,
+                admin.sub,
+                {
+                    "party": admin.party,
+                    "pu_code": row.pu_code,
+                    "language": row.language,
+                },
+            )
+            inserted += 1
 
     sms_dispatched = 0
     if dispatch_sms and inserted > 0:
@@ -192,7 +191,7 @@ async def review_queue(
     if state:
         sql += " AND pu.state_code = $1"
         params.append(state)
-    sql += " ORDER BY s.submitted_at ASC LIMIT $%d" % (len(params) + 1)
+    sql += f" ORDER BY s.submitted_at ASC LIMIT ${len(params) + 1}"
     params.append(limit)
 
     async with pool().acquire() as conn:
@@ -238,21 +237,23 @@ async def review_submission(
 ):
     try:
         action = review.ReviewAction(body.action)
-    except ValueError:
-        raise HTTPException(status_code=400, detail={"code": "bad_action"})
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail={"code": "bad_action"}) from e
 
-    async with pool().acquire() as conn:
-        async with conn.transaction():
-            try:
-                outcome = await review.apply_review(
-                    conn,
-                    submission_id=submission_id,
-                    action=action,
-                    reviewer_id=UUID(reviewer.sub),
-                    reason=body.reason,
-                )
-            except ValueError as e:
-                raise HTTPException(status_code=400, detail={"code": "review_invalid", "message": str(e)})
+    async with pool().acquire() as conn, conn.transaction():
+        try:
+            outcome = await review.apply_review(
+                conn,
+                submission_id=submission_id,
+                action=action,
+                reviewer_id=UUID(reviewer.sub),
+                reason=body.reason,
+            )
+        except ValueError as e:
+            raise HTTPException(
+                status_code=400,
+                detail={"code": "review_invalid", "message": str(e)},
+            ) from e
 
     return ReviewDecisionOut(
         submission_id=outcome.submission_id,

@@ -7,7 +7,7 @@ _FakeConn shape used elsewhere.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
 from uuid import uuid4
 
@@ -95,8 +95,8 @@ def _stale_row(seconds_ago: int) -> dict:
         "pu_code": "25-11-04-007",
         "image_url": "https://x/y.jpg",
         "image_sha256": "a" * 64,
-        "extraction_started_at": datetime.now(timezone.utc) - timedelta(seconds=seconds_ago),
-        "queued_at": datetime.now(timezone.utc) - timedelta(seconds=seconds_ago + 30),
+        "extraction_started_at": datetime.now(UTC) - timedelta(seconds=seconds_ago),
+        "queued_at": datetime.now(UTC) - timedelta(seconds=seconds_ago + 30),
     }
 
 
@@ -111,8 +111,8 @@ async def test_recover_one_requeues_when_below_giveup_threshold(queue):
     assert outcome == "requeued"
     assert await queue.depth() == 1
     # Audit + status update both fired
-    assert any("UPDATE" == s[0] for s in conn.executed)
-    assert any("INSERT" == s[0] for s in conn.executed)
+    assert any(s[0] == "UPDATE" for s in conn.executed)
+    assert any(s[0] == "INSERT" for s in conn.executed)
 
 
 @pytest.mark.asyncio

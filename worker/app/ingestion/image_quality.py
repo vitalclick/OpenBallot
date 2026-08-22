@@ -140,7 +140,7 @@ def blur_score(image_bytes: bytes) -> float | None:
             )
             stats = ImageStat.Stat(laplacian)
             variance = stats.var[0]
-    except Exception:  # noqa: BLE001 - see below
+    except Exception:
         # Deliberately blind. This is an advisory quality check sitting in the
         # ingestion path: any decoder quirk, truncated upload or exotic format
         # must degrade to "not measured" rather than take down the processing

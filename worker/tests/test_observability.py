@@ -17,8 +17,8 @@ from app.observability.metrics import (
     EXTRACTION_HISTOGRAM,
     INGESTION_COUNTER,
     INGESTION_REJECTED_COUNTER,
-    observe_extraction,
     metrics_response,
+    observe_extraction,
 )
 
 
@@ -57,9 +57,8 @@ def test_observe_extraction_records_duration():
 
 def test_observe_extraction_increments_failure_counter_on_exception():
     before = EXTRACTION_FAILURE_COUNTER.labels(backend="test-fail")._value.get()
-    with pytest.raises(RuntimeError):
-        with observe_extraction("test-fail"):
-            raise RuntimeError("boom")
+    with pytest.raises(RuntimeError), observe_extraction("test-fail"):
+        raise RuntimeError("boom")
     after = EXTRACTION_FAILURE_COUNTER.labels(backend="test-fail")._value.get()
     assert after == before + 1
 

@@ -18,7 +18,7 @@ from ..db import pool
 from ..models import ExtractedEC8A
 from .historical import CurrentResult, HistoricalBaseline, run_historical_checks
 from .sanity import run_sanity_checks
-from .statistical import PUTurnout, PeerDistribution, run_statistical_checks
+from .statistical import PeerDistribution, PUTurnout, run_statistical_checks
 from .types import AnomalyHit
 
 log = logging.getLogger(__name__)

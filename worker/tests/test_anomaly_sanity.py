@@ -8,18 +8,18 @@ from app.models import ExtractedEC8A
 
 
 def _ec8a(**overrides) -> ExtractedEC8A:
-    base = dict(
-        pu_code="25-11-04-007",
-        registered_voters=500,
-        accredited_voters=450,
-        candidate_votes={"APC": 142, "PDP": 89, "LP": 203},
-        total_valid_votes=434,
-        rejected_ballots=12,
-        total_votes_cast=446,
-        presiding_officer_signed=True,
-        agent_signatures_detected=3,
-        official_stamp_present=True,
-    )
+    base = {
+        "pu_code": "25-11-04-007",
+        "registered_voters": 500,
+        "accredited_voters": 450,
+        "candidate_votes": {"APC": 142, "PDP": 89, "LP": 203},
+        "total_valid_votes": 434,
+        "rejected_ballots": 12,
+        "total_votes_cast": 446,
+        "presiding_officer_signed": True,
+        "agent_signatures_detected": 3,
+        "official_stamp_present": True,
+    }
     base.update(overrides)
     return ExtractedEC8A(**base)
 
@@ -44,7 +44,7 @@ def test_votes_exceed_registered_critical():
     severities = [h.severity for h in hits if h.anomaly_type == AnomalyType.VOTES_EXCEED_REGISTERED]
     assert severities == [Severity.CRITICAL]
     # Details carry the excess delta
-    detail = [h.details for h in hits if h.anomaly_type == AnomalyType.VOTES_EXCEED_REGISTERED][0]
+    detail = next(h.details for h in hits if h.anomaly_type == AnomalyType.VOTES_EXCEED_REGISTERED)
     assert detail["excess"] == 190
 
 
@@ -92,7 +92,7 @@ def test_leader_extreme_share_above_97pct():
     )
     types = {h.anomaly_type for h in hits}
     assert AnomalyType.LEADER_EXTREME_SHARE in types
-    detail = [h.details for h in hits if h.anomaly_type == AnomalyType.LEADER_EXTREME_SHARE][0]
+    detail = next(h.details for h in hits if h.anomaly_type == AnomalyType.LEADER_EXTREME_SHARE)
     assert detail["leader"] == "LP"
     assert detail["share"] >= 0.97
 

@@ -84,7 +84,7 @@ def test_party_flip_with_above_threshold_share_swing_flagged():
     types = {h.anomaly_type for h in hits}
     assert AnomalyType.LEADER_PARTY_SHIFT_VS_2023 in types
     # share shift = 62pp → CRITICAL? (default uses 70 for CRITICAL, 50 for HIGH)
-    detail = [h for h in hits if h.anomaly_type == AnomalyType.LEADER_PARTY_SHIFT_VS_2023][0]
+    detail = next(h for h in hits if h.anomaly_type == AnomalyType.LEADER_PARTY_SHIFT_VS_2023)
     assert detail.severity == Severity.HIGH
 
 

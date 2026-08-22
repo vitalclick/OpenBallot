@@ -29,7 +29,7 @@ just burn through API budget on infinite retry.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from ..db import pool
@@ -73,7 +73,7 @@ async def recover_one(
     if started_at is None:
         return "skipped"
 
-    age = (datetime.now(timezone.utc) - started_at).total_seconds()
+    age = (datetime.now(UTC) - started_at).total_seconds()
 
     if age > give_up_seconds:
         async with pool().acquire() as conn:
@@ -135,7 +135,7 @@ async def recover_one(
         pu_code=row["pu_code"],
         image_url=row["image_url"],
         image_sha256=row["image_sha256"],
-        enqueued_at=datetime.now(timezone.utc).isoformat(),
+        enqueued_at=datetime.now(UTC).isoformat(),
     )
     await queue.enqueue(job)
     log.info(

@@ -4,20 +4,19 @@ import jwt as jwt_lib
 
 from app.auth.jwt_tokens import issue_agent_token, verify_agent_token
 
-
 SECRET = "test-secret-for-jwt"
 
 
 def _issue(**overrides):
-    base = dict(
-        secret=SECRET,
-        agent_id="11111111-1111-1111-1111-111111111111",
-        role="party_agent",
-        party="APC",
-        pu_code="25-11-04-007",
-        device_fingerprint_hash="d" * 64,
-        ttl_seconds=60,
-    )
+    base = {
+        "secret": SECRET,
+        "agent_id": "11111111-1111-1111-1111-111111111111",
+        "role": "party_agent",
+        "party": "APC",
+        "pu_code": "25-11-04-007",
+        "device_fingerprint_hash": "d" * 64,
+        "ttl_seconds": 60,
+    }
     base.update(overrides)
     return issue_agent_token(**base)
 

@@ -92,9 +92,11 @@ async def test_extract_rejects_not_an_ec8a(extractor):
     mock_response.status_code = 200
     mock_response.json = lambda: _mock_openai_response({"error": "not_an_ec8a"})
 
-    with patch("httpx.AsyncClient.post", return_value=mock_response):
-        with pytest.raises(RuntimeError, match="not an EC8A"):
-            await extractor.extract("https://example.com/random.jpg", "x")
+    with (
+        patch("httpx.AsyncClient.post", return_value=mock_response),
+        pytest.raises(RuntimeError, match="not an EC8A"),
+    ):
+        await extractor.extract("https://example.com/random.jpg", "x")
 
 
 async def test_extract_raises_on_no_candidates(extractor, good_response_json):
@@ -103,9 +105,11 @@ async def test_extract_raises_on_no_candidates(extractor, good_response_json):
     mock_response.status_code = 200
     mock_response.json = lambda: _mock_openai_response(good_response_json)
 
-    with patch("httpx.AsyncClient.post", return_value=mock_response):
-        with pytest.raises(RuntimeError, match="no candidate votes"):
-            await extractor.extract("https://example.com/ec8a.jpg", "x")
+    with (
+        patch("httpx.AsyncClient.post", return_value=mock_response),
+        pytest.raises(RuntimeError, match="no candidate votes"),
+    ):
+        await extractor.extract("https://example.com/ec8a.jpg", "x")
 
 
 async def test_extract_raises_on_non_json_content(extractor):
@@ -115,9 +119,11 @@ async def test_extract_raises_on_non_json_content(extractor):
         "choices": [{"message": {"content": "definitely not json"}}]
     }
 
-    with patch("httpx.AsyncClient.post", return_value=mock_response):
-        with pytest.raises(RuntimeError, match="non-JSON"):
-            await extractor.extract("https://example.com/ec8a.jpg", "x")
+    with (
+        patch("httpx.AsyncClient.post", return_value=mock_response),
+        pytest.raises(RuntimeError, match="non-JSON"),
+    ):
+        await extractor.extract("https://example.com/ec8a.jpg", "x")
 
 
 async def test_extract_raises_on_http_error(extractor):
@@ -125,9 +131,11 @@ async def test_extract_raises_on_http_error(extractor):
     mock_response.status_code = 500
     mock_response.text = "internal server error"
 
-    with patch("httpx.AsyncClient.post", return_value=mock_response):
-        with pytest.raises(RuntimeError, match="HTTP 500"):
-            await extractor.extract("https://example.com/ec8a.jpg", "x")
+    with (
+        patch("httpx.AsyncClient.post", return_value=mock_response),
+        pytest.raises(RuntimeError, match="HTTP 500"),
+    ):
+        await extractor.extract("https://example.com/ec8a.jpg", "x")
 
 
 async def test_extract_arithmetic_inconsistent_flagged(extractor, good_response_json):

@@ -11,9 +11,9 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-from app.extraction.factory import build_engine
-from app.extraction.engine import StubExtractor
 from app.extraction.document_ai import DocumentAIExtractor
+from app.extraction.engine import StubExtractor
+from app.extraction.factory import build_engine
 from app.extraction.gpt4o_vision import GPT4oVisionExtractor
 
 

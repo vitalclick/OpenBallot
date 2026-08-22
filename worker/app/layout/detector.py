@@ -107,7 +107,7 @@ class HTTPDetector(LayoutDetector):
                 )
                 response.raise_for_status()
                 payload = response.json()
-        except Exception as e:  # noqa: BLE001 - see module docstring
+        except Exception as e:
             # Any failure degrades to "no detections". An EC8A must never be
             # lost because a vision service was unavailable.
             log.warning("layout.detect.failed", extra={"error": str(e)})
@@ -163,7 +163,7 @@ class LocalDetector(LayoutDetector):
                     max_det=10_000,
                     verbose=False,
                 )
-        except Exception as e:  # noqa: BLE001 - see module docstring
+        except Exception as e:
             log.warning("layout.detect.local_failed", extra={"error": str(e)})
             return DetectionResult(
                 boxes=[], page_width=0, page_height=0,

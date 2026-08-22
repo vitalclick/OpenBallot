@@ -15,7 +15,7 @@ every step of extraction. A custom asyncio-native consumer is simpler
 and faster.
 """
 
-from .queue import IngestionJob, JobQueue, enqueue_ingestion
 from .publisher import EventPublisher
+from .queue import IngestionJob, JobQueue, enqueue_ingestion
 
-__all__ = ["IngestionJob", "JobQueue", "enqueue_ingestion", "EventPublisher"]
+__all__ = ["EventPublisher", "IngestionJob", "JobQueue", "enqueue_ingestion"]

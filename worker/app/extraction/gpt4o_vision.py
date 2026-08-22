@@ -22,8 +22,8 @@ from ..config import settings
 from ..models import ExtractedEC8A
 from .arithmetic import arithmetic_consistent
 from .engine import ExtractionResult, Extractor
-from .prompts import EXTRACTION_PROMPT, PROMPT_VERSION
 from .errors import NotAnEC8AError
+from .prompts import EXTRACTION_PROMPT, PROMPT_VERSION
 from .word_numbers import reconcile_votes
 
 log = logging.getLogger(__name__)
@@ -85,7 +85,9 @@ class GPT4oVisionExtractor(Extractor):
         try:
             parsed = json.loads(content)
         except json.JSONDecodeError as e:
-            raise RuntimeError(f"GPT-4o returned non-JSON content: {e}: {content[:200]}")
+            raise RuntimeError(
+                f"GPT-4o returned non-JSON content: {e}: {content[:200]}"
+            ) from e
 
         if parsed.get("error") == "not_an_ec8a":
             # A classification, not a failure. Raised as a typed error so the

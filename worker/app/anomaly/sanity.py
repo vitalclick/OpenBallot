@@ -20,7 +20,6 @@ from uuid import UUID
 from ..models import ExtractedEC8A
 from .types import AnomalyHit, AnomalyType, Severity
 
-
 # Threshold for the "single party dominates" check. The 2023 Rivers
 # Eleme/Andoni election tribunal record shows several PUs with 99.6%+
 # for one party; that's the bar we want to flag.

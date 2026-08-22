@@ -182,11 +182,11 @@ def classify(
         verdict = model_verdict.strip().lower()
         if verdict in ("not_an_ec8a", "not_ec8a"):
             return Classification(
-                FormClass.NOT_A_FORM, reasons + ["model_verdict=not_an_ec8a"]
+                FormClass.NOT_A_FORM, [*reasons, "model_verdict=not_an_ec8a"]
             )
         for name in FormClass:
             if verdict == name.value:
-                return Classification(name, reasons + [f"model_verdict={verdict}"])
+                return Classification(name, [*reasons, f"model_verdict={verdict}"])
 
     if layout is not None:
         outliers = layout_outlier_reasons(layout)

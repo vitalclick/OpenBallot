@@ -6,13 +6,13 @@ same `_FakePool / _FakeConn` shape used in test_anchor_cron / test_admin_review.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
 import pytest
 
-from app.extraction.engine import StubExtractor, ExtractionEngine
+from app.extraction.engine import ExtractionEngine, StubExtractor
 from app.jobs.ingest import IngestionJobHandler
 from app.jobs.queue import IngestionJob
 
@@ -90,7 +90,7 @@ def _job() -> IngestionJob:
         pu_code="25-11-04-007",
         image_url="https://x/y.jpg",
         image_sha256="a" * 64,
-        enqueued_at=datetime.now(timezone.utc).isoformat(),
+        enqueued_at=datetime.now(UTC).isoformat(),
     )
 
 
@@ -132,9 +132,11 @@ async def test_extractor_failure_marks_failed_and_publishes():
 
     handler = IngestionJobHandler(publisher=pub, extractor=FailingExtractor())
 
-    with patch("app.jobs.ingest.pool", return_value=_FakePool(conn)):
-        with pytest.raises(RuntimeError, match="503"):
-            await handler.run(_job())
+    with (
+        patch("app.jobs.ingest.pool", return_value=_FakePool(conn)),
+        pytest.raises(RuntimeError, match="503"),
+    ):
+        await handler.run(_job())
 
     statements = [s[0] for s in conn.executed]
     # UPDATE to processing, then UPDATE to failed.

@@ -13,7 +13,7 @@ without any FastAPI dependency.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import jwt as jwt_lib
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
@@ -78,7 +78,7 @@ async def request_otp(body: RequestOtpIn, request: Request):
     try:
         phone = normalise_phone(body.phone)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
     ip = request.client.host if request.client else None
 
@@ -169,7 +169,7 @@ async def verify_otp(body: VerifyOtpIn, request: Request):
     try:
         phone = normalise_phone(body.phone)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
     ip = request.client.host if request.client else None
     presented_dev_hash = device_fingerprint_hash(body.device_fingerprint)
@@ -305,7 +305,7 @@ async def verify_otp(body: VerifyOtpIn, request: Request):
         ttl_seconds=s.agent_jwt_ttl_seconds,
     )
     expires_at = datetime.fromtimestamp(
-        datetime.now(tz=timezone.utc).timestamp() + s.agent_jwt_ttl_seconds, tz=timezone.utc
+        datetime.now(tz=UTC).timestamp() + s.agent_jwt_ttl_seconds, tz=UTC
     )
     return VerifyOtpOut(
         token=token,
@@ -335,13 +335,12 @@ def require_agent(
     try:
         claims = verify_agent_token(token, settings().agent_jwt_secret)
     except jwt_lib.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail={"code": "token_expired"})
+        raise HTTPException(status_code=401, detail={"code": "token_expired"}) from None
     except jwt_lib.InvalidTokenError:
-        raise HTTPException(status_code=401, detail={"code": "invalid_token"})
+        raise HTTPException(status_code=401, detail={"code": "invalid_token"}) from None
 
-    if x_device_fingerprint:
-        if device_fingerprint_hash(x_device_fingerprint) != claims.dev:
-            raise HTTPException(status_code=401, detail={"code": "device_mismatch"})
+    if x_device_fingerprint and device_fingerprint_hash(x_device_fingerprint) != claims.dev:
+        raise HTTPException(status_code=401, detail={"code": "device_mismatch"})
 
     return claims
 

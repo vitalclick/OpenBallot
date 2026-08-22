@@ -15,7 +15,7 @@ both signer and verifier (the worker).
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import jwt
@@ -44,7 +44,7 @@ def issue_agent_token(
     device_fingerprint_hash: str | None,
     ttl_seconds: int = 60 * 60 * 24,
 ) -> str:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     payload: dict[str, Any] = {
         "sub": agent_id,
         "role": role,
@@ -71,6 +71,6 @@ def verify_agent_token(token: str, secret: str) -> AgentClaims:
         party=decoded.get("party"),
         pu=decoded.get("pu"),
         dev=decoded.get("dev"),
-        iat=datetime.fromtimestamp(decoded["iat"], tz=timezone.utc),
-        exp=datetime.fromtimestamp(decoded["exp"], tz=timezone.utc),
+        iat=datetime.fromtimestamp(decoded["iat"], tz=UTC),
+        exp=datetime.fromtimestamp(decoded["exp"], tz=UTC),
     )

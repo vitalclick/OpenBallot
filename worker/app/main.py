@@ -20,21 +20,19 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 
+from .admin.router import router as admin_router
+from .anomaly import AnomalyEngine
 from .audit import cron as anchor_cron
 from .audit.chain import AuditEvent, verify_chain
 from .audit.ethereum_client import build_from_settings as build_eth_client
 from .auth.router import router as auth_router
-from .admin.router import router as admin_router
-from .anomaly import AnomalyEngine
-from .observers import observer_router
-from .uploads import uploads_router
 from .config import settings
 from .db import close_pool, init_pool, pool
 from .extraction import build_engine
 from .ingestion import IngestionPipeline
+from .ingestion.pipeline import IngestionContext
 from .jobs import enqueue_ingestion
 from .jobs.queue import close_queue, get_queue
-from .ingestion.pipeline import IngestionContext
 from .models import IngestionPayload
 from .observability import (
     INFLIGHT_GAUGE,
@@ -45,6 +43,8 @@ from .observability import (
     init_sentry,
     metrics_response,
 )
+from .observers import observer_router
+from .uploads import uploads_router
 
 log = logging.getLogger(__name__)
 
@@ -97,9 +97,11 @@ async def metrics():
         queue = await get_queue()
         QUEUE_DEPTH_GAUGE.set(await queue.depth())
         INFLIGHT_GAUGE.set(await queue.inflight_count())
-    except Exception:
-        # Metric refresh failure must not block the scrape.
-        pass
+    except Exception as e:
+        # A metric refresh failure must not block the scrape -- but it must
+        # not be invisible either. A gauge silently stuck at its last value
+        # during an election is worse than a gap in the series.
+        log.warning("metrics.refresh_failed", extra={"error": str(e)})
     return metrics_response()
 
 

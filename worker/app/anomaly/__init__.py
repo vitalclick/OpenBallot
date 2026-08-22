@@ -20,18 +20,18 @@ inserts into the `anomalies` table. The detection rules are pure
 functions; the engine wires them to the DB.
 """
 
-from .types import AnomalyHit, AnomalyType, Severity
+from .engine import AnomalyEngine
+from .historical import run_historical_checks
 from .sanity import run_sanity_checks
 from .statistical import run_statistical_checks
-from .historical import run_historical_checks
-from .engine import AnomalyEngine
+from .types import AnomalyHit, AnomalyType, Severity
 
 __all__ = [
+    "AnomalyEngine",
     "AnomalyHit",
     "AnomalyType",
     "Severity",
+    "run_historical_checks",
     "run_sanity_checks",
     "run_statistical_checks",
-    "run_historical_checks",
-    "AnomalyEngine",
 ]

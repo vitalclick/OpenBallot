@@ -37,7 +37,6 @@ from prometheus_client import (
     generate_latest,
 )
 
-
 # ─── Counters ───────────────────────────────────────────────────────────────
 
 

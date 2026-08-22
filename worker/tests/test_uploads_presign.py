@@ -7,12 +7,13 @@ role-based + assignment-based branch.
 
 from __future__ import annotations
 
+from datetime import UTC
 from unittest.mock import patch
 
 import pytest
 
 from app.auth.jwt_tokens import AgentClaims
-from app.uploads.router import presign, PresignIn
+from app.uploads.router import PresignIn, presign
 from app.uploads.s3_client import PresignResult
 
 
@@ -21,9 +22,9 @@ def _claims(
     pu: str | None = "25-11-04-007",
     party: str | None = "APC",
 ) -> AgentClaims:
-    from datetime import datetime, timezone, timedelta
+    from datetime import datetime, timedelta
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     return AgentClaims(
         sub="11111111-1111-1111-1111-111111111111",
         role=role,
@@ -36,13 +37,13 @@ def _claims(
 
 
 def _payload(**overrides) -> PresignIn:
-    base = dict(
-        election_id="2027-presidential",
-        pu_code="25-11-04-007",
-        content_type="image/jpeg",
-        content_length=800_000,
-        sha256="a" * 64,
-    )
+    base = {
+        "election_id": "2027-presidential",
+        "pu_code": "25-11-04-007",
+        "content_type": "image/jpeg",
+        "content_length": 800_000,
+        "sha256": "a" * 64,
+    }
     base.update(overrides)
     return PresignIn(**base)
 

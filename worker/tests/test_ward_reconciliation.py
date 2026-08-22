@@ -14,8 +14,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from reconcile_ward_names import InecWard, normalise, reconcile  # noqa: E402
-
+from reconcile_ward_names import InecWard, normalise, reconcile
 
 INEC = [
     InecWard("LA", "Lagos", "LA-SUR", "Surulere", "LA-SUR-04", "Itire Ikate"),
