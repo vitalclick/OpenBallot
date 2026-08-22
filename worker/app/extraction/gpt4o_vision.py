@@ -23,6 +23,7 @@ from ..models import ExtractedEC8A
 from .arithmetic import arithmetic_consistent
 from .engine import ExtractionResult, Extractor
 from .prompts import EXTRACTION_PROMPT, PROMPT_VERSION
+from .errors import NotAnEC8AError
 from .word_numbers import reconcile_votes
 
 log = logging.getLogger(__name__)
@@ -87,7 +88,14 @@ class GPT4oVisionExtractor(Extractor):
             raise RuntimeError(f"GPT-4o returned non-JSON content: {e}: {content[:200]}")
 
         if parsed.get("error") == "not_an_ec8a":
-            raise RuntimeError("GPT-4o classified the image as not an EC8A")
+            # A classification, not a failure. Raised as a typed error so the
+            # caller can flag the submission for review and publish it with
+            # that flag, rather than logging a generic extraction failure and
+            # losing what the model actually told us (issue #71).
+            raise NotAnEC8AError(
+                "backend classified the image as not an EC8A",
+                image_url=image_url,
+            )
 
         return self._parse_response(parsed, pu_code, image_url)
 

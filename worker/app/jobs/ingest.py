@@ -28,15 +28,16 @@ from ..anomaly import AnomalyEngine
 from ..config import settings
 from ..db import pool
 from ..extraction import build_engine
-from ..observability import (
-    EXTRACTION_CONFIDENCE_HISTOGRAM,
-    ANOMALY_COUNTER,
-    observe_extraction,
-)
+from ..extraction.errors import NotAnEC8AError
 from ..models import (
     ExtractedEC8A,
     SubmissionRecord,
     SubmissionSource,
+)
+from ..observability import (
+    ANOMALY_COUNTER,
+    EXTRACTION_CONFIDENCE_HISTOGRAM,
+    observe_extraction,
 )
 from ..verification import compute_consensus
 from .publisher import EventPublisher
@@ -91,6 +92,26 @@ class IngestionJobHandler:
                     pu_code=job.pu_code,
                     status=verification_status,
                 )
+        except NotAnEC8AError as e:
+            # A finding, not a fault. The backend looked at the image and told
+            # us it is not a result sheet: record that on the submission and
+            # send it to review. Re-queueing would only reach the same
+            # conclusion, and failing silently would leave an unexplained gap
+            # in the public record where an explanation exists (issue #71).
+            log.info(
+                "ingest.job.not_an_ec8a",
+                extra={"submission_id": job.submission_id},
+            )
+            await self._mark_not_an_ec8a(submission_id, str(e))
+            if self.publisher:
+                await self.publisher.submission_failed(
+                    submission_id=job.submission_id,
+                    election_id=job.election_id,
+                    pu_code=job.pu_code,
+                    error=f"{e.validation_flag}: {e}",
+                )
+            return
+
         except Exception as e:
             log.exception("ingest.job.failed", extra={"submission_id": job.submission_id})
             await self._mark_failed(submission_id, str(e))
@@ -139,6 +160,31 @@ class IngestionJobHandler:
                     and extraction.arithmetic.consistent
                 )
                 else "pending_review",
+                submission_id,
+            )
+
+    async def _mark_not_an_ec8a(self, submission_id: UUID, note: str) -> None:
+        """Flag the submission and queue it for review.
+
+        processing_status is 'complete', not 'failed': the pipeline did its
+        job and reached a verdict. The flag merges into validation_flags so
+        it sits alongside the geo-fence and EXIF findings the public API
+        already exposes.
+        """
+        async with pool().acquire() as conn:
+            await conn.execute(
+                """
+                UPDATE ec8a_submissions
+                   SET processing_status = 'complete',
+                       processing_error = $1,
+                       review_status = 'pending_review',
+                       validation_flags =
+                           COALESCE(validation_flags, '{}'::jsonb)
+                           || jsonb_build_object('not_an_ec8a', TRUE),
+                       extraction_completed_at = NOW()
+                 WHERE id = $2
+                """,
+                note[:2000],
                 submission_id,
             )
 

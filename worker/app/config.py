@@ -40,6 +40,12 @@ class Settings(BaseSettings):
     gps_hard_block_metres: int = 2_000          # discard beyond this
     min_image_bytes: int = 60_000               # below this is almost certainly thumbnail
     max_image_bytes: int = 12_000_000           # cap upload payload
+    # Image quality (issue #70). Advisory: these produce flags, never
+    # rejections. Configurable so a threshold can be moved on election day
+    # without a redeploy - the blur value in particular is uncalibrated
+    # against real EC8A photographs and must not be treated as settled.
+    blur_threshold: float = 130.0               # below this reads as blurred
+    min_legible_long_edge: int = 1_000          # pixels on the longer edge
     extraction_confidence_floor: float = 0.85   # below this routes to human review
     consensus_min_sources: int = 2              # parties/observers required for consensus
     consensus_tolerance_votes: int = 0          # exact agreement required by default

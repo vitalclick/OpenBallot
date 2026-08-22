@@ -46,6 +46,21 @@ class ValidationFlag(str, Enum):
     EXIF_SOFTWARE_WARNING = "exif_software_warning"
     EXIF_DATETIME_MISMATCH = "exif_datetime_mismatch"
     DUPLICATE_PARTY_SUBMISSION = "duplicate_party_submission"
+    # What the document turned out to be (issue #71). None of these discard
+    # the submission: a wrong form at a contested polling unit is either an
+    # error worth correcting or an attempt worth recording, and both want
+    # publishing with a loud flag rather than silent rejection.
+    NOT_AN_EC8A = "not_an_ec8a"
+    WRONG_ELECTION = "wrong_election_form"
+    COLLATION_FORM = "collation_form"
+    EC40G_FORM = "ec40g_form"
+    CANCELLATION_FORM = "cancellation_form"
+    BLANK_FORM = "blank_form"
+    LAYOUT_OUTLIER = "layout_outlier"
+    # Legibility (issue #70). Also advisory: a marginal photograph of a real
+    # result is worth more than no photograph.
+    IMAGE_BELOW_LEGIBLE_DIMENSIONS = "image_below_legible_dimensions"
+    IMAGE_BLURRED = "image_blurred"
 
 
 @dataclass

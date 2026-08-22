@@ -233,3 +233,21 @@ async def test_absent_words_column_keeps_the_old_behaviour(
     assert result.extracted.candidate_votes_words is None
     assert result.extracted.candidate_votes == {"APC": 142, "PDP": 89, "LP": 203}
     assert result.raw_response["votes_disputed"] == []
+
+
+@pytest.mark.asyncio
+async def test_not_an_ec8a_raises_a_typed_classification_not_a_generic_error(
+    extractor,
+):
+    """The backend's verdict is a finding, not a fault (issue #71).
+
+    A generic RuntimeError here would be logged as an extraction failure and
+    the reason lost - the public record would show an unexplained gap where
+    it could show 'this upload was not a result sheet'."""
+    from app.extraction.errors import NotAnEC8AError
+
+    with pytest.raises(NotAnEC8AError) as excinfo:
+        await _extract(extractor, {"error": "not_an_ec8a"})
+
+    assert excinfo.value.validation_flag == "not_an_ec8a"
+    assert excinfo.value.image_url == "https://cdn/test.jpg"
