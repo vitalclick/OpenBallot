@@ -39,8 +39,17 @@ interpolated.
 rather than the URL because the 40-character prefix is identical on every row.
 169,328 of 176,846 polling units (95.7%) have one.
 
-> **Unverified:** DocumentCloud reachability has not been confirmed from a
-> normal network. Check before depending on the mirror.
+> **Still unverified, and here is exactly what is known.** Checked 2026-08-22
+> from a restricted-egress environment: every `documentcloud.org` host fails
+> at the CONNECT tunnel. That is this environment's allowlist, not
+> DocumentCloud — `api.github.com` returned 200 and `s3.amazonaws.com` 307
+> from the same shell, while `google.com` failed identically to
+> DocumentCloud. So the result says nothing about whether the mirror is
+> alive.
+>
+> Someone needs to open one of these URLs from an ordinary network before the
+> platform depends on the mirror. Retrying from a session with the same
+> network policy will not settle it.
 
 `pu_results_2023.csv` columns: `polling_unit_code`, `status`,
 `Registered_num`, `Accredited_num`, `APC`, `PDP`, `LP`, `NNPP`, `total_use`.
@@ -158,6 +167,32 @@ Accordingly:
 - 320 polling units have no usable coordinate: 256 blank, 64 outside
   Nigeria's bounding box. Rejected rather than loaded, and reported by the
   loader's `--report` flag.
+
+## `nigeria_election_data.json` — a dead pointer, do not go looking
+
+The CCIJ repository contains a 133-byte Git LFS pointer claiming a 99 MB
+`nigeria_election_data.json`. **The data behind it is not retrievable from
+GitHub.** Recorded here because the file looks like a substantial dataset in a
+directory listing, and it is not one.
+
+Checked 2026-08-22:
+
+- GitHub's LFS batch API returns `{"code": 404, "message": "Object does not
+  exist on the server"}` for the pointer's oid
+  (`55b51ae65004e23951710790c77efcaf5747c9bff189b135a01aae72538d996f`).
+- `git lfs pull` fails with the same 404.
+- The file was committed exactly once, already as a pointer. It has never
+  existed in that repository's history as real content.
+- The repository's history shows `Add Git LFS tracking for JSON files`
+  followed by `Remove Git LFS tracking`, and carries no `.gitattributes`. The
+  pointer was committed; the object was either never uploaded or has since
+  been purged.
+- It is the only LFS pointer in the repository — the model weights are real
+  files.
+
+If this dataset matters, it has to come from CCIJ directly. A repository named
+`anndawn/Nigeria-2023-election` looks like a plausible upstream and has not
+been checked.
 
 ## Regenerating
 
